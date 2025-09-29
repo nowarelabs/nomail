@@ -1,8 +1,217 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 
 export default function Home() {
+  const [showNewEmailDialog, setShowNewEmailDialog] = useState(false);
+  const [showFiltersDialog, setShowFiltersDialog] = useState(false);
+
   return (
     <div className="h-full w-full bg-background text-foreground">
+      {/* New Email Dialog */}
+      {showNewEmailDialog && (
+        <section 
+          role="dialog" 
+          aria-modal="true" 
+          aria-label="Compose email" 
+          className="fixed bottom-4 right-4 w-[min(100vw-1rem,48rem)] max-w-[48rem] z-50"
+          style={{ opacity: 1, transform: 'none' }}
+        >
+          <div className="rounded-xl border bg-card shadow-2xl overflow-hidden">
+            <header className="flex items-center justify-between border-b px-3 py-2">
+              <h2 className="text-sm font-medium">New Message</h2>
+              <div className="flex items-center gap-2">
+                <button 
+                  className="rounded-md border px-2 py-1 text-xs hover:bg-accent"
+                  onClick={() => setShowNewEmailDialog(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </header>
+            <form className="p-3 space-y-2">
+              <div className="grid grid-cols-[4.5rem_1fr] items-center gap-2">
+                <label htmlFor="to" className="text-xs text-muted-foreground">To</label>
+                <input 
+                  id="to" 
+                  required 
+                  placeholder="Recipient" 
+                  className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" 
+                  name="to" 
+                />
+                <label htmlFor="from" className="text-xs text-muted-foreground">From</label>
+                <input 
+                  id="from" 
+                  placeholder="you@domain.com" 
+                  className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" 
+                  name="from" 
+                />
+                <label htmlFor="cc" className="text-xs text-muted-foreground">Cc</label>
+                <input 
+                  id="cc" 
+                  placeholder="Add Cc" 
+                  className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" 
+                  name="cc" 
+                />
+                <label htmlFor="bcc" className="text-xs text-muted-foreground">Bcc</label>
+                <input 
+                  id="bcc" 
+                  placeholder="Add Bcc" 
+                  className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" 
+                  name="bcc" 
+                />
+                <label htmlFor="replyto" className="text-xs text-muted-foreground">Reply‑To</label>
+                <input 
+                  id="replyto" 
+                  placeholder="Reply-to address" 
+                  className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" 
+                  name="replyto" 
+                />
+                <label htmlFor="subject" className="text-xs text-muted-foreground">Subject</label>
+                <input 
+                  id="subject" 
+                  placeholder="Subject" 
+                  className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" 
+                  name="subject" 
+                />
+              </div>
+              <div>
+                <label htmlFor="content" className="sr-only">Message</label>
+                <textarea 
+                  id="content" 
+                  name="content" 
+                  rows={10} 
+                  placeholder="Write your message…" 
+                  className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm"
+                ></textarea>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <button type="button" className="rounded-md border px-2 py-1 text-xs hover:bg-accent">
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      width="24" 
+                      height="24" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="2" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      className="lucide lucide-paperclip size-4" 
+                      aria-hidden="true"
+                    >
+                      <path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"></path>
+                    </svg>
+                  </button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button type="submit" className="rounded-lg border px-3 py-1.5 bg-primary text-primary-foreground">
+                    Send
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </section>
+      )}
+
+      {/* Filters Dialog */}
+      {showFiltersDialog && (
+        <section 
+          role="dialog" 
+          aria-modal="true" 
+          aria-label="Advanced filters" 
+          className="fixed top-4 right-4 w-[min(100vw-1rem,28rem)] z-50"
+          style={{ opacity: 1, transform: 'none' }}
+        >
+          <div className="rounded-xl border bg-card shadow-xl overflow-hidden">
+            <header className="flex items-center justify-between border-b px-3 py-2">
+              <h2 className="text-sm font-medium">Advanced filters</h2>
+              <div className="flex items-center gap-2">
+                <button 
+                  className="rounded-md border px-2 py-1 text-xs hover:bg-accent"
+                  onClick={() => setShowFiltersDialog(false)}
+                >
+                  Close
+                </button>
+              </div>
+            </header>
+            <form className="p-3 space-y-3">
+              <div className="grid grid-cols-[6rem_1fr] items-center gap-2">
+                <label htmlFor="q" className="text-xs text-muted-foreground">Query</label>
+                <input 
+                  id="q" 
+                  placeholder="free text" 
+                  className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" 
+                  value="" 
+                />
+                <label htmlFor="from" className="text-xs text-muted-foreground">From</label>
+                <input 
+                  id="from" 
+                  placeholder="name or email" 
+                  className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" 
+                  value="" 
+                />
+                <label htmlFor="to" className="text-xs text-muted-foreground">To</label>
+                <input 
+                  id="to" 
+                  placeholder="recipient" 
+                  className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" 
+                  value="" 
+                />
+                <label className="text-xs text-muted-foreground">Attachment</label>
+                <div className="flex items-center gap-2">
+                  <input 
+                    id="hasAtt" 
+                    className="size-4" 
+                    type="checkbox" 
+                  />
+                  <label htmlFor="hasAtt" className="text-xs">Has attachment</label>
+                </div>
+                <label htmlFor="label" className="text-xs text-muted-foreground">Label</label>
+                <select 
+                  id="label" 
+                  className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm"
+                >
+                  <option value="">Any</option>
+                  <option value="work">Work</option>
+                  <option value="personal">Personal</option>
+                  <option value="updates">Updates</option>
+                  <option value="alerts">Alerts</option>
+                </select>
+                <label className="text-xs text-muted-foreground">Starred</label>
+                <div className="flex items-center gap-2">
+                  <input 
+                    id="isStar" 
+                    className="size-4" 
+                    type="checkbox" 
+                  />
+                  <label htmlFor="isStar" className="text-xs">Only starred</label>
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-2">
+                <button 
+                  type="button" 
+                  className="rounded-md border px-3 py-1.5 text-xs hover:bg-accent"
+                  onClick={() => setShowFiltersDialog(false)}
+                >
+                  Reset
+                </button>
+                <button 
+                  type="submit" 
+                  className="rounded-md border px-3 py-1.5 text-xs bg-primary text-primary-foreground"
+                  onClick={() => setShowFiltersDialog(false)}
+                >
+                  Apply
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+      )}
+
       <div className="flex items-center gap-2 px-3 py-2 border-b">
         <div className="relative flex-1">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -17,8 +226,13 @@ export default function Home() {
             className="w-full rounded-lg bg-input/50 border px-9 py-2 text-sm placeholder:text-muted-foreground focus:outline-none"
             value="" />
         </div>
-        <button aria-label="Open advanced filters"
-          className="rounded-lg border px-3 py-2 hover:bg-accent"><span>Filters</span></button><button
+        <button 
+          aria-label="Open advanced filters"
+          className="rounded-lg border px-3 py-2 hover:bg-accent"
+          onClick={() => setShowFiltersDialog(true)}
+        >
+          <span>Filters</span>
+        </button><button
           aria-label="Toggle theme" className="rounded-lg border p-2 hover:bg-accent"><svg
             xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -27,7 +241,9 @@ export default function Home() {
               d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401">
             </path>
           </svg></button><button
-          className="rounded-lg border px-3 py-2 bg-primary text-primary-foreground hover:opacity-90">
+          className="rounded-lg border px-3 py-2 bg-primary text-primary-foreground hover:opacity-90"
+          onClick={() => setShowNewEmailDialog(true)}
+        >
           <div className="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
               viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
               strokeLinejoin="round" className="lucide lucide-plus size-4" aria-hidden="true">
@@ -42,7 +258,10 @@ export default function Home() {
             <div className="text-sm text-muted-foreground">Baked Design</div>
             <div className="text-xs text-muted-foreground">work@baked.design</div>
           </div><button
-            className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 bg-primary text-primary-foreground hover:opacity-90"><svg
+            className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 bg-primary text-primary-foreground hover:opacity-90"
+            onClick={() => setShowNewEmailDialog(true)}
+          >
+            <svg
               xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
               className="lucide lucide-plus size-4" aria-hidden="true">
