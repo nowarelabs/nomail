@@ -1,0 +1,28 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "nomail",
+	"main": "src/index.ts",
+	"compatibility_date": "2025-09-27",
+	"migrations": [
+		{
+			"new_sqlite_classes": [
+				"NomailDurableObject"
+			],
+			"tag": "v1"
+		}
+	],
+	"assets": {
+		"directory": "./public"
+	},
+	"durable_objects": {
+		"bindings": [
+			{
+				"class_name": "NomailDurableObject",
+				"name": "NOMAIL_DURABLE_OBJECT"
+			}
+		]
+	},
+	"observability": {
+		"enabled": true
+	}
+}
