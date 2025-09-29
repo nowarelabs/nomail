@@ -1,11 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 export default function Home() {
   const [showNewEmailDialog, setShowNewEmailDialog] = useState(false);
   const [showFiltersDialog, setShowFiltersDialog] = useState(false);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+
+  // Check system preference and saved theme on initial load
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme) {
+      setTheme(savedTheme);
+    } else if (systemPrefersDark) {
+      setTheme('dark');
+    }
+  }, []);
+
+  // Apply theme to document element
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  };
 
   return (
     <div className="h-full w-full bg-background text-foreground">
@@ -232,15 +259,45 @@ export default function Home() {
           onClick={() => setShowFiltersDialog(true)}
         >
           <span>Filters</span>
-        </button><button
-          aria-label="Toggle theme" className="rounded-lg border p-2 hover:bg-accent"><svg
-            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-            className="lucide lucide-moon size-4" aria-hidden="true">
-            <path
-              d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401">
-            </path>
-          </svg></button><button
+        </button>
+        <button 
+          aria-label="Toggle theme" 
+          className="rounded-lg border p-2 hover:bg-accent"
+          onClick={toggleTheme}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg" 
+            width="24" 
+            height="24" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+            className="lucide lucide-moon size-4" 
+            aria-hidden="true"
+          >
+            {theme === 'light' ? (
+              // Moon icon for light mode
+              <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path>
+            ) : (
+              // Sun icon for dark mode
+              <>
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+                <path d="m4.93 4.93 1.41 1.41"></path>
+                <path d="m17.66 17.66 1.41 1.41"></path>
+                <path d="M2 12h2"></path>
+                <path d="M20 12h2"></path>
+                <path d="m6.34 17.66-1.41 1.41"></path>
+                <path d="m19.07 4.93-1.41 1.41"></path>
+              </>
+            )}
+          </svg>
+        </button>
+        <button
           className="rounded-lg border px-3 py-2 bg-primary text-primary-foreground hover:opacity-90"
           onClick={() => setShowNewEmailDialog(true)}
         >
