@@ -334,7 +334,12 @@ export default function Home() {
           className="rounded-lg border px-3 py-2 hover:bg-accent"
           onClick={() => setShowFiltersDialog(true)}
         >
-          <span>Filters</span>
+          <div className="flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-filter size-4">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            <span>Filters</span>
+          </div>
         </button>
         <button 
           aria-label="Toggle theme" 
@@ -564,24 +569,36 @@ export default function Home() {
               {isSelectMode ? (
                 <div className="text-xs text-muted-foreground flex items-center gap-2">
                   <button 
-                    className="rounded-md border px-2 py-1 hover:bg-accent"
+                    className="rounded-md border px-2 py-1 hover:bg-accent flex items-center gap-1"
                     onClick={toggleSelectAll}
                     aria-pressed={selectedEmails.size === 5}
                   >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check-square size-4">
+                      <polyline points="9 11 12 14 22 4"></polyline>
+                      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                    </svg>
                     <span>Select all</span>
                   </button>
                   <button 
-                    className="rounded-md border px-2 py-1 hover:bg-accent"
+                    className="rounded-md border px-2 py-1 hover:bg-accent flex items-center gap-1"
                     onClick={toggleSelectMode}
                   >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x size-4">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
                     <span>Done</span>
                   </button>
                 </div>
               ) : (
                 <button 
-                  className="rounded-md border px-2 py-1 hover:bg-accent"
+                  className="rounded-md border px-2 py-1 hover:bg-accent flex items-center gap-1"
                   onClick={toggleSelectMode}
                 >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check-square size-4">
+                    <polyline points="9 11 12 14 22 4"></polyline>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                  </svg>
                   <span>Select</span>
                 </button>
               )}
@@ -917,33 +934,45 @@ export default function Home() {
                       <circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle>
                     </svg>Work</span></div>
               </div>
-              <div className="flex items-center gap-2"><button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent"><svg
+              <div className="flex items-center gap-2">
+                <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
+                  <svg
                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                     className="lucide lucide-reply size-4" aria-hidden="true">
                     <path d="M20 18v-2a4 4 0 0 0-4-4H4"></path>
                     <path d="m9 17-5-5 5-5"></path>
-                  </svg></button><button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent"><svg
+                  </svg>
+                  Reply
+                </button>
+                <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
+                  <svg
                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                     className="lucide lucide-reply-all size-4" aria-hidden="true">
                     <path d="m12 17-5-5 5-5"></path>
                     <path d="M22 18v-2a4 4 0 0 0-4-4H7"></path>
                     <path d="m7 17-5-5 5-5"></path>
-                  </svg></button><button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent"><svg
-                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                    className="lucide lucide-forward size-4" aria-hidden="true">
-                    <path d="m15 17 5-5-5-5"></path>
+                  </svg>
+                  Reply All
+                </button>
+                <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-forward size-4">
+                    <polyline points="15 17 20 12 15 7"></polyline>
                     <path d="M4 18v-2a4 4 0 0 1 4-4h12"></path>
-                  </svg></button><button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent" ref={moreActionsButtonRef} onClick={toggleMoreActions}><svg
+                  </svg>
+                  Forward
+                </button>
+                <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent" ref={moreActionsButtonRef} onClick={toggleMoreActions}><svg
                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                     className="lucide lucide-ellipsis size-4" aria-hidden="true">
                     <circle cx="12" cy="12" r="1"></circle>
                     <circle cx="19" cy="12" r="1"></circle>
                     <circle cx="5" cy="12" r="1"></circle>
-                  </svg></button></div>
+                  </svg>
+                </button>
+              </div>
             </div>
             <div className="rounded-xl border p-3 bg-card/50">
               <div className="flex items-center gap-2">
@@ -1002,9 +1031,37 @@ export default function Home() {
                   </svg><span className="font-mono text-xs">.pdf</span><span className="opacity-90">requirements.pdf</span><span
                     className="opacity-60">1.5 MB</span></span></div>
             </div>
-            <div className="mt-auto flex items-center gap-2"><button
-                className="rounded-lg border px-3 py-1.5 bg-accent text-accent-foreground hover:opacity-90">Reply</button><button
-                className="rounded-lg border px-3 py-1.5 hover:bg-accent">Forward</button></div>
+            <div className="mt-auto flex items-center gap-2">
+              
+                <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                    className="lucide lucide-reply size-4" aria-hidden="true">
+                    <path d="M20 18v-2a4 4 0 0 0-4-4H4"></path>
+                    <path d="m9 17-5-5 5-5"></path>
+                  </svg>
+                  Reply
+                </button>
+                <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                    className="lucide lucide-reply-all size-4" aria-hidden="true">
+                    <path d="m12 17-5-5 5-5"></path>
+                    <path d="M22 18v-2a4 4 0 0 0-4-4H7"></path>
+                    <path d="m7 17-5-5 5-5"></path>
+                  </svg>
+                  Reply All
+                </button>
+                <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-forward size-4">
+                    <polyline points="15 17 20 12 15 7"></polyline>
+                    <path d="M4 18v-2a4 4 0 0 1 4-4h12"></path>
+                  </svg>
+                  Forward
+                </button>
+            </div>
           </div>
         </main>
       </div>
