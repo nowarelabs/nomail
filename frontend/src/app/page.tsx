@@ -1,6 +1,13 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "../components/ui/dropdown-menu";
 
 export default function Home() {
   const [showNewEmailDialog, setShowNewEmailDialog] = useState(false);
@@ -935,43 +942,85 @@ export default function Home() {
                     </svg>Work</span></div>
               </div>
               <div className="flex items-center gap-2">
-                <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                    className="lucide lucide-reply size-4" aria-hidden="true">
-                    <path d="M20 18v-2a4 4 0 0 0-4-4H4"></path>
-                    <path d="m9 17-5-5 5-5"></path>
-                  </svg>
-                  Reply
-                </button>
-                <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                    className="lucide lucide-reply-all size-4" aria-hidden="true">
-                    <path d="m12 17-5-5 5-5"></path>
-                    <path d="M22 18v-2a4 4 0 0 0-4-4H7"></path>
-                    <path d="m7 17-5-5 5-5"></path>
-                  </svg>
-                  Reply All
-                </button>
-                <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-forward size-4">
-                    <polyline points="15 17 20 12 15 7"></polyline>
-                    <path d="M4 18v-2a4 4 0 0 1 4-4h12"></path>
-                  </svg>
-                  Forward
-                </button>
-                <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent" ref={moreActionsButtonRef} onClick={toggleMoreActions}><svg
-                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                    className="lucide lucide-ellipsis size-4" aria-hidden="true">
-                    <circle cx="12" cy="12" r="1"></circle>
-                    <circle cx="19" cy="12" r="1"></circle>
-                    <circle cx="5" cy="12" r="1"></circle>
-                  </svg>
-                </button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                        className="lucide lucide-reply size-4" aria-hidden="true">
+                        <path d="M20 18v-2a4 4 0 0 0-4-4H4"></path>
+                        <path d="m9 17-5-5 5-5"></path>
+                      </svg>
+                      Reply
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem>
+                      <span>Reply</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <span>Reply to sender only</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <span>Reply with template</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                        className="lucide lucide-reply-all size-4" aria-hidden="true">
+                        <path d="m12 17-5-5 5-5"></path>
+                        <path d="M22 18v-2a4 4 0 0 0-4-4H7"></path>
+                        <path d="m7 17-5-5 5-5"></path>
+                      </svg>
+                      Reply All
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem>
+                      <span>Reply All</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <span>Reply All except...</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <span>Reply All with template</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-forward size-4">
+                        <polyline points="15 17 20 12 15 7"></polyline>
+                        <path d="M4 18v-2a4 4 0 0 1 4-4h12"></path>
+                      </svg>
+                      Forward
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem>
+                      <span>Forward</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <span>Forward as attachment</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <span>Forward with template</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <span>Redirect</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
             <div className="rounded-xl border p-3 bg-card/50">
@@ -1032,35 +1081,85 @@ export default function Home() {
                     className="opacity-60">1.5 MB</span></span></div>
             </div>
             <div className="mt-auto flex items-center gap-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                      className="lucide lucide-reply size-4" aria-hidden="true">
+                      <path d="M20 18v-2a4 4 0 0 0-4-4H4"></path>
+                      <path d="m9 17-5-5 5-5"></path>
+                    </svg>
+                    Reply
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem>
+                    <span>Reply</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <span>Reply to sender only</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <span>Reply with template</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               
-                <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                    className="lucide lucide-reply size-4" aria-hidden="true">
-                    <path d="M20 18v-2a4 4 0 0 0-4-4H4"></path>
-                    <path d="m9 17-5-5 5-5"></path>
-                  </svg>
-                  Reply
-                </button>
-                <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                    className="lucide lucide-reply-all size-4" aria-hidden="true">
-                    <path d="m12 17-5-5 5-5"></path>
-                    <path d="M22 18v-2a4 4 0 0 0-4-4H7"></path>
-                    <path d="m7 17-5-5 5-5"></path>
-                  </svg>
-                  Reply All
-                </button>
-                <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-forward size-4">
-                    <polyline points="15 17 20 12 15 7"></polyline>
-                    <path d="M4 18v-2a4 4 0 0 1 4-4h12"></path>
-                  </svg>
-                  Forward
-                </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                      className="lucide lucide-reply-all size-4" aria-hidden="true">
+                      <path d="m12 17-5-5 5-5"></path>
+                      <path d="M22 18v-2a4 4 0 0 0-4-4H7"></path>
+                      <path d="m7 17-5-5 5-5"></path>
+                    </svg>
+                    Reply All
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem>
+                    <span>Reply All</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <span>Reply All except...</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <span>Reply All with template</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-forward size-4">
+                      <polyline points="15 17 20 12 15 7"></polyline>
+                      <path d="M4 18v-2a4 4 0 0 1 4-4h12"></path>
+                    </svg>
+                    Forward
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem>
+                    <span>Forward</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <span>Forward as attachment</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <span>Forward with template</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <span>Redirect</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </main>
