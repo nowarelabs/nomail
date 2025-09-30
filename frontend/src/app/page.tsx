@@ -7,6 +7,9 @@ export default function Home() {
   const [showNewEmailDialog, setShowNewEmailDialog] = useState(false);
   const [showFiltersDialog, setShowFiltersDialog] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [isCoreOpen, setIsCoreOpen] = useState(true);
+  const [isManagementOpen, setIsManagementOpen] = useState(true);
+  const [activeView, setActiveView] = useState('primary');
 
   // Check system preference and saved theme on initial load
   useEffect(() => {
@@ -32,6 +35,18 @@ export default function Home() {
 
   const toggleTheme = () => {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  };
+
+  const toggleCore = () => {
+    setIsCoreOpen(!isCoreOpen);
+  };
+
+  const toggleManagement = () => {
+    setIsManagementOpen(!isManagementOpen);
+  };
+
+  const handleViewChange = (view: string) => {
+    setActiveView(view);
   };
 
   return (
@@ -172,21 +187,18 @@ export default function Home() {
                   id="q" 
                   placeholder="free text" 
                   className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" 
-                  value="" 
                 />
                 <label htmlFor="from" className="text-xs text-muted-foreground">From</label>
                 <input 
                   id="from" 
                   placeholder="name or email" 
                   className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" 
-                  value="" 
                 />
                 <label htmlFor="to" className="text-xs text-muted-foreground">To</label>
                 <input 
                   id="to" 
                   placeholder="recipient" 
                   className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" 
-                  value="" 
                 />
                 <label className="text-xs text-muted-foreground">Attachment</label>
                 <div className="flex items-center gap-2">
@@ -202,7 +214,7 @@ export default function Home() {
                   id="label" 
                   className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm"
                 >
-                  <option value="">Any</option>
+                  <option value="any">Any</option>
                   <option value="work">Work</option>
                   <option value="personal">Personal</option>
                   <option value="updates">Updates</option>
@@ -251,7 +263,7 @@ export default function Home() {
           <input aria-label="Search mail"
             placeholder="Search: words, from:alice, to:bob, label:work, has:attachment, is:starred"
             className="w-full rounded-lg bg-input/50 border px-9 py-2 text-sm placeholder:text-muted-foreground focus:outline-none"
-            value="" />
+          />
         </div>
         <button 
           aria-label="Open advanced filters"
@@ -325,119 +337,200 @@ export default function Home() {
               <path d="M5 12h14"></path>
               <path d="M12 5v14"></path>
             </svg>New email</button>
-          <div><button
-              className="w-full text-left flex items-center gap-2 px-2 py-2 text-sm text-muted-foreground hover:text-foreground"><svg
+          <div>
+            <button
+              className="w-full text-left flex items-center gap-2 px-2 py-2 text-sm text-muted-foreground hover:text-foreground"
+              onClick={toggleCore}
+            >
+              <svg
                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                className="lucide lucide-chevron-down size-4" aria-hidden="true">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg><span className="font-medium">Core</span></button>
-            <div className="overflow-hidden" style={{ height: 'auto', opacity: 1 }}>
-              <div className="py-1"><button
-                  className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"><span
-                    className="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                      viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                      strokeLinejoin="round" className="lucide lucide-inbox size-4" aria-hidden="true">
-                      <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
-                      <path
-                        d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z">
-                      </path>
-                    </svg>Inbox</span><span
-                    className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">281</span></button><button
-                  className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"><span
-                    className="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                      viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                      strokeLinejoin="round" className="lucide lucide-star size-4" aria-hidden="true">
-                      <path
-                        d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z">
-                      </path>
-                    </svg>Favorites</span></button><button
-                  className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"><span
-                    className="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                      viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                      strokeLinejoin="round" className="lucide lucide-pen-line size-4" aria-hidden="true">
-                      <path d="M13 21h8"></path>
-                      <path
-                        d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z">
-                      </path>
-                    </svg>Drafts</span><span
-                    className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">13</span></button><button
-                  className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"><span
-                    className="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                      viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                      strokeLinejoin="round" className="lucide lucide-send size-4" aria-hidden="true">
-                      <path
-                        d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z">
-                      </path>
-                      <path d="m21.854 2.147-10.94 10.939"></path>
-                    </svg>Sent</span></button></div>
-            </div>
+                className={`lucide lucide-chevron-${isCoreOpen ? 'down' : 'right'} size-4`} aria-hidden="true">
+                <path d={`m${isCoreOpen ? '6 9 6 6 6-6' : '9 18 6-6-6-6'}`}></path>
+              </svg>
+              <span className="font-medium">Core</span>
+            </button>
+            {isCoreOpen && (
+              <div className="overflow-hidden" style={{ height: 'auto', opacity: 1 }}>
+                <div className="py-1">
+                  <button
+                    className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                    <span className="flex items-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                        strokeLinejoin="round" className="lucide lucide-inbox size-4" aria-hidden="true">
+                        <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline>
+                        <path
+                          d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z">
+                        </path>
+                      </svg>
+                      Inbox
+                    </span>
+                    <span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">281</span>
+                  </button>
+                  <button
+                    className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                    <span className="flex items-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                        strokeLinejoin="round" className="lucide lucide-star size-4" aria-hidden="true">
+                        <path
+                          d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z">
+                        </path>
+                      </svg>
+                      Favorites
+                    </span>
+                  </button>
+                  <button
+                    className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                    <span className="flex items-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                        strokeLinejoin="round" className="lucide lucide-pen-line size-4" aria-hidden="true">
+                        <path d="M13 21h8"></path>
+                        <path
+                          d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z">
+                        </path>
+                      </svg>
+                      Drafts
+                    </span>
+                    <span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">13</span>
+                  </button>
+                  <button
+                    className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                    <span className="flex items-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                        strokeLinejoin="round" className="lucide lucide-send size-4" aria-hidden="true">
+                        <path
+                          d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z">
+                        </path>
+                        <path d="m21.854 2.147-10.94 10.939"></path>
+                      </svg>
+                      Sent
+                    </span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-          <div><button
-              className="w-full text-left flex items-center gap-2 px-2 py-2 text-sm text-muted-foreground hover:text-foreground"><svg
+          <div>
+            <button
+              className="w-full text-left flex items-center gap-2 px-2 py-2 text-sm text-muted-foreground hover:text-foreground"
+              onClick={toggleManagement}
+            >
+              <svg
                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                className="lucide lucide-chevron-down size-4" aria-hidden="true">
-                <path d="m6 9 6 6 6-6"></path>
-              </svg><span className="font-medium">Management</span></button>
-            <div className="overflow-hidden" style={{ height: 'auto', opacity: 1 }}>
-              <div className="py-1"><button
-                  className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"><span
-                    className="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                      viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                      strokeLinejoin="round" className="lucide lucide-archive size-4" aria-hidden="true">
-                      <rect width="20" height="5" x="2" y="3" rx="1"></rect>
-                      <path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"></path>
-                      <path d="M10 12h4"></path>
-                    </svg>Archive</span></button><button
-                  className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"><span
-                    className="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                      viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                      strokeLinejoin="round" className="lucide lucide-shield-alert size-4" aria-hidden="true">
-                      <path
-                        d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z">
-                      </path>
-                      <path d="M12 8v4"></path>
-                      <path d="M12 16h.01"></path>
-                    </svg>Spam</span><span
-                    className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">24</span></button><button
-                  className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm bg-sidebar-primary text-sidebar-primary-foreground"><span
-                    className="flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                      viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                      strokeLinejoin="round" className="lucide lucide-trash2 lucide-trash-2 size-4" aria-hidden="true">
-                      <path d="M10 11v6"></path>
-                      <path d="M14 11v6"></path>
-                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
-                      <path d="M3 6h18"></path>
-                      <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                    </svg>Bin</span></button></div>
-            </div>
+                className={`lucide lucide-chevron-${isManagementOpen ? 'down' : 'right'} size-4`} aria-hidden="true">
+                <path d={`m${isManagementOpen ? '6 9 6 6 6-6' : '9 18 6-6-6-6'}`}></path>
+              </svg>
+              <span className="font-medium">Management</span>
+            </button>
+            {isManagementOpen && (
+              <div className="overflow-hidden" style={{ height: 'auto', opacity: 1 }}>
+                <div className="py-1">
+                  <button
+                    className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                    <span className="flex items-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                        strokeLinejoin="round" className="lucide lucide-archive size-4" aria-hidden="true">
+                        <rect width="20" height="5" x="2" y="3" rx="1"></rect>
+                        <path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"></path>
+                        <path d="M10 12h4"></path>
+                      </svg>
+                      Archive
+                    </span>
+                  </button>
+                  <button
+                    className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                    <span className="flex items-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                        strokeLinejoin="round" className="lucide lucide-shield-alert size-4" aria-hidden="true">
+                        <path
+                          d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z">
+                        </path>
+                        <path d="M12 8v4"></path>
+                        <path d="M12 16h.01"></path>
+                      </svg>
+                      Spam
+                    </span>
+                    <span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">24</span>
+                  </button>
+                  <button
+                    className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm bg-sidebar-primary text-sidebar-primary-foreground">
+                    <span className="flex items-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                        strokeLinejoin="round" className="lucide lucide-trash2 lucide-trash-2 size-4" aria-hidden="true">
+                        <path d="M10 11v6"></path>
+                        <path d="M14 11v6"></path>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+                        <path d="M3 6h18"></path>
+                        <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      </svg>
+                      Bin
+                    </span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
           <div className="mt-auto">
-            <div><button
-                className="w-full text-left flex items-center gap-2 px-2 py-2 text-sm text-muted-foreground hover:text-foreground"><svg
+            <div>
+              <button
+                className="w-full text-left flex items-center gap-2 px-2 py-2 text-sm text-muted-foreground hover:text-foreground">
+                <svg
                   xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                   stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                   className="lucide lucide-chevron-right size-4" aria-hidden="true">
                   <path d="m9 18 6-6-6-6"></path>
-                </svg><span className="font-medium">Settings</span></button></div>
+                </svg>
+                <span className="font-medium">Settings</span>
+              </button>
+            </div>
           </div>
         </aside>
         <section className="border-r p-3 overflow-y-auto hidden xl:flex xl:flex-col xl:min-w-0">
           <div className="flex items-center justify-between px-1 pb-2">
             <div className="text-sm font-medium">Inbox</div>
-            <div className="text-xs text-muted-foreground flex items-center gap-2"><button
-                className="rounded-md border px-2 py-1 hover:bg-accent"><span>Select</span></button></div>
+            <div className="text-xs text-muted-foreground flex items-center gap-2">
+              <button className="rounded-md border px-2 py-1 hover:bg-accent">
+                <span>Select</span>
+              </button>
+            </div>
           </div>
           <div className="rounded-xl border bg-card/40 p-2 flex-1 min-h-0 flex flex-col">
             <div className="flex items-center gap-2 px-1 pb-2">
               <div className="text-xs text-muted-foreground">Views</div>
-              <div className="ms-auto flex items-center gap-1"><button
-                  className="rounded-md border px-2 py-1 text-xs bg-primary text-primary-foreground"
-                  aria-current="true">Primary</button><button
-                  className="rounded-md border px-2 py-1 text-xs hover:bg-accent">Social</button><button
-                  className="rounded-md border px-2 py-1 text-xs hover:bg-accent">Updates</button><button
-                  className="rounded-md border px-2 py-1 text-xs hover:bg-accent">Promotions</button></div>
+              <div className="ms-auto flex items-center gap-1">
+                <button
+                  className={`rounded-md border px-2 py-1 text-xs ${activeView === 'primary' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'}`}
+                  onClick={() => handleViewChange('primary')}
+                >
+                  Primary
+                </button>
+                <button
+                  className={`rounded-md border px-2 py-1 text-xs ${activeView === 'social' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'}`}
+                  onClick={() => handleViewChange('social')}
+                >
+                  Social
+                </button>
+                <button
+                  className={`rounded-md border px-2 py-1 text-xs ${activeView === 'updates' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'}`}
+                  onClick={() => handleViewChange('updates')}
+                >
+                  Updates
+                </button>
+                <button
+                  className={`rounded-md border px-2 py-1 text-xs ${activeView === 'promotions' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'}`}
+                  onClick={() => handleViewChange('promotions')}
+                >
+                  Promotions
+                </button>
+              </div>
             </div>
             <div className="space-y-2 overflow-y-auto pr-1">
               <div className="w-full text-left rounded-xl p-3 border transition-colors bg-card border-sidebar-border"
