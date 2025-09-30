@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
 
 export default function Home() {
   const [showNewEmailDialog, setShowNewEmailDialog] = useState(false);
@@ -10,6 +9,11 @@ export default function Home() {
   const [isCoreOpen, setIsCoreOpen] = useState(true);
   const [isManagementOpen, setIsManagementOpen] = useState(true);
   const [activeView, setActiveView] = useState('primary');
+  const [isSelectMode, setIsSelectMode] = useState(false);
+  const [selectedEmails, setSelectedEmails] = useState<Set<number>>(new Set());
+  const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
+  const moreActionsButtonRef = useRef<HTMLButtonElement>(null);
+  const moreActionsDropdownRef = useRef<HTMLDivElement>(null);
 
   // Check system preference and saved theme on initial load
   useEffect(() => {
@@ -33,6 +37,25 @@ export default function Home() {
     localStorage.setItem('theme', theme);
   }, [theme]);
 
+  // Close more actions dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        moreActionsButtonRef.current && 
+        !moreActionsButtonRef.current.contains(event.target as Node) &&
+        moreActionsDropdownRef.current && 
+        !moreActionsDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsMoreActionsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const toggleTheme = () => {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
   };
@@ -47,6 +70,39 @@ export default function Home() {
 
   const handleViewChange = (view: string) => {
     setActiveView(view);
+  };
+
+  const toggleSelectMode = () => {
+    if (isSelectMode) {
+      // Exiting select mode - clear selections
+      setSelectedEmails(new Set());
+    }
+    setIsSelectMode(!isSelectMode);
+    setIsMoreActionsOpen(false); // Close more actions when toggling select mode
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedEmails.size === 5) {
+      // All emails are selected, so deselect all
+      setSelectedEmails(new Set());
+    } else {
+      // Select all emails (we have 5 emails in the list)
+      setSelectedEmails(new Set([1, 2, 3, 4, 5]));
+    }
+  };
+
+  const toggleEmailSelection = (id: number) => {
+    const newSelected = new Set(selectedEmails);
+    if (newSelected.has(id)) {
+      newSelected.delete(id);
+    } else {
+      newSelected.add(id);
+    }
+    setSelectedEmails(newSelected);
+  };
+
+  const toggleMoreActions = () => {
+    setIsMoreActionsOpen(!isMoreActionsOpen);
   };
 
   return (
@@ -497,9 +553,30 @@ export default function Home() {
           <div className="flex items-center justify-between px-1 pb-2">
             <div className="text-sm font-medium">Inbox</div>
             <div className="text-xs text-muted-foreground flex items-center gap-2">
-              <button className="rounded-md border px-2 py-1 hover:bg-accent">
-                <span>Select</span>
-              </button>
+              {isSelectMode ? (
+                <div className="text-xs text-muted-foreground flex items-center gap-2">
+                  <button 
+                    className="rounded-md border px-2 py-1 hover:bg-accent"
+                    onClick={toggleSelectAll}
+                    aria-pressed={selectedEmails.size === 5}
+                  >
+                    <span>Select all</span>
+                  </button>
+                  <button 
+                    className="rounded-md border px-2 py-1 hover:bg-accent"
+                    onClick={toggleSelectMode}
+                  >
+                    <span>Done</span>
+                  </button>
+                </div>
+              ) : (
+                <button 
+                  className="rounded-md border px-2 py-1 hover:bg-accent"
+                  onClick={toggleSelectMode}
+                >
+                  <span>Select</span>
+                </button>
+              )}
             </div>
           </div>
           <div className="rounded-xl border bg-card/40 p-2 flex-1 min-h-0 flex flex-col">
@@ -532,10 +609,68 @@ export default function Home() {
                 </button>
               </div>
             </div>
+            {/* Action items bar - shown when in select mode */}
+            {isSelectMode && (
+              <div className="flex items-center gap-2 px-1 pb-2">
+                <div className="text-xs">{selectedEmails.size} selected</div>
+                <div className="ms-auto flex items-center gap-1">
+                  <button className="rounded-md border px-2 py-1 text-xs hover:bg-accent">
+                    <span>Mark read</span>
+                  </button>
+                  <button className="rounded-md border px-2 py-1 text-xs hover:bg-accent">
+                    <span>Mark unread</span>
+                  </button>
+                  <div className="relative">
+                    <button 
+                      className="rounded-md border px-2 py-1 text-xs hover:bg-accent flex items-center gap-1"
+                      onClick={toggleMoreActions}
+                      ref={moreActionsButtonRef}
+                    >
+                      <span>More</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-down size-3">
+                        <path d="m6 9 6 6 6-6"></path>
+                      </svg>
+                    </button>
+                    {isMoreActionsOpen && (
+                      <div className="absolute right-0 mt-1 w-48 rounded-md border bg-popover p-1 shadow-md z-10" ref={moreActionsDropdownRef}>
+                        <button className="w-full text-left px-2 py-1 text-xs hover:bg-accent rounded">
+                          <span>Favorite</span>
+                        </button>
+                        <button className="w-full text-left px-2 py-1 text-xs hover:bg-destructive/10 rounded">
+                          <span>Spam</span>
+                        </button>
+                        <button className="w-full text-left px-2 py-1 text-xs hover:bg-destructive/10 rounded">
+                          <span>Trash</span>
+                        </button>
+                        <div className="border-t my-1"></div>
+                        <div className="px-2 py-1">
+                          <select aria-label="Move to label" className="w-full rounded-md border px-2 py-1 text-xs bg-input/50">
+                            <option value="">Move to…</option>
+                            <option value="work">Work</option>
+                            <option value="personal">Personal</option>
+                            <option value="updates">Updates</option>
+                            <option value="alerts">Alerts</option>
+                          </select>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
             <div className="space-y-2 overflow-y-auto pr-1">
               <div className="w-full text-left rounded-xl p-3 border transition-colors bg-card border-sidebar-border"
                 aria-current="page">
-                <div className="flex items-center gap-2"><button className="flex-1 text-left">
+                <div className="flex items-center gap-2">
+                  {isSelectMode && (
+                    <input
+                      type="checkbox"
+                      className="size-4"
+                      checked={selectedEmails.has(1)}
+                      onChange={() => toggleEmailSelection(1)}
+                    />
+                  )}
+                  <button className="flex-1 text-left">
                     <div className="flex items-center gap-2">
                       <div className="size-7 rounded-full flex items-center justify-center text-xs bg-chart-1"><svg
                           xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -574,10 +709,20 @@ export default function Home() {
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground line-clamp-1">Design review of new email client
                       features...</p>
-                  </button></div>
+                  </button>
+                </div>
               </div>
               <div className="w-full text-left rounded-xl p-3 border transition-colors hover:bg-accent/50">
-                <div className="flex items-center gap-2"><button className="flex-1 text-left">
+                <div className="flex items-center gap-2">
+                  {isSelectMode && (
+                    <input
+                      type="checkbox"
+                      className="size-4"
+                      checked={selectedEmails.has(2)}
+                      onChange={() => toggleEmailSelection(2)}
+                    />
+                  )}
+                  <button className="flex-1 text-left">
                     <div className="flex items-center gap-2">
                       <div className="size-7 rounded-full flex items-center justify-center text-xs bg-chart-2"><svg
                           xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -607,10 +752,20 @@ export default function Home() {
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground line-clamp-1">Catching up on the email client design
                       with new interactions...</p>
-                  </button></div>
+                  </button>
+                </div>
               </div>
               <div className="w-full text-left rounded-xl p-3 border transition-colors hover:bg-accent/50">
-                <div className="flex items-center gap-2"><button className="flex-1 text-left">
+                <div className="flex items-center gap-2">
+                  {isSelectMode && (
+                    <input
+                      type="checkbox"
+                      className="size-4"
+                      checked={selectedEmails.has(3)}
+                      onChange={() => toggleEmailSelection(3)}
+                    />
+                  )}
+                  <button className="flex-1 text-left">
                     <div className="flex items-center gap-2">
                       <div className="size-7 rounded-full flex items-center justify-center text-xs bg-destructive"><svg
                           xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -641,10 +796,20 @@ export default function Home() {
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground line-clamp-1">A high severity vulnerability was
                       detected in one of your dependencies.</p>
-                  </button></div>
+                  </button>
+                </div>
               </div>
               <div className="w-full text-left rounded-xl p-3 border transition-colors hover:bg-accent/50">
-                <div className="flex items-center gap-2"><button className="flex-1 text-left">
+                <div className="flex items-center gap-2">
+                  {isSelectMode && (
+                    <input
+                      type="checkbox"
+                      className="size-4"
+                      checked={selectedEmails.has(4)}
+                      onChange={() => toggleEmailSelection(4)}
+                    />
+                  )}
+                  <button className="flex-1 text-left">
                     <div className="flex items-center gap-2">
                       <div className="size-7 rounded-full flex items-center justify-center text-xs bg-chart-4"><svg
                           xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -673,10 +838,20 @@ export default function Home() {
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground line-clamp-1">Your recent payment has been successfully
                       processed.</p>
-                  </button></div>
+                  </button>
+                </div>
               </div>
               <div className="w-full text-left rounded-xl p-3 border transition-colors hover:bg-accent/50">
-                <div className="flex items-center gap-2"><button className="flex-1 text-left">
+                <div className="flex items-center gap-2">
+                  {isSelectMode && (
+                    <input
+                      type="checkbox"
+                      className="size-4"
+                      checked={selectedEmails.has(5)}
+                      onChange={() => toggleEmailSelection(5)}
+                    />
+                  )}
+                  <button className="flex-1 text-left">
                     <div className="flex items-center gap-2">
                       <div className="size-7 rounded-full flex items-center justify-center text-xs bg-primary"><svg
                           xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -705,7 +880,8 @@ export default function Home() {
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground line-clamp-1">We added new shows we think you will
                       love.</p>
-                  </button></div>
+                  </button>
+                </div>
               </div>
             </div>
             <nav className="pt-3 flex items-center justify-between text-xs text-muted-foreground"><span>Page 1 of 1</span>
@@ -752,7 +928,7 @@ export default function Home() {
                     className="lucide lucide-forward size-4" aria-hidden="true">
                     <path d="m15 17 5-5-5-5"></path>
                     <path d="M4 18v-2a4 4 0 0 1 4-4h12"></path>
-                  </svg></button><button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent"><svg
+                  </svg></button><button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent" ref={moreActionsButtonRef} onClick={toggleMoreActions}><svg
                     xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                     className="lucide lucide-ellipsis size-4" aria-hidden="true">
