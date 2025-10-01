@@ -498,9 +498,23 @@ export default function Home() {
         </div>
         <button 
           aria-label="Open advanced filters"
-          className="rounded-lg border px-3 py-2 hover:bg-accent"
+          className="rounded-lg border px-3 py-2 hover:bg-accent flex items-center gap-2"
           onClick={() => setShowFiltersDialog(true)}
         >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-filter size-4"
+          >
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
           <span>Filters</span>
         </button>
         <button 
@@ -850,7 +864,7 @@ export default function Home() {
               <div 
                 className={`w-full text-left rounded-xl p-3 border transition-colors ${
                   selectedThread === 1 
-                    ? 'bg-card border-sidebar-border' 
+                    ? 'bg-primary text-primary-foreground border-primary' 
                     : 'hover:bg-accent/50'
                 } ${!emailThreads[1]?.[0]?.isRead ? 'font-bold' : ''}`}
                 aria-current={selectedThread === 1 ? "page" : undefined}
@@ -928,7 +942,7 @@ export default function Home() {
               <div 
                 className={`w-full text-left rounded-xl p-3 border transition-colors ${
                   selectedThread === 2 
-                    ? 'bg-card border-sidebar-border' 
+                    ? 'bg-primary text-primary-foreground border-primary' 
                     : 'hover:bg-accent/50'
                 } ${!emailThreads[2]?.[0]?.isRead ? 'font-bold' : ''}`}
                 onClick={() => handleSelectThread(2)}
@@ -993,7 +1007,7 @@ export default function Home() {
               <div 
                 className={`w-full text-left rounded-xl p-3 border transition-colors ${
                   selectedThread === 3 
-                    ? 'bg-card border-sidebar-border' 
+                    ? 'bg-primary text-primary-foreground border-primary' 
                     : 'hover:bg-accent/50'
                 } ${!emailThreads[3]?.[0]?.isRead ? 'font-bold' : ''}`}
                 onClick={() => handleSelectThread(3)}
@@ -1058,7 +1072,7 @@ export default function Home() {
               <div 
                 className={`w-full text-left rounded-xl p-3 border transition-colors ${
                   selectedThread === 4 
-                    ? 'bg-card border-sidebar-border' 
+                    ? 'bg-primary text-primary-foreground border-primary' 
                     : 'hover:bg-accent/50'
                 } ${!emailThreads[4]?.[0]?.isRead ? 'font-bold' : ''}`}
                 onClick={() => handleSelectThread(4)}
@@ -1122,7 +1136,7 @@ export default function Home() {
               <div 
                 className={`w-full text-left rounded-xl p-3 border transition-colors ${
                   selectedThread === 5 
-                    ? 'bg-card border-sidebar-border' 
+                    ? 'bg-primary text-primary-foreground border-primary' 
                     : 'hover:bg-accent/50'
                 } ${!emailThreads[5]?.[0]?.isRead ? 'font-bold' : ''}`}
                 onClick={() => handleSelectThread(5)}
