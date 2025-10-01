@@ -1,13 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from "../components/ui/dropdown-menu";
 import { EmailThread } from "../components/email-thread";
 
 export default function Home() {
@@ -30,7 +23,8 @@ export default function Home() {
         date: 'Mar 29',
         subject: 'New design review',
         content: 'Team discussed command center improvements and category system. General positive feedback, with suggestions for quick actions placement.',
-        isCollapsed: true
+        isCollapsed: true,
+        isRead: false
       },
       {
         id: 2,
@@ -39,7 +33,8 @@ export default function Home() {
         date: 'Mar 28',
         subject: 'Re: New design review',
         content: 'Thanks for the feedback. I\'ll work on implementing the suggestions.',
-        isCollapsed: true
+        isCollapsed: true,
+        isRead: true
       },
       {
         id: 3,
@@ -48,11 +43,61 @@ export default function Home() {
         date: 'Mar 27',
         subject: 'Re: New design review',
         content: 'Looking forward to seeing the updated designs.',
-        isCollapsed: true
+        isCollapsed: true,
+        isRead: false
+      }
+    ],
+    2: [
+      {
+        id: 4,
+        from: 'Alex, Ali, Sarah',
+        to: 'You',
+        date: 'Mar 28',
+        subject: 'Re: Design review feedback',
+        content: 'Catching up on the email client design with new interactions...',
+        isCollapsed: true,
+        isRead: true
+      }
+    ],
+    3: [
+      {
+        id: 5,
+        from: 'GitHub',
+        to: 'You',
+        date: 'Mar 28',
+        subject: 'Security alert: Critical vulnerability',
+        content: 'A high severity vulnerability was detected in one of your dependencies.',
+        isCollapsed: true,
+        isRead: false
+      }
+    ],
+    4: [
+      {
+        id: 6,
+        from: 'Stripe',
+        to: 'You',
+        date: 'Mar 29',
+        subject: 'Payment confirmation #1234',
+        content: 'Your recent payment has been successfully processed.',
+        isCollapsed: true,
+        isRead: true
+      }
+    ],
+    5: [
+      {
+        id: 7,
+        from: 'Netflix',
+        to: 'You',
+        date: 'Mar 29',
+        subject: 'New shows added to your list',
+        content: 'We added new shows we think you will love.',
+        isCollapsed: true,
+        isRead: false
       }
     ]
   });
   const [showThreadCompose, setShowThreadCompose] = useState<number | null>(null);
+  const [selectedThread, setSelectedThread] = useState<number>(1);
   const moreActionsButtonRef = useRef<HTMLButtonElement>(null);
   const moreActionsDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -77,25 +122,6 @@ export default function Home() {
     }
     localStorage.setItem('theme', theme);
   }, [theme]);
-
-  // Close more actions dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        moreActionsButtonRef.current && 
-        !moreActionsButtonRef.current.contains(event.target as Node) &&
-        moreActionsDropdownRef.current && 
-        !moreActionsDropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsMoreActionsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   const toggleTheme = () => {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
@@ -164,6 +190,23 @@ export default function Home() {
     setShowThreadCompose(null);
   };
 
+  // Add function to handle email thread selection
+  const handleSelectThread = (threadId: number) => {
+    setSelectedThread(threadId);
+    
+    // Mark the thread as read when selected
+    setEmailThreads(prev => {
+      const updatedThreads = { ...prev };
+      if (updatedThreads[threadId]) {
+        updatedThreads[threadId] = updatedThreads[threadId].map((email: any) => ({
+          ...email,
+          isRead: true
+        }));
+      }
+      return updatedThreads;
+    });
+  };
+
   const handleReply = (threadId: number) => {
     openThreadCompose(threadId);
     // Additional reply logic can be added here
@@ -209,6 +252,25 @@ export default function Home() {
         console.log(`Unknown action: ${action}`);
     }
   };
+
+  // Close more actions dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        moreActionsButtonRef.current && 
+        !moreActionsButtonRef.current.contains(event.target as Node) &&
+        moreActionsDropdownRef.current && 
+        !moreActionsDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsMoreActionsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="h-full w-full bg-background text-foreground">
@@ -413,14 +475,6 @@ export default function Home() {
       )}
 
       <div className="flex items-center gap-2 px-3 py-2 border-b">
-        <div className="flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-mail size-5">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-            <polyline points="22,6 12,13 2,6"></polyline>
-          </svg>
-          <div className="text-xl font-bold">nomail</div>
-        </div>
-        <div className="h-6 border-r border-muted"></div>
         <div className="relative flex-1">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
             fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -439,12 +493,7 @@ export default function Home() {
           className="rounded-lg border px-3 py-2 hover:bg-accent"
           onClick={() => setShowFiltersDialog(true)}
         >
-          <div className="flex items-center gap-2">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-filter size-4">
-              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-            </svg>
-            <span>Filters</span>
-          </div>
+          <span>Filters</span>
         </button>
         <button 
           aria-label="Toggle theme" 
@@ -671,42 +720,9 @@ export default function Home() {
           <div className="flex items-center justify-between px-1 pb-2">
             <div className="text-sm font-medium">Inbox</div>
             <div className="text-xs text-muted-foreground flex items-center gap-2">
-              {isSelectMode ? (
-                <div className="text-xs text-muted-foreground flex items-center gap-2">
-                  <button 
-                    className="rounded-md border px-2 py-1 hover:bg-accent flex items-center gap-1"
-                    onClick={toggleSelectAll}
-                    aria-pressed={selectedEmails.size === 5}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check-square size-4">
-                      <polyline points="9 11 12 14 22 4"></polyline>
-                      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                    </svg>
-                    <span>Select all</span>
-                  </button>
-                  <button 
-                    className="rounded-md border px-2 py-1 hover:bg-accent flex items-center gap-1"
-                    onClick={toggleSelectMode}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x size-4">
-                      <line x1="18" y1="6" x2="6" y2="18"></line>
-                      <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                    <span>Done</span>
-                  </button>
-                </div>
-              ) : (
-                <button 
-                  className="rounded-md border px-2 py-1 hover:bg-accent flex items-center gap-1"
-                  onClick={toggleSelectMode}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check-square size-4">
-                    <polyline points="9 11 12 14 22 4"></polyline>
-                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-                  </svg>
-                  <span>Select</span>
-                </button>
-              )}
+              <button className="rounded-md border px-2 py-1 hover:bg-accent">
+                <span>Select</span>
+              </button>
             </div>
           </div>
           <div className="rounded-xl border bg-card/40 p-2 flex-1 min-h-0 flex flex-col">
@@ -739,58 +755,17 @@ export default function Home() {
                 </button>
               </div>
             </div>
-            {/* Action items bar - shown when in select mode */}
-            {isSelectMode && (
-              <div className="flex items-center gap-2 px-1 pb-2">
-                <div className="text-xs">{selectedEmails.size} selected</div>
-                <div className="ms-auto flex items-center gap-1">
-                  <button className="rounded-md border px-2 py-1 text-xs hover:bg-accent">
-                    <span>Mark read</span>
-                  </button>
-                  <button className="rounded-md border px-2 py-1 text-xs hover:bg-accent">
-                    <span>Mark unread</span>
-                  </button>
-                  <div className="relative">
-                    <button 
-                      className="rounded-md border px-2 py-1 text-xs hover:bg-accent flex items-center gap-1"
-                      onClick={toggleMoreActions}
-                      ref={moreActionsButtonRef}
-                    >
-                      <span>More</span>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-down size-3">
-                        <path d="m6 9 6 6 6-6"></path>
-                      </svg>
-                    </button>
-                    {isMoreActionsOpen && (
-                      <div className="absolute right-0 mt-1 w-48 rounded-md border bg-popover p-1 shadow-md z-10" ref={moreActionsDropdownRef}>
-                        <button className="w-full text-left px-2 py-1 text-xs hover:bg-accent rounded">
-                          <span>Favorite</span>
-                        </button>
-                        <button className="w-full text-left px-2 py-1 text-xs hover:bg-destructive/10 rounded">
-                          <span>Spam</span>
-                        </button>
-                        <button className="w-full text-left px-2 py-1 text-xs hover:bg-destructive/10 rounded">
-                          <span>Trash</span>
-                        </button>
-                        <div className="border-t my-1"></div>
-                        <div className="px-2 py-1">
-                          <select aria-label="Move to label" className="w-full rounded-md border px-2 py-1 text-xs bg-input/50">
-                            <option value="">Move to…</option>
-                            <option value="work">Work</option>
-                            <option value="personal">Personal</option>
-                            <option value="updates">Updates</option>
-                            <option value="alerts">Alerts</option>
-                          </select>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
             <div className="space-y-2 overflow-y-auto pr-1">
-              <div className="w-full text-left rounded-xl p-3 border transition-colors bg-card border-sidebar-border"
-                aria-current="page">
+              {/* Email thread 1 */}
+              <div 
+                className={`w-full text-left rounded-xl p-3 border transition-colors ${
+                  selectedThread === 1 
+                    ? 'bg-card border-sidebar-border' 
+                    : 'hover:bg-accent/50'
+                } ${!emailThreads[1]?.[0]?.isRead ? 'font-bold' : ''}`}
+                aria-current={selectedThread === 1 ? "page" : undefined}
+                onClick={() => handleSelectThread(1)}
+              >
                 <div className="flex items-center gap-2">
                   {isSelectMode && (
                     <input
@@ -802,23 +777,33 @@ export default function Home() {
                   )}
                   <button className="flex-1 text-left">
                     <div className="flex items-center gap-2">
-                      <div className="size-7 rounded-full flex items-center justify-center text-xs bg-chart-1"><svg
+                      <div className="size-7 rounded-full flex items-center justify-center text-xs bg-chart-1">
+                        <svg
                           xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                           stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                           className="lucide lucide-user size-4 opacity-80" aria-hidden="true">
                           <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                           <circle cx="12" cy="7" r="4"></circle>
-                        </svg></div>
+                        </svg>
+                      </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-2 min-w-0"><span
-                              className="font-medium truncate text-foreground">Ali from Baked</span><span
-                              className="text-xs text-muted-foreground">[9]</span></div><span
-                            className="text-xs text-muted-foreground">Mar 29</span>
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span
+                              className={`truncate ${!emailThreads[1]?.[0]?.isRead ? 'text-foreground' : ''}`}
+                            >
+                              Ali from Baked
+                            </span>
+                            <span className="text-xs text-muted-foreground">[9]</span>
+                          </div>
+                          <span className="text-xs text-muted-foreground">Mar 29</span>
                         </div>
-                        <div className="truncate text-sm opacity-90">New design review</div>
-                        <div className="flex items-center gap-2 mt-1"><span
-                            className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs bg-chart-1 text-primary-foreground"><svg
+                        <div className={`truncate text-sm ${!emailThreads[1]?.[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
+                          New design review
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs bg-chart-1 text-primary-foreground">
+                            <svg
                               xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                               stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                               className="lucide lucide-tag size-3 opacity-80" aria-hidden="true">
@@ -826,23 +811,38 @@ export default function Home() {
                                 d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z">
                               </path>
                               <circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle>
-                            </svg>Work</span><span
-                            className="inline-flex items-center gap-1 text-xs text-muted-foreground"><svg
+                            </svg>
+                            Work
+                          </span>
+                          <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                            <svg
                               xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                               stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                               className="lucide lucide-paperclip size-3" aria-hidden="true">
                               <path
                                 d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551">
                               </path>
-                            </svg> 4</span></div>
+                            </svg> 4
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    <p className="mt-1 text-xs text-muted-foreground line-clamp-1">Design review of new email client
-                      features...</p>
+                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[1]?.[0]?.isRead ? 'font-medium' : ''}`}>
+                      Design review of new email client features...
+                    </p>
                   </button>
                 </div>
               </div>
-              <div className="w-full text-left rounded-xl p-3 border transition-colors hover:bg-accent/50">
+              
+              {/* Email thread 2 */}
+              <div 
+                className={`w-full text-left rounded-xl p-3 border transition-colors ${
+                  selectedThread === 2 
+                    ? 'bg-card border-sidebar-border' 
+                    : 'hover:bg-accent/50'
+                } ${!emailThreads[2]?.[0]?.isRead ? 'font-bold' : ''}`}
+                onClick={() => handleSelectThread(2)}
+              >
                 <div className="flex items-center gap-2">
                   {isSelectMode && (
                     <input
@@ -854,22 +854,31 @@ export default function Home() {
                   )}
                   <button className="flex-1 text-left">
                     <div className="flex items-center gap-2">
-                      <div className="size-7 rounded-full flex items-center justify-center text-xs bg-chart-2"><svg
+                      <div className="size-7 rounded-full flex items-center justify-center text-xs bg-chart-2">
+                        <svg
                           xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                           stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                           className="lucide lucide-user size-4 opacity-80" aria-hidden="true">
                           <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                           <circle cx="12" cy="7" r="4"></circle>
-                        </svg></div>
+                        </svg>
+                      </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-2 min-w-0"><span className="font-medium truncate">Alex, Ali,
-                              Sarah</span><span className="text-xs text-muted-foreground">[6]</span></div><span
-                            className="text-xs text-muted-foreground">Mar 28</span>
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className={`truncate ${!emailThreads[2]?.[0]?.isRead ? 'text-foreground' : ''}`}>
+                              Alex, Ali, Sarah
+                            </span>
+                            <span className="text-xs text-muted-foreground">[6]</span>
+                          </div>
+                          <span className="text-xs text-muted-foreground">Mar 28</span>
                         </div>
-                        <div className="truncate text-sm opacity-90">Re: Design review feedback</div>
-                        <div className="flex items-center gap-2 mt-1"><span
-                            className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs bg-chart-3 text-secondary-foreground"><svg
+                        <div className={`truncate text-sm ${!emailThreads[2]?.[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
+                          Re: Design review feedback
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs bg-chart-3 text-secondary-foreground">
+                            <svg
                               xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                               stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                               className="lucide lucide-tag size-3 opacity-80" aria-hidden="true">
@@ -877,15 +886,28 @@ export default function Home() {
                                 d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z">
                               </path>
                               <circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle>
-                            </svg>Updates</span></div>
+                            </svg>
+                            Updates
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    <p className="mt-1 text-xs text-muted-foreground line-clamp-1">Catching up on the email client design
-                      with new interactions...</p>
+                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[2]?.[0]?.isRead ? 'font-medium' : ''}`}>
+                      Catching up on the email client design with new interactions...
+                    </p>
                   </button>
                 </div>
               </div>
-              <div className="w-full text-left rounded-xl p-3 border transition-colors hover:bg-accent/50">
+              
+              {/* Email thread 3 */}
+              <div 
+                className={`w-full text-left rounded-xl p-3 border transition-colors ${
+                  selectedThread === 3 
+                    ? 'bg-card border-sidebar-border' 
+                    : 'hover:bg-accent/50'
+                } ${!emailThreads[3]?.[0]?.isRead ? 'font-bold' : ''}`}
+                onClick={() => handleSelectThread(3)}
+              >
                 <div className="flex items-center gap-2">
                   {isSelectMode && (
                     <input
@@ -897,23 +919,31 @@ export default function Home() {
                   )}
                   <button className="flex-1 text-left">
                     <div className="flex items-center gap-2">
-                      <div className="size-7 rounded-full flex items-center justify-center text-xs bg-destructive"><svg
+                      <div className="size-7 rounded-full flex items-center justify-center text-xs bg-destructive">
+                        <svg
                           xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                           stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                           className="lucide lucide-user size-4 opacity-80" aria-hidden="true">
                           <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                           <circle cx="12" cy="7" r="4"></circle>
-                        </svg></div>
+                        </svg>
+                      </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-2 min-w-0"><span
-                              className="font-medium truncate">GitHub</span><span
-                              className="text-xs text-muted-foreground">[8]</span></div><span
-                            className="text-xs text-muted-foreground">Mar 28</span>
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className={`font-medium truncate ${!emailThreads[3]?.[0]?.isRead ? 'text-foreground' : ''}`}>
+                              GitHub
+                            </span>
+                            <span className="text-xs text-muted-foreground">[8]</span>
+                          </div>
+                          <span className="text-xs text-muted-foreground">Mar 28</span>
                         </div>
-                        <div className="truncate text-sm opacity-90">Security alert: Critical vulnerability</div>
-                        <div className="flex items-center gap-2 mt-1"><span
-                            className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs bg-chart-5 text-primary-foreground"><svg
+                        <div className={`truncate text-sm ${!emailThreads[3]?.[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
+                          Security alert: Critical vulnerability
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs bg-chart-5 text-primary-foreground">
+                            <svg
                               xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                               stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                               className="lucide lucide-tag size-3 opacity-80" aria-hidden="true">
@@ -921,15 +951,28 @@ export default function Home() {
                                 d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z">
                               </path>
                               <circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle>
-                            </svg>Alerts</span></div>
+                            </svg>
+                            Alerts
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    <p className="mt-1 text-xs text-muted-foreground line-clamp-1">A high severity vulnerability was
-                      detected in one of your dependencies.</p>
+                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[3]?.[0]?.isRead ? 'font-medium' : ''}`}>
+                      A high severity vulnerability was detected in one of your dependencies.
+                    </p>
                   </button>
                 </div>
               </div>
-              <div className="w-full text-left rounded-xl p-3 border transition-colors hover:bg-accent/50">
+              
+              {/* Email thread 4 */}
+              <div 
+                className={`w-full text-left rounded-xl p-3 border transition-colors ${
+                  selectedThread === 4 
+                    ? 'bg-card border-sidebar-border' 
+                    : 'hover:bg-accent/50'
+                } ${!emailThreads[4]?.[0]?.isRead ? 'font-bold' : ''}`}
+                onClick={() => handleSelectThread(4)}
+              >
                 <div className="flex items-center gap-2">
                   {isSelectMode && (
                     <input
@@ -941,21 +984,30 @@ export default function Home() {
                   )}
                   <button className="flex-1 text-left">
                     <div className="flex items-center gap-2">
-                      <div className="size-7 rounded-full flex items-center justify-center text-xs bg-chart-4"><svg
+                      <div className="size-7 rounded-full flex items-center justify-center text-xs bg-chart-4">
+                        <svg
                           xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                           stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                           className="lucide lucide-user size-4 opacity-80" aria-hidden="true">
                           <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                           <circle cx="12" cy="7" r="4"></circle>
-                        </svg></div>
+                        </svg>
+                      </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-2 min-w-0"><span className="font-medium truncate">Stripe</span>
-                          </div><span className="text-xs text-muted-foreground">Mar 29</span>
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className={`font-medium truncate ${!emailThreads[4]?.[0]?.isRead ? 'text-foreground' : ''}`}>
+                              Stripe
+                            </span>
+                          </div>
+                          <span className="text-xs text-muted-foreground">Mar 29</span>
                         </div>
-                        <div className="truncate text-sm opacity-90">Payment confirmation #1234</div>
-                        <div className="flex items-center gap-2 mt-1"><span
-                            className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs bg-chart-1 text-primary-foreground"><svg
+                        <div className={`truncate text-sm ${!emailThreads[4]?.[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
+                          Payment confirmation #1234
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs bg-chart-1 text-primary-foreground">
+                            <svg
                               xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                               stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                               className="lucide lucide-tag size-3 opacity-80" aria-hidden="true">
@@ -963,15 +1015,28 @@ export default function Home() {
                                 d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z">
                               </path>
                               <circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle>
-                            </svg>Work</span></div>
+                            </svg>
+                            Work
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    <p className="mt-1 text-xs text-muted-foreground line-clamp-1">Your recent payment has been successfully
-                      processed.</p>
+                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[4]?.[0]?.isRead ? 'font-medium' : ''}`}>
+                      Your recent payment has been successfully processed.
+                    </p>
                   </button>
                 </div>
               </div>
-              <div className="w-full text-left rounded-xl p-3 border transition-colors hover:bg-accent/50">
+              
+              {/* Email thread 5 */}
+              <div 
+                className={`w-full text-left rounded-xl p-3 border transition-colors ${
+                  selectedThread === 5 
+                    ? 'bg-card border-sidebar-border' 
+                    : 'hover:bg-accent/50'
+                } ${!emailThreads[5]?.[0]?.isRead ? 'font-bold' : ''}`}
+                onClick={() => handleSelectThread(5)}
+              >
                 <div className="flex items-center gap-2">
                   {isSelectMode && (
                     <input
@@ -983,21 +1048,30 @@ export default function Home() {
                   )}
                   <button className="flex-1 text-left">
                     <div className="flex items-center gap-2">
-                      <div className="size-7 rounded-full flex items-center justify-center text-xs bg-primary"><svg
+                      <div className="size-7 rounded-full flex items-center justify-center text-xs bg-primary">
+                        <svg
                           xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                           stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                           className="lucide lucide-user size-4 opacity-80" aria-hidden="true">
                           <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
                           <circle cx="12" cy="7" r="4"></circle>
-                        </svg></div>
+                        </svg>
+                      </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-2 min-w-0"><span className="font-medium truncate">Netflix</span>
-                          </div><span className="text-xs text-muted-foreground">Mar 29</span>
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className={`font-medium truncate ${!emailThreads[5]?.[0]?.isRead ? 'text-foreground' : ''}`}>
+                              Netflix
+                            </span>
+                          </div>
+                          <span className="text-xs text-muted-foreground">Mar 29</span>
                         </div>
-                        <div className="truncate text-sm opacity-90">New shows added to your list</div>
-                        <div className="flex items-center gap-2 mt-1"><span
-                            className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs bg-chart-2 text-primary-foreground"><svg
+                        <div className={`truncate text-sm ${!emailThreads[5]?.[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
+                          New shows added to your list
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs bg-chart-2 text-primary-foreground">
+                            <svg
                               xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                               stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                               className="lucide lucide-tag size-3 opacity-80" aria-hidden="true">
@@ -1005,11 +1079,15 @@ export default function Home() {
                                 d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z">
                               </path>
                               <circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle>
-                            </svg>Personal</span></div>
+                            </svg>
+                            Personal
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    <p className="mt-1 text-xs text-muted-foreground line-clamp-1">We added new shows we think you will
-                      love.</p>
+                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[5]?.[0]?.isRead ? 'font-medium' : ''}`}>
+                      We added new shows we think you will love.
+                    </p>
                   </button>
                 </div>
               </div>
@@ -1026,15 +1104,15 @@ export default function Home() {
           <div className="h-full w-full flex flex-col gap-3 p-4">
             {/* Email thread display */}
             <EmailThread 
-              threadId={1}
-              emails={emailThreads[1] || []}
-              isExpanded={expandedThreads.has(1)}
+              threadId={selectedThread}
+              emails={emailThreads[selectedThread] || []}
+              isExpanded={expandedThreads.has(selectedThread)}
               onToggleExpand={toggleThreadExpansion}
               onReply={handleReply}
               onReplyAll={handleReplyAll}
               onForward={handleForward}
               onThreadAction={handleThreadAction}
-              showCompose={showThreadCompose === 1}
+              showCompose={showThreadCompose === selectedThread}
               onCloseCompose={closeThreadCompose}
             />
           </div>
