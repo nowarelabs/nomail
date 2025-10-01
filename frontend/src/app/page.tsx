@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "../components/ui/dropdown-menu";
+import { EmailThread } from "../components/email-thread";
 
 export default function Home() {
   const [showNewEmailDialog, setShowNewEmailDialog] = useState(false);
@@ -19,6 +20,39 @@ export default function Home() {
   const [isSelectMode, setIsSelectMode] = useState(false);
   const [selectedEmails, setSelectedEmails] = useState<Set<number>>(new Set());
   const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
+  const [expandedThreads, setExpandedThreads] = useState<Set<number>>(new Set());
+  const [emailThreads, setEmailThreads] = useState<Record<number, any[]>>({
+    1: [
+      {
+        id: 1,
+        from: 'Ali from Baked',
+        to: 'You',
+        date: 'Mar 29',
+        subject: 'New design review',
+        content: 'Team discussed command center improvements and category system. General positive feedback, with suggestions for quick actions placement.',
+        isCollapsed: true
+      },
+      {
+        id: 2,
+        from: 'You',
+        to: 'Ali from Baked',
+        date: 'Mar 28',
+        subject: 'Re: New design review',
+        content: 'Thanks for the feedback. I\'ll work on implementing the suggestions.',
+        isCollapsed: true
+      },
+      {
+        id: 3,
+        from: 'Ali from Baked',
+        to: 'You',
+        date: 'Mar 27',
+        subject: 'Re: New design review',
+        content: 'Looking forward to seeing the updated designs.',
+        isCollapsed: true
+      }
+    ]
+  });
+  const [showThreadCompose, setShowThreadCompose] = useState<number | null>(null);
   const moreActionsButtonRef = useRef<HTMLButtonElement>(null);
   const moreActionsDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -110,6 +144,70 @@ export default function Home() {
 
   const toggleMoreActions = () => {
     setIsMoreActionsOpen(!isMoreActionsOpen);
+  };
+
+  const toggleThreadExpansion = (threadId: number) => {
+    const newExpanded = new Set(expandedThreads);
+    if (newExpanded.has(threadId)) {
+      newExpanded.delete(threadId);
+    } else {
+      newExpanded.add(threadId);
+    }
+    setExpandedThreads(newExpanded);
+  };
+
+  const openThreadCompose = (threadId: number) => {
+    setShowThreadCompose(threadId);
+  };
+
+  const closeThreadCompose = () => {
+    setShowThreadCompose(null);
+  };
+
+  const handleReply = (threadId: number) => {
+    openThreadCompose(threadId);
+    // Additional reply logic can be added here
+  };
+
+  const handleReplyAll = (threadId: number) => {
+    openThreadCompose(threadId);
+    // Additional reply all logic can be added here
+  };
+
+  const handleForward = (threadId: number) => {
+    openThreadCompose(threadId);
+    // Additional forward logic can be added here
+  };
+
+  const handleMarkAsSpam = (threadId: number) => {
+    // Logic to mark email thread as spam
+    console.log(`Marking thread ${threadId} as spam`);
+  };
+
+  const handleFavorite = (threadId: number) => {
+    // Logic to favorite email thread
+    console.log(`Favoriting thread ${threadId}`);
+  };
+
+  const handleMoveToBin = (threadId: number) => {
+    // Logic to move email thread to bin
+    console.log(`Moving thread ${threadId} to bin`);
+  };
+
+  const handleThreadAction = (threadId: number, action: string) => {
+    switch (action) {
+      case 'spam':
+        handleMarkAsSpam(threadId);
+        break;
+      case 'favorite':
+        handleFavorite(threadId);
+        break;
+      case 'bin':
+        handleMoveToBin(threadId);
+        break;
+      default:
+        console.log(`Unknown action: ${action}`);
+    }
   };
 
   return (
@@ -926,241 +1024,19 @@ export default function Home() {
         </section>
         <main className="col-span-1 p-3 overflow-y-auto">
           <div className="h-full w-full flex flex-col gap-3 p-4">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <h2 className="text-xl font-semibold">New design review</h2>
-                <div className="text-sm text-muted-foreground">Mar 29</div>
-                <div className="mt-2 flex flex-wrap items-center gap-2"><span
-                    className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs bg-chart-1 text-primary-foreground"><svg
-                      xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                      className="lucide lucide-tag size-3 opacity-80" aria-hidden="true">
-                      <path
-                        d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z">
-                      </path>
-                      <circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle>
-                    </svg>Work</span></div>
-              </div>
-              <div className="flex items-center gap-2">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                        className="lucide lucide-reply size-4" aria-hidden="true">
-                        <path d="M20 18v-2a4 4 0 0 0-4-4H4"></path>
-                        <path d="m9 17-5-5 5-5"></path>
-                      </svg>
-                      Reply
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuItem>
-                      <span>Reply</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <span>Reply to sender only</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <span>Reply with template</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                        className="lucide lucide-reply-all size-4" aria-hidden="true">
-                        <path d="m12 17-5-5 5-5"></path>
-                        <path d="M22 18v-2a4 4 0 0 0-4-4H7"></path>
-                        <path d="m7 17-5-5 5-5"></path>
-                      </svg>
-                      Reply All
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuItem>
-                      <span>Reply All</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <span>Reply All except...</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <span>Reply All with template</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-forward size-4">
-                        <polyline points="15 17 20 12 15 7"></polyline>
-                        <path d="M4 18v-2a4 4 0 0 1 4-4h12"></path>
-                      </svg>
-                      Forward
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuItem>
-                      <span>Forward</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <span>Forward as attachment</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <span>Forward with template</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      <span>Redirect</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </div>
-            <div className="rounded-xl border p-3 bg-card/50">
-              <div className="flex items-center gap-2">
-                <div className="size-8 rounded-full flex items-center justify-center bg-chart-1"><svg
-                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                    className="lucide lucide-user size-4" aria-hidden="true">
-                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </svg></div>
-                <div>
-                  <div className="font-medium">Ali from Baked</div>
-                  <div className="text-xs text-muted-foreground">To: You</div>
-                </div>
-              </div>
-              <p className="mt-3 text-sm leading-6">Team discussed command center improvements and category system. General
-                positive feedback, with suggestions for quick actions placement.</p>
-            </div>
-            <div className="rounded-xl border p-3">
-              <div className="text-sm font-medium mb-2">Attachments [4]</div>
-              <div className="flex flex-wrap gap-2"><span
-                  className="inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs border bg-accent text-accent-foreground"><svg
-                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                    className="lucide lucide-paperclip size-3.5 opacity-80" aria-hidden="true">
-                    <path
-                      d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551">
-                    </path>
-                  </svg><span className="font-mono text-xs">.fig</span><span className="opacity-90">cmd.center.fig</span><span
-                    className="opacity-60">21 MB</span></span><span
-                  className="inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs border bg-secondary text-secondary-foreground"><svg
-                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                    className="lucide lucide-paperclip size-3.5 opacity-80" aria-hidden="true">
-                    <path
-                      d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551">
-                    </path>
-                  </svg><span className="font-mono text-xs">.docx</span><span className="opacity-90">comments.docx</span><span
-                    className="opacity-60">3.7 MB</span></span><span
-                  className="inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs border bg-primary text-primary-foreground"><svg
-                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                    className="lucide lucide-paperclip size-3.5 opacity-80" aria-hidden="true">
-                    <path
-                      d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551">
-                    </path>
-                  </svg><span className="font-mono text-xs">.img</span><span className="opacity-90">img.png</span><span
-                    className="opacity-60">2.3 MB</span></span><span
-                  className="inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs border bg-destructive text-destructive-foreground"><svg
-                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                    className="lucide lucide-paperclip size-3.5 opacity-80" aria-hidden="true">
-                    <path
-                      d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551">
-                    </path>
-                  </svg><span className="font-mono text-xs">.pdf</span><span className="opacity-90">requirements.pdf</span><span
-                    className="opacity-60">1.5 MB</span></span></div>
-            </div>
-            <div className="mt-auto flex items-center gap-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                      className="lucide lucide-reply size-4" aria-hidden="true">
-                      <path d="M20 18v-2a4 4 0 0 0-4-4H4"></path>
-                      <path d="m9 17-5-5 5-5"></path>
-                    </svg>
-                    Reply
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem>
-                    <span>Reply</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>Reply to sender only</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>Reply with template</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                      className="lucide lucide-reply-all size-4" aria-hidden="true">
-                      <path d="m12 17-5-5 5-5"></path>
-                      <path d="M22 18v-2a4 4 0 0 0-4-4H7"></path>
-                      <path d="m7 17-5-5 5-5"></path>
-                    </svg>
-                    Reply All
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem>
-                    <span>Reply All</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>Reply All except...</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>Reply All with template</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-forward size-4">
-                      <polyline points="15 17 20 12 15 7"></polyline>
-                      <path d="M4 18v-2a4 4 0 0 1 4-4h12"></path>
-                    </svg>
-                    Forward
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem>
-                    <span>Forward</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>Forward as attachment</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <span>Forward with template</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <span>Redirect</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+            {/* Email thread display */}
+            <EmailThread 
+              threadId={1}
+              emails={emailThreads[1] || []}
+              isExpanded={expandedThreads.has(1)}
+              onToggleExpand={toggleThreadExpansion}
+              onReply={handleReply}
+              onReplyAll={handleReplyAll}
+              onForward={handleForward}
+              onThreadAction={handleThreadAction}
+              showCompose={showThreadCompose === 1}
+              onCloseCompose={closeThreadCompose}
+            />
           </div>
         </main>
       </div>
