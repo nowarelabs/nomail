@@ -1260,7 +1260,7 @@ export default function Home() {
                             >
                               Ali from Baked
                             </span>
-                            <span className="text-xs text-muted-foreground">[9]</span>
+                            <span className="text-xs text-muted-foreground">[3]</span>
                           </div>
                           <span className="text-xs text-muted-foreground">Mar 29</span>
                         </div>
