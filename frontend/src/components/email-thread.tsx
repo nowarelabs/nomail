@@ -44,14 +44,14 @@ const EMPTY_EMAIL: Email = {
 };
 
 interface EmailThreadProps {
-	threadId: number;
+	threadId: string;
 	emails: Email[];
 	isExpanded: boolean;
-	onToggleExpand: (threadId: number) => void;
-	onReply: (threadId: number) => void;
-	onReplyAll: (threadId: number) => void;
-	onForward: (threadId: number) => void;
-	onThreadAction: (threadId: number, action: string) => void;
+	onToggleExpand: (threadId: string) => void;
+	onReply: (threadId: string) => void;
+	onReplyAll: (threadId: string) => void;
+	onForward: (threadId: string) => void;
+	onThreadAction: (threadId: string, action: string) => void;
 	showCompose: boolean;
 	onCloseCompose: () => void;
 }
@@ -86,15 +86,15 @@ export function EmailThread({
 	}, [showCompose]);
 
 	// Handler functions that combine the original action with scrolling
-	const handleReply = (threadId: number) => {
+	const handleReply = (threadId: string) => {
 		onReply(threadId);
 	};
 
-	const handleReplyAll = (threadId: number) => {
+	const handleReplyAll = (threadId: string) => {
 		onReplyAll(threadId);
 	};
 
-	const handleForward = (threadId: number) => {
+	const handleForward = (threadId: string) => {
 		onForward(threadId);
 	};
 

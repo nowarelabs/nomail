@@ -12,343 +12,459 @@ export default function Home() {
   const [isManagementOpen, setIsManagementOpen] = useState(true);
   const [activeView, setActiveView] = useState('primary');
   const [isSelectMode, setIsSelectMode] = useState(false);
-  const [selectedEmails, setSelectedEmails] = useState<Set<number>>(new Set());
+  const [selectedEmails, setSelectedEmails] = useState<Set<string>>(new Set());
   const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
-  const [expandedThreads, setExpandedThreads] = useState<Set<number>>(new Set());
-  const [emailThreads, setEmailThreads] = useState<Record<number, Email[]>>({
-    1: [
-      {
-        id: 1,
-        from: 'ali@baked.com',
-        to: 'you@example.com',
-        cc: [],
-        bcc: [],
-        replyTo: '',
-        date: 'Mar 29',
-        subject: 'New design review',
-        content: 'Team discussed command center improvements and category system. General positive feedback, with suggestions for quick actions placement.',
-        htmlContent: '',
-        plainTextContent: 'Team discussed command center improvements and category system. General positive feedback, with suggestions for quick actions placement.',
-        isCollapsed: true,
-        isRead: false,
-        category: 'work',
-        isDraft: false,
-        isFavorite: false,
-        isSpam: false,
-        isTrash: false,
-        isArchive: false,
-        labels: [],
-        hasAttachments: true,
-        attachments: [
-          {
-            id: '1',
-            name: 'design-mockup.png',
-            extension: '.png',
-            size: 2411724,
-            sizeFormatted: '2.3 MB',
-            type: 'image/png',
-            mimeType: 'image/png',
-            url: '',
-            isScanned: true,
-            scanResult: 'clean',
-            downloadCount: 0,
-            uploadedDate: 'Mar 29',
-            thumbnailUrl: '',
-            isInline: false
-          },
-          {
-            id: '2',
-            name: 'requirements.pdf',
-            extension: '.pdf',
-            size: 1048576,
-            sizeFormatted: '1.0 MB',
-            type: 'application/pdf',
-            mimeType: 'application/pdf',
-            url: '',
-            isScanned: true,
-            scanResult: 'clean',
-            downloadCount: 2,
-            uploadedDate: 'Mar 29',
-            thumbnailUrl: '',
-            isInline: false
-          },
-          {
-            id: '3',
-            name: 'comments.docx',
-            extension: '.docs',
-            size: 1048576,
-            sizeFormatted: '2.0 MB',
-            type: 'application/docx',
-            mimeType: 'application/docx',
-            url: '',
-            isScanned: true,
-            scanResult: 'clean',
-            downloadCount: 2,
-            uploadedDate: 'Mar 29',
-            thumbnailUrl: '',
-            isInline: false
-          }
-        ],
-        attachmentCount: 3,
-        priority: 'normal',
-        isStarred: false,
-        threadId: '1',
-        inReplyTo: '',
-        references: [],
-        snippet: 'Team discussed command center improvements...',
-        size: 0,
-        flags: [],
-        senderName: 'Ali from Baked',
-        recipientNames: ['You'],
-        isImportant: false,
-        hasInlineImages: false,
-        unsubscribeLink: ''
-      },
-      {
-        id: 2,
-        from: 'you@example.com',
-        to: 'ali@baked.com',
-        cc: [],
-        bcc: [],
-        replyTo: '',
-        date: 'Mar 28',
-        subject: 'Re: New design review',
-        content: 'Thanks for the feedback. I\'ll work on implementing the suggestions.',
-        htmlContent: '',
-        plainTextContent: 'Thanks for the feedback. I\'ll work on implementing the suggestions.',
-        isCollapsed: true,
-        isRead: true,
-        category: 'work',
-        isDraft: false,
-        isFavorite: false,
-        isSpam: false,
-        isTrash: false,
-        isArchive: false,
-        labels: [],
-        hasAttachments: false,
-        attachments: [],
-        attachmentCount: 0,
-        priority: 'normal',
-        isStarred: false,
-        threadId: '1',
-        inReplyTo: '1',
-        references: ['1'],
-        snippet: 'Thanks for the feedback...',
-        size: 0,
-        flags: ['replied'],
-        senderName: 'You',
-        recipientNames: ['Ali from Baked'],
-        isImportant: false,
-        hasInlineImages: false,
-        unsubscribeLink: ''
-      },
-      {
-        id: 3,
-        from: 'ali@baked.com',
-        to: 'you@example.com',
-        cc: [],
-        bcc: [],
-        replyTo: '',
-        date: 'Mar 27',
-        subject: 'Re: New design review',
-        content: 'Looking forward to seeing the updated designs.',
-        htmlContent: '',
-        plainTextContent: 'Looking forward to seeing the updated designs.',
-        isCollapsed: true,
-        isRead: false,
-        category: 'work',
-        isDraft: false,
-        isFavorite: false,
-        isSpam: false,
-        isTrash: false,
-        isArchive: false,
-        labels: [],
-        hasAttachments: false,
-        attachments: [],
-        attachmentCount: 0,
-        priority: 'normal',
-        isStarred: false,
-        threadId: '1',
-        inReplyTo: '2',
-        references: ['1', '2'],
-        snippet: 'Looking forward to seeing...',
-        size: 0,
-        flags: [],
-        senderName: 'Ali from Baked',
-        recipientNames: ['You'],
-        isImportant: false,
-        hasInlineImages: false,
-        unsubscribeLink: ''
-      }
-    ],
-    2: [
-      {
-        id: 4,
-        from: 'alex@example.com',
-        to: 'you@example.com',
-        cc: ['ali@baked.com', 'sarah@example.com'],
-        bcc: [],
-        replyTo: '',
-        date: 'Mar 28',
-        subject: 'Re: Design review feedback',
-        content: 'Catching up on the email client design with new interactions...',
-        htmlContent: '',
-        plainTextContent: 'Catching up on the email client design with new interactions...',
-        isCollapsed: true,
-        isRead: true,
-        category: 'work',
-        isDraft: false,
-        isFavorite: false,
-        isSpam: false,
-        isTrash: false,
-        isArchive: false,
-        labels: [],
-        hasAttachments: false,
-        attachments: [],
-        attachmentCount: 0,
-        priority: 'normal',
-        isStarred: false,
-        threadId: '2',
-        inReplyTo: '',
-        references: [],
-        snippet: 'Catching up on the email client design...',
-        size: 0,
-        flags: [],
-        senderName: 'Alex',
-        recipientNames: ['You', 'Ali', 'Sarah'],
-        isImportant: false,
-        hasInlineImages: false,
-        unsubscribeLink: ''
-      }
-    ],
-    3: [
-      {
-        id: 5,
-        from: 'noreply@github.com',
-        to: 'you@example.com',
-        cc: [],
-        bcc: [],
-        replyTo: '',
-        date: 'Mar 28',
-        subject: 'Security alert: Critical vulnerability',
-        content: 'A high severity vulnerability was detected in one of your dependencies.',
-        htmlContent: '',
-        plainTextContent: 'A high severity vulnerability was detected in one of your dependencies.',
-        isCollapsed: true,
-        isRead: false,
-        category: 'notifications',
-        isDraft: false,
-        isFavorite: false,
-        isSpam: false,
-        isTrash: false,
-        isArchive: false,
-        labels: ['security'],
-        hasAttachments: false,
-        attachments: [],
-        attachmentCount: 0,
-        priority: 'high',
-        isStarred: false,
-        threadId: '3',
-        inReplyTo: '',
-        references: [],
-        snippet: 'A high severity vulnerability was detected...',
-        size: 0,
-        flags: [],
-        senderName: 'GitHub',
-        recipientNames: ['You'],
-        isImportant: true,
-        hasInlineImages: false,
-        unsubscribeLink: ''
-      }
-    ],
-    4: [
-      {
-        id: 6,
-        from: 'receipts@stripe.com',
-        to: 'you@example.com',
-        cc: [],
-        bcc: [],
-        replyTo: '',
-        date: 'Mar 29',
-        subject: 'Payment confirmation #1234',
-        content: 'Your recent payment has been successfully processed.',
-        htmlContent: '',
-        plainTextContent: 'Your recent payment has been successfully processed.',
-        isCollapsed: true,
-        isRead: true,
-        category: 'receipts',
-        isDraft: false,
-        isFavorite: false,
-        isSpam: false,
-        isTrash: false,
-        isArchive: false,
-        labels: ['payment'],
-        hasAttachments: false,
-        attachments: [],
-        attachmentCount: 0,
-        priority: 'normal',
-        isStarred: false,
-        threadId: '4',
-        inReplyTo: '',
-        references: [],
-        snippet: 'Your recent payment has been successfully processed.',
-        size: 0,
-        flags: [],
-        senderName: 'Stripe',
-        recipientNames: ['You'],
-        isImportant: false,
-        hasInlineImages: false,
-        unsubscribeLink: ''
-      }
-    ],
-    5: [
-      {
-        id: 7,
-        from: 'info@netflix.com',
-        to: 'you@example.com',
-        cc: [],
-        bcc: [],
-        replyTo: '',
-        date: 'Mar 29',
-        subject: 'New shows added to your list',
-        content: 'We added new shows we think you will love.',
-        htmlContent: '',
-        plainTextContent: 'We added new shows we think you will love.',
-        isCollapsed: true,
-        isRead: false,
-        category: 'promotions',
-        isDraft: false,
-        isFavorite: false,
-        isSpam: false,
-        isTrash: false,
-        isArchive: false,
-        labels: [],
-        hasAttachments: false,
-        attachments: [],
-        attachmentCount: 0,
-        priority: 'normal',
-        isStarred: false,
-        threadId: '5',
-        inReplyTo: '',
-        references: [],
-        snippet: 'We added new shows we think you will love.',
-        size: 0,
-        flags: [],
-        senderName: 'Netflix',
-        recipientNames: ['You'],
-        isImportant: false,
-        hasInlineImages: false,
-        unsubscribeLink: 'https://netflix.com/unsubscribe'
-      }
-    ]
-  });
-  const [showThreadCompose, setShowThreadCompose] = useState<number | null>(null);
-  const [selectedThread, setSelectedThread] = useState<number | null>(null);
+  const [expandedThreads, setExpandedThreads] = useState<Set<string>>(new Set());
+  const [emailThreads, setEmailThreads] = useState<EmailThread[]>([
+    {
+      id: '1',
+      subject: 'New design review',
+      emails: [
+        {
+          id: 1,
+          from: 'ali@baked.com',
+          to: 'you@example.com',
+          cc: [],
+          bcc: [],
+          replyTo: '',
+          date: 'Mar 29',
+          subject: 'New design review',
+          content: 'Team discussed command center improvements and category system. General positive feedback, with suggestions for quick actions placement.',
+          htmlContent: '',
+          plainTextContent: 'Team discussed command center improvements and category system. General positive feedback, with suggestions for quick actions placement.',
+          isCollapsed: true,
+          isRead: false,
+          category: 'work',
+          isDraft: false,
+          isFavorite: false,
+          isSpam: false,
+          isTrash: false,
+          isArchive: false,
+          labels: [],
+          hasAttachments: true,
+          attachments: [
+            {
+              id: '1',
+              name: 'design-mockup.png',
+              extension: '.png',
+              size: 2411724,
+              sizeFormatted: '2.3 MB',
+              type: 'image/png',
+              mimeType: 'image/png',
+              url: '',
+              isScanned: true,
+              scanResult: 'clean',
+              downloadCount: 0,
+              uploadedDate: 'Mar 29',
+              thumbnailUrl: '',
+              isInline: false
+            },
+            {
+              id: '2',
+              name: 'requirements.pdf',
+              extension: '.pdf',
+              size: 1048576,
+              sizeFormatted: '1.0 MB',
+              type: 'application/pdf',
+              mimeType: 'application/pdf',
+              url: '',
+              isScanned: true,
+              scanResult: 'clean',
+              downloadCount: 2,
+              uploadedDate: 'Mar 29',
+              thumbnailUrl: '',
+              isInline: false
+            },
+            {
+              id: '3',
+              name: 'comments.docx',
+              extension: '.docx',
+              size: 2097152,
+              sizeFormatted: '2.0 MB',
+              type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+              mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+              url: '',
+              isScanned: true,
+              scanResult: 'clean',
+              downloadCount: 2,
+              uploadedDate: 'Mar 29',
+              thumbnailUrl: '',
+              isInline: false
+            }
+          ],
+          attachmentCount: 3,
+          priority: 'normal',
+          isStarred: false,
+          threadId: '1',
+          inReplyTo: '',
+          references: [],
+          snippet: 'Team discussed command center improvements...',
+          size: 0,
+          flags: [],
+          senderName: 'Ali from Baked',
+          recipientNames: ['You'],
+          isImportant: false,
+          hasInlineImages: false,
+          unsubscribeLink: ''
+        },
+        {
+          id: 2,
+          from: 'you@example.com',
+          to: 'ali@baked.com',
+          cc: [],
+          bcc: [],
+          replyTo: '',
+          date: 'Mar 28',
+          subject: 'Re: New design review',
+          content: 'Thanks for the feedback. I\'ll work on implementing the suggestions.',
+          htmlContent: '',
+          plainTextContent: 'Thanks for the feedback. I\'ll work on implementing the suggestions.',
+          isCollapsed: true,
+          isRead: true,
+          category: 'work',
+          isDraft: false,
+          isFavorite: false,
+          isSpam: false,
+          isTrash: false,
+          isArchive: false,
+          labels: [],
+          hasAttachments: false,
+          attachments: [],
+          attachmentCount: 0,
+          priority: 'normal',
+          isStarred: false,
+          threadId: '1',
+          inReplyTo: '1',
+          references: ['1'],
+          snippet: 'Thanks for the feedback...',
+          size: 0,
+          flags: ['replied'],
+          senderName: 'You',
+          recipientNames: ['Ali from Baked'],
+          isImportant: false,
+          hasInlineImages: false,
+          unsubscribeLink: ''
+        },
+        {
+          id: 3,
+          from: 'ali@baked.com',
+          to: 'you@example.com',
+          cc: [],
+          bcc: [],
+          replyTo: '',
+          date: 'Mar 27',
+          subject: 'Re: New design review',
+          content: 'Looking forward to seeing the updated designs.',
+          htmlContent: '',
+          plainTextContent: 'Looking forward to seeing the updated designs.',
+          isCollapsed: true,
+          isRead: false,
+          category: 'work',
+          isDraft: false,
+          isFavorite: false,
+          isSpam: false,
+          isTrash: false,
+          isArchive: false,
+          labels: [],
+          hasAttachments: false,
+          attachments: [],
+          attachmentCount: 0,
+          priority: 'normal',
+          isStarred: false,
+          threadId: '1',
+          inReplyTo: '2',
+          references: ['1', '2'],
+          snippet: 'Looking forward to seeing...',
+          size: 0,
+          flags: [],
+          senderName: 'Ali from Baked',
+          recipientNames: ['You'],
+          isImportant: false,
+          hasInlineImages: false,
+          unsubscribeLink: ''
+        }
+      ],
+      participants: ['ali@baked.com', 'you@example.com'],
+      participantNames: ['Ali from Baked', 'You'],
+      lastEmailDate: 'Mar 29',
+      firstEmailDate: 'Mar 27',
+      messageCount: 3,
+      unreadCount: 2,
+      hasAttachments: true,
+      totalAttachmentCount: 4,
+      labels: [],
+      isStarred: false,
+      isFavorite: false,
+      isImportant: false,
+      category: 'work',
+      snippet: 'Team discussed command center improvements...',
+      isCollapsed: true,
+      isDraft: false,
+      isSpam: false,
+      isTrash: false,
+      isArchive: false
+    },
+    {
+      id: '2',
+      subject: 'Re: Design review feedback',
+      emails: [
+        {
+          id: 4,
+          from: 'alex@example.com',
+          to: 'you@example.com',
+          cc: ['ali@baked.com', 'sarah@example.com'],
+          bcc: [],
+          replyTo: '',
+          date: 'Mar 28',
+          subject: 'Re: Design review feedback',
+          content: 'Catching up on the email client design with new interactions...',
+          htmlContent: '',
+          plainTextContent: 'Catching up on the email client design with new interactions...',
+          isCollapsed: true,
+          isRead: true,
+          category: 'work',
+          isDraft: false,
+          isFavorite: false,
+          isSpam: false,
+          isTrash: false,
+          isArchive: false,
+          labels: [],
+          hasAttachments: false,
+          attachments: [],
+          attachmentCount: 0,
+          priority: 'normal',
+          isStarred: false,
+          threadId: '2',
+          inReplyTo: '',
+          references: [],
+          snippet: 'Catching up on the email client design...',
+          size: 0,
+          flags: [],
+          senderName: 'Alex',
+          recipientNames: ['You', 'Ali', 'Sarah'],
+          isImportant: false,
+          hasInlineImages: false,
+          unsubscribeLink: ''
+        }
+      ],
+      participants: ['alex@example.com', 'you@example.com', 'ali@baked.com', 'sarah@example.com'],
+      participantNames: ['Alex', 'You', 'Ali', 'Sarah'],
+      lastEmailDate: 'Mar 28',
+      firstEmailDate: 'Mar 28',
+      messageCount: 1,
+      unreadCount: 0,
+      hasAttachments: false,
+      totalAttachmentCount: 0,
+      labels: [],
+      isStarred: false,
+      isFavorite: false,
+      isImportant: false,
+      category: 'work',
+      snippet: 'Catching up on the email client design...',
+      isCollapsed: true,
+      isDraft: false,
+      isSpam: false,
+      isTrash: false,
+      isArchive: false
+    },
+    {
+      id: '3',
+      subject: 'Security alert: Critical vulnerability',
+      emails: [
+        {
+          id: 5,
+          from: 'noreply@github.com',
+          to: 'you@example.com',
+          cc: [],
+          bcc: [],
+          replyTo: '',
+          date: 'Mar 28',
+          subject: 'Security alert: Critical vulnerability',
+          content: 'A high severity vulnerability was detected in one of your dependencies.',
+          htmlContent: '',
+          plainTextContent: 'A high severity vulnerability was detected in one of your dependencies.',
+          isCollapsed: true,
+          isRead: false,
+          category: 'notifications',
+          isDraft: false,
+          isFavorite: false,
+          isSpam: false,
+          isTrash: false,
+          isArchive: false,
+          labels: ['security'],
+          hasAttachments: false,
+          attachments: [],
+          attachmentCount: 0,
+          priority: 'high',
+          isStarred: false,
+          threadId: '3',
+          inReplyTo: '',
+          references: [],
+          snippet: 'A high severity vulnerability was detected...',
+          size: 0,
+          flags: [],
+          senderName: 'GitHub',
+          recipientNames: ['You'],
+          isImportant: true,
+          hasInlineImages: false,
+          unsubscribeLink: ''
+        }
+      ],
+      participants: ['noreply@github.com', 'you@example.com'],
+      participantNames: ['GitHub', 'You'],
+      lastEmailDate: 'Mar 28',
+      firstEmailDate: 'Mar 28',
+      messageCount: 1,
+      unreadCount: 1,
+      hasAttachments: false,
+      totalAttachmentCount: 0,
+      labels: ['security'],
+      isStarred: false,
+      isFavorite: false,
+      isImportant: true,
+      category: 'notifications',
+      snippet: 'A high severity vulnerability was detected...',
+      isCollapsed: true,
+      isDraft: false,
+      isSpam: false,
+      isTrash: false,
+      isArchive: false
+    },
+    {
+      id: '4',
+      subject: 'Payment confirmation #1234',
+      emails: [
+        {
+          id: 6,
+          from: 'receipts@stripe.com',
+          to: 'you@example.com',
+          cc: [],
+          bcc: [],
+          replyTo: '',
+          date: 'Mar 29',
+          subject: 'Payment confirmation #1234',
+          content: 'Your recent payment has been successfully processed.',
+          htmlContent: '',
+          plainTextContent: 'Your recent payment has been successfully processed.',
+          isCollapsed: true,
+          isRead: true,
+          category: 'receipts',
+          isDraft: false,
+          isFavorite: false,
+          isSpam: false,
+          isTrash: false,
+          isArchive: false,
+          labels: ['payment'],
+          hasAttachments: false,
+          attachments: [],
+          attachmentCount: 0,
+          priority: 'normal',
+          isStarred: false,
+          threadId: '4',
+          inReplyTo: '',
+          references: [],
+          snippet: 'Your recent payment has been successfully processed.',
+          size: 0,
+          flags: [],
+          senderName: 'Stripe',
+          recipientNames: ['You'],
+          isImportant: false,
+          hasInlineImages: false,
+          unsubscribeLink: ''
+        }
+      ],
+      participants: ['receipts@stripe.com', 'you@example.com'],
+      participantNames: ['Stripe', 'You'],
+      lastEmailDate: 'Mar 29',
+      firstEmailDate: 'Mar 29',
+      messageCount: 1,
+      unreadCount: 0,
+      hasAttachments: false,
+      totalAttachmentCount: 0,
+      labels: ['payment'],
+      isStarred: false,
+      isFavorite: false,
+      isImportant: false,
+      category: 'receipts',
+      snippet: 'Your recent payment has been successfully processed.',
+      isCollapsed: true,
+      isDraft: false,
+      isSpam: false,
+      isTrash: false,
+      isArchive: false
+    },
+    {
+      id: '5',
+      subject: 'New shows added to your list',
+      emails: [
+        {
+          id: 7,
+          from: 'info@netflix.com',
+          to: 'you@example.com',
+          cc: [],
+          bcc: [],
+          replyTo: '',
+          date: 'Mar 29',
+          subject: 'New shows added to your list',
+          content: 'We added new shows we think you will love.',
+          htmlContent: '',
+          plainTextContent: 'We added new shows we think you will love.',
+          isCollapsed: true,
+          isRead: false,
+          category: 'promotions',
+          isDraft: false,
+          isFavorite: false,
+          isSpam: false,
+          isTrash: false,
+          isArchive: false,
+          labels: [],
+          hasAttachments: false,
+          attachments: [],
+          attachmentCount: 0,
+          priority: 'normal',
+          isStarred: false,
+          threadId: '5',
+          inReplyTo: '',
+          references: [],
+          snippet: 'We added new shows we think you will love.',
+          size: 0,
+          flags: [],
+          senderName: 'Netflix',
+          recipientNames: ['You'],
+          isImportant: false,
+          hasInlineImages: false,
+          unsubscribeLink: 'https://netflix.com/unsubscribe'
+        }
+      ],
+      participants: ['info@netflix.com', 'you@example.com'],
+      participantNames: ['Netflix', 'You'],
+      lastEmailDate: 'Mar 29',
+      firstEmailDate: 'Mar 29',
+      messageCount: 1,
+      unreadCount: 1,
+      hasAttachments: false,
+      totalAttachmentCount: 0,
+      labels: [],
+      isStarred: false,
+      isFavorite: false,
+      isImportant: false,
+      category: 'promotions',
+      snippet: 'We added new shows we think you will love.',
+      isCollapsed: true,
+      isDraft: false,
+      isSpam: false,
+      isTrash: false,
+      isArchive: false
+    }
+  ]);
+  
+  const [showThreadCompose, setShowThreadCompose] = useState<string | null>(null);
+  const [selectedThread, setSelectedThread] = useState<string | null>(null);
   const moreActionsButtonRef = useRef<HTMLButtonElement>(null);
   const moreActionsDropdownRef = useRef<HTMLDivElement>(null);
 
   // Define a constant for the default/empty thread ID
-  const DEFAULT_THREAD_ID = 0;
+  const DEFAULT_THREAD_ID = '0';
 
   // Check system preference and saved theme on initial load
   useEffect(() => {
@@ -390,24 +506,21 @@ export default function Home() {
 
   const toggleSelectMode = () => {
     if (isSelectMode) {
-      // Exiting select mode - clear selections
       setSelectedEmails(new Set());
     }
     setIsSelectMode(!isSelectMode);
-    setIsMoreActionsOpen(false); // Close more actions when toggling select mode
+    setIsMoreActionsOpen(false);
   };
 
   const toggleSelectAll = () => {
-    if (selectedEmails.size === 5) {
-      // All emails are selected, so deselect all
+    if (selectedEmails.size === emailThreads.length) {
       setSelectedEmails(new Set());
     } else {
-      // Select all emails (we have 5 emails in the list)
-      setSelectedEmails(new Set([1, 2, 3, 4, 5]));
+      setSelectedEmails(new Set(emailThreads.map(t => t.id)));
     }
   };
 
-  const toggleEmailSelection = (id: number) => {
+  const toggleEmailSelection = (id: string) => {
     const newSelected = new Set(selectedEmails);
     if (newSelected.has(id)) {
       newSelected.delete(id);
@@ -421,7 +534,7 @@ export default function Home() {
     setIsMoreActionsOpen(!isMoreActionsOpen);
   };
 
-  const toggleThreadExpansion = (threadId: number) => {
+  const toggleThreadExpansion = (threadId: string) => {
     const newExpanded = new Set(expandedThreads);
     if (newExpanded.has(threadId)) {
       newExpanded.delete(threadId);
@@ -431,7 +544,7 @@ export default function Home() {
     setExpandedThreads(newExpanded);
   };
 
-  const openThreadCompose = (threadId: number) => {
+  const openThreadCompose = (threadId: string) => {
     setShowThreadCompose(threadId);
   };
 
@@ -439,54 +552,49 @@ export default function Home() {
     setShowThreadCompose(null);
   };
 
-  // Add function to handle email thread selection
-  const handleSelectThread = (threadId: number) => {
+  const handleSelectThread = (threadId: string) => {
     setSelectedThread(threadId);
     
-    // Mark the thread as read when selected
-    setEmailThreads(prev => {
-      const updatedThreads = { ...prev };
-      if (updatedThreads[threadId]) {
-        updatedThreads[threadId] = updatedThreads[threadId].map((email: any) => ({
-          ...email,
-          isRead: true
-        }));
+    setEmailThreads(prev => prev.map(thread => {
+      if (thread.id === threadId) {
+        return {
+          ...thread,
+          emails: thread.emails.map(email => ({
+            ...email,
+            isRead: true
+          })),
+          unreadCount: 0
+        };
       }
-      return updatedThreads;
-    });
+      return thread;
+    }));
   };
 
-  const handleReply = (threadId: number) => {
+  const handleReply = (threadId: string) => {
     openThreadCompose(threadId);
-    // Additional reply logic can be added here
   };
 
-  const handleReplyAll = (threadId: number) => {
+  const handleReplyAll = (threadId: string) => {
     openThreadCompose(threadId);
-    // Additional reply all logic can be added here
   };
 
-  const handleForward = (threadId: number) => {
+  const handleForward = (threadId: string) => {
     openThreadCompose(threadId);
-    // Additional forward logic can be added here
   };
 
-  const handleMarkAsSpam = (threadId: number) => {
-    // Logic to mark email thread as spam
+  const handleMarkAsSpam = (threadId: string) => {
     console.log(`Marking thread ${threadId} as spam`);
   };
 
-  const handleFavorite = (threadId: number) => {
-    // Logic to favorite email thread
+  const handleFavorite = (threadId: string) => {
     console.log(`Favoriting thread ${threadId}`);
   };
 
-  const handleMoveToBin = (threadId: number) => {
-    // Logic to move email thread to bin
+  const handleMoveToBin = (threadId: string) => {
     console.log(`Moving thread ${threadId} to bin`);
   };
 
-  const handleThreadAction = (threadId: number, action: string) => {
+  const handleThreadAction = (threadId: string, action: string) => {
     switch (action) {
       case 'spam':
         handleMarkAsSpam(threadId);
@@ -501,6 +609,11 @@ export default function Home() {
         console.log(`Unknown action: ${action}`);
     }
   };
+
+  // Get the selected thread object
+  const selectedThreadData = selectedThread !== null 
+    ? emailThreads.find(t => t.id === selectedThread) 
+    : undefined;
 
   // Close more actions dropdown when clicking outside
   useEffect(() => {
@@ -1112,20 +1225,20 @@ export default function Home() {
               {/* Email thread 1 */}
               <div 
                 className={`w-full text-left rounded-xl p-3 border transition-colors ${
-                  selectedThread === 1 
+                  selectedThread === '1' 
                     ? 'bg-primary text-primary-foreground border-primary' 
                     : 'hover:bg-accent/50'
-                } ${!emailThreads[1]?.[0]?.isRead ? 'font-bold' : ''}`}
-                aria-current={selectedThread === 1 ? "page" : undefined}
-                onClick={() => handleSelectThread(1)}
+                } ${!emailThreads[1]?.emails[0]?.isRead ? 'font-bold' : ''}`}
+                aria-current={selectedThread === '1' ? "page" : undefined}
+                onClick={() => handleSelectThread('1')}
               >
                 <div className="flex items-center gap-2">
                   {isSelectMode && (
                     <input
                       type="checkbox"
                       className="size-4"
-                      checked={selectedEmails.has(1)}
-                      onChange={() => toggleEmailSelection(1)}
+                      checked={selectedEmails.has('1')}
+                      onChange={() => toggleEmailSelection('1')}
                     />
                   )}
                   <button className="flex-1 text-left">
@@ -1143,7 +1256,7 @@ export default function Home() {
                         <div className="flex items-center justify-between gap-2">
                           <div className="flex items-center gap-2 min-w-0">
                             <span
-                              className={`truncate ${!emailThreads[1]?.[0]?.isRead ? 'text-foreground' : ''}`}
+                              className={`truncate ${!emailThreads[1]?.emails[0]?.isRead ? 'text-foreground' : ''}`}
                             >
                               Ali from Baked
                             </span>
@@ -1151,7 +1264,7 @@ export default function Home() {
                           </div>
                           <span className="text-xs text-muted-foreground">Mar 29</span>
                         </div>
-                        <div className={`truncate text-sm ${!emailThreads[1]?.[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
+                        <div className={`truncate text-sm ${!emailThreads[1]?.emails[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
                           New design review
                         </div>
                         <div className="flex items-center gap-2 mt-1">
@@ -1180,7 +1293,7 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
-                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[1]?.[0]?.isRead ? 'font-medium' : ''}`}>
+                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[1]?.emails[0]?.isRead ? 'font-medium' : ''}`}>
                       Design review of new email client features...
                     </p>
                   </button>
@@ -1190,19 +1303,19 @@ export default function Home() {
               {/* Email thread 2 */}
               <div 
                 className={`w-full text-left rounded-xl p-3 border transition-colors ${
-                  selectedThread === 2 
+                  selectedThread === '2' 
                     ? 'bg-primary text-primary-foreground border-primary' 
                     : 'hover:bg-accent/50'
-                } ${!emailThreads[2]?.[0]?.isRead ? 'font-bold' : ''}`}
-                onClick={() => handleSelectThread(2)}
+                } ${!emailThreads[2]?.emails[0]?.isRead ? 'font-bold' : ''}`}
+                onClick={() => handleSelectThread('2')}
               >
                 <div className="flex items-center gap-2">
                   {isSelectMode && (
                     <input
                       type="checkbox"
                       className="size-4"
-                      checked={selectedEmails.has(2)}
-                      onChange={() => toggleEmailSelection(2)}
+                      checked={selectedEmails.has('2')}
+                      onChange={() => toggleEmailSelection('2')}
                     />
                   )}
                   <button className="flex-1 text-left">
@@ -1219,14 +1332,14 @@ export default function Home() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
                           <div className="flex items-center gap-2 min-w-0">
-                            <span className={`truncate ${!emailThreads[2]?.[0]?.isRead ? 'text-foreground' : ''}`}>
+                            <span className={`truncate ${!emailThreads[2]?.emails[0]?.isRead ? 'text-foreground' : ''}`}>
                               Alex, Ali, Sarah
                             </span>
                             <span className="text-xs text-muted-foreground">[6]</span>
                           </div>
                           <span className="text-xs text-muted-foreground">Mar 28</span>
                         </div>
-                        <div className={`truncate text-sm ${!emailThreads[2]?.[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
+                        <div className={`truncate text-sm ${!emailThreads[2]?.emails[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
                           Re: Design review feedback
                         </div>
                         <div className="flex items-center gap-2 mt-1">
@@ -1245,7 +1358,7 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
-                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[2]?.[0]?.isRead ? 'font-medium' : ''}`}>
+                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[2]?.emails[0]?.isRead ? 'font-medium' : ''}`}>
                       Catching up on the email client design with new interactions...
                     </p>
                   </button>
@@ -1255,19 +1368,19 @@ export default function Home() {
               {/* Email thread 3 */}
               <div 
                 className={`w-full text-left rounded-xl p-3 border transition-colors ${
-                  selectedThread === 3 
+                  selectedThread === '3'
                     ? 'bg-primary text-primary-foreground border-primary' 
                     : 'hover:bg-accent/50'
-                } ${!emailThreads[3]?.[0]?.isRead ? 'font-bold' : ''}`}
-                onClick={() => handleSelectThread(3)}
+                } ${!emailThreads[3]?.emails[0]?.isRead ? 'font-bold' : ''}`}
+                onClick={() => handleSelectThread('3')}
               >
                 <div className="flex items-center gap-2">
                   {isSelectMode && (
                     <input
                       type="checkbox"
                       className="size-4"
-                      checked={selectedEmails.has(3)}
-                      onChange={() => toggleEmailSelection(3)}
+                      checked={selectedEmails.has('3')}
+                      onChange={() => toggleEmailSelection('3')}
                     />
                   )}
                   <button className="flex-1 text-left">
@@ -1284,14 +1397,14 @@ export default function Home() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
                           <div className="flex items-center gap-2 min-w-0">
-                            <span className={`font-medium truncate ${!emailThreads[3]?.[0]?.isRead ? 'text-foreground' : ''}`}>
+                            <span className={`font-medium truncate ${!emailThreads[3]?.emails[0]?.isRead ? 'text-foreground' : ''}`}>
                               GitHub
                             </span>
                             <span className="text-xs text-muted-foreground">[8]</span>
                           </div>
                           <span className="text-xs text-muted-foreground">Mar 28</span>
                         </div>
-                        <div className={`truncate text-sm ${!emailThreads[3]?.[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
+                        <div className={`truncate text-sm ${!emailThreads[3]?.emails[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
                           Security alert: Critical vulnerability
                         </div>
                         <div className="flex items-center gap-2 mt-1">
@@ -1310,7 +1423,7 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
-                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[3]?.[0]?.isRead ? 'font-medium' : ''}`}>
+                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[3]?.emails[0]?.isRead ? 'font-medium' : ''}`}>
                       A high severity vulnerability was detected in one of your dependencies.
                     </p>
                   </button>
@@ -1320,19 +1433,19 @@ export default function Home() {
               {/* Email thread 4 */}
               <div 
                 className={`w-full text-left rounded-xl p-3 border transition-colors ${
-                  selectedThread === 4 
+                  selectedThread === '4'
                     ? 'bg-primary text-primary-foreground border-primary' 
                     : 'hover:bg-accent/50'
-                } ${!emailThreads[4]?.[0]?.isRead ? 'font-bold' : ''}`}
-                onClick={() => handleSelectThread(4)}
+                } ${!emailThreads[4]?.emails[0]?.isRead ? 'font-bold' : ''}`}
+                onClick={() => handleSelectThread('4')}
               >
                 <div className="flex items-center gap-2">
                   {isSelectMode && (
                     <input
                       type="checkbox"
                       className="size-4"
-                      checked={selectedEmails.has(4)}
-                      onChange={() => toggleEmailSelection(4)}
+                      checked={selectedEmails.has('4')}
+                      onChange={() => toggleEmailSelection('4')}
                     />
                   )}
                   <button className="flex-1 text-left">
@@ -1349,13 +1462,13 @@ export default function Home() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
                           <div className="flex items-center gap-2 min-w-0">
-                            <span className={`font-medium truncate ${!emailThreads[4]?.[0]?.isRead ? 'text-foreground' : ''}`}>
+                            <span className={`font-medium truncate ${!emailThreads[4]?.emails[0]?.isRead ? 'text-foreground' : ''}`}>
                               Stripe
                             </span>
                           </div>
                           <span className="text-xs text-muted-foreground">Mar 29</span>
                         </div>
-                        <div className={`truncate text-sm ${!emailThreads[4]?.[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
+                        <div className={`truncate text-sm ${!emailThreads[4]?.emails[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
                           Payment confirmation #1234
                         </div>
                         <div className="flex items-center gap-2 mt-1">
@@ -1374,7 +1487,7 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
-                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[4]?.[0]?.isRead ? 'font-medium' : ''}`}>
+                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[4]?.emails[0]?.isRead ? 'font-medium' : ''}`}>
                       Your recent payment has been successfully processed.
                     </p>
                   </button>
@@ -1384,19 +1497,19 @@ export default function Home() {
               {/* Email thread 5 */}
               <div 
                 className={`w-full text-left rounded-xl p-3 border transition-colors ${
-                  selectedThread === 5 
+                  selectedThread === '5' 
                     ? 'bg-primary text-primary-foreground border-primary' 
                     : 'hover:bg-accent/50'
-                } ${!emailThreads[5]?.[0]?.isRead ? 'font-bold' : ''}`}
-                onClick={() => handleSelectThread(5)}
+                } ${!emailThreads[5]?.emails[0]?.isRead ? 'font-bold' : ''}`}
+                onClick={() => handleSelectThread('5')}
               >
                 <div className="flex items-center gap-2">
                   {isSelectMode && (
                     <input
                       type="checkbox"
                       className="size-4"
-                      checked={selectedEmails.has(5)}
-                      onChange={() => toggleEmailSelection(5)}
+                      checked={selectedEmails.has('5')}
+                      onChange={() => toggleEmailSelection('5')}
                     />
                   )}
                   <button className="flex-1 text-left">
@@ -1413,13 +1526,13 @@ export default function Home() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
                           <div className="flex items-center gap-2 min-w-0">
-                            <span className={`font-medium truncate ${!emailThreads[5]?.[0]?.isRead ? 'text-foreground' : ''}`}>
+                            <span className={`font-medium truncate ${!emailThreads[5]?.emails[0]?.isRead ? 'text-foreground' : ''}`}>
                               Netflix
                             </span>
                           </div>
                           <span className="text-xs text-muted-foreground">Mar 29</span>
                         </div>
-                        <div className={`truncate text-sm ${!emailThreads[5]?.[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
+                        <div className={`truncate text-sm ${!emailThreads[5]?.emails[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
                           New shows added to your list
                         </div>
                         <div className="flex items-center gap-2 mt-1">
@@ -1438,7 +1551,7 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
-                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[5]?.[0]?.isRead ? 'font-medium' : ''}`}>
+                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[5]?.emails[0]?.isRead ? 'font-medium' : ''}`}>
                       We added new shows we think you will love.
                     </p>
                   </button>
@@ -1458,7 +1571,7 @@ export default function Home() {
             {/* Email thread display */}
             <EmailThreadComponent 
               threadId={selectedThread || DEFAULT_THREAD_ID}
-              emails={selectedThread !== null && emailThreads[selectedThread] ? emailThreads[selectedThread] : []}
+              emails={selectedThreadData ? selectedThreadData.emails : []}
               isExpanded={selectedThread !== null && expandedThreads.has(selectedThread) ? expandedThreads.has(selectedThread) : false}
               onToggleExpand={toggleThreadExpansion}
               onReply={handleReply}
