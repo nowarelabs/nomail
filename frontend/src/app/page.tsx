@@ -97,9 +97,12 @@ export default function Home() {
     ]
   });
   const [showThreadCompose, setShowThreadCompose] = useState<number | null>(null);
-  const [selectedThread, setSelectedThread] = useState<number>(1);
+  const [selectedThread, setSelectedThread] = useState<number | null>(null);
   const moreActionsButtonRef = useRef<HTMLButtonElement>(null);
   const moreActionsDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Define a constant for the default/empty thread ID
+  const DEFAULT_THREAD_ID = 0;
 
   // Check system preference and saved theme on initial load
   useEffect(() => {
@@ -1208,15 +1211,15 @@ export default function Home() {
           <div className="h-full w-full flex flex-col gap-3 p-4">
             {/* Email thread display */}
             <EmailThread 
-              threadId={selectedThread}
-              emails={emailThreads[selectedThread] || []}
-              isExpanded={expandedThreads.has(selectedThread)}
+              threadId={selectedThread || DEFAULT_THREAD_ID}
+              emails={selectedThread !== null && emailThreads[selectedThread] ? emailThreads[selectedThread] : []}
+              isExpanded={selectedThread !== null && expandedThreads.has(selectedThread) ? expandedThreads.has(selectedThread) : false}
               onToggleExpand={toggleThreadExpansion}
               onReply={handleReply}
               onReplyAll={handleReplyAll}
               onForward={handleForward}
               onThreadAction={handleThreadAction}
-              showCompose={showThreadCompose === selectedThread}
+              showCompose={selectedThread !== null && showThreadCompose === selectedThread ? showThreadCompose === selectedThread : false}
               onCloseCompose={closeThreadCompose}
             />
           </div>

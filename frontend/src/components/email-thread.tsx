@@ -3,6 +3,12 @@
 import { useRef, useEffect } from 'react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from './ui/dropdown-menu';
 
+interface Attachment {
+  name: string;
+  size: number;
+  type: string;
+}
+
 interface Email {
 	id: number;
 	from: string;
@@ -11,7 +17,30 @@ interface Email {
 	subject: string;
 	content: string;
 	isCollapsed: boolean;
+	isRead?: boolean;
+	category?: string;
+  isDraft?: boolean;
+	isFavorite?: boolean;
+	isSpam?: boolean;
+	isTrash?: boolean;
+	isArchive?: boolean;
+	labels?: string[];
+  hasAttachments?: boolean;
+  attachments?: Attachment[];
+  attachmentCount?: number;
 }
+
+// Define a default empty email object
+const EMPTY_EMAIL: Email = {
+	id: 0,
+	from: '',
+	to: '',
+	date: '',
+	subject: 'No email selected',
+	content: 'Select an email thread to view its contents',
+	isCollapsed: true,
+	isRead: true
+};
 
 interface EmailThreadProps {
 	threadId: number;
@@ -38,12 +67,13 @@ export function EmailThread({
 	showCompose,
 	onCloseCompose,
 }: EmailThreadProps) {
-	// Handle case where emails might be undefined or empty
-	if (!emails || emails.length === 0) {
-		return <div className="rounded-xl border bg-card p-4 mb-4">Loading thread...</div>;
-	}
+	// Handle case where no emails are available
+	const displayEmails = emails && emails.length > 0 ? emails : [EMPTY_EMAIL];
+	const primaryEmail = displayEmails[0];
+	
+	// Show empty state when there are no real emails
+	const isEmptyState = !emails || emails.length === 0;
 
-	const primaryEmail = emails[0];
 	const composeRef = useRef<HTMLDivElement>(null);
 
 	// Scroll to compose box when it's shown
@@ -74,16 +104,19 @@ export function EmailThread({
 				<div className="flex-1">
 					<h3 className="font-semibold text-lg">{primaryEmail.subject}</h3>
 					<div className="text-sm text-muted-foreground">
-						{primaryEmail.from} • {primaryEmail.date}
+						{primaryEmail.from ? `${primaryEmail.from} • ${primaryEmail.date}` : primaryEmail.date}
 					</div>
-					<div className="text-sm text-muted-foreground">to {primaryEmail.to}</div>
+					{primaryEmail.to && (
+						<div className="text-sm text-muted-foreground">to {primaryEmail.to}</div>
+					)}
 				</div>
 
 				<div className="flex items-center gap-2">
-					{/* Action buttons */}
+					{/* Action buttons - disabled in empty state */}
 					<button
 						className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2 text-sm"
 						onClick={() => handleReply(threadId)}
+						disabled={isEmptyState}
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -106,6 +139,7 @@ export function EmailThread({
 					<button
 						className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2 text-sm"
 						onClick={() => handleReplyAll(threadId)}
+						disabled={isEmptyState}
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -129,6 +163,7 @@ export function EmailThread({
 					<button
 						className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2 text-sm"
 						onClick={() => handleForward(threadId)}
+						disabled={isEmptyState}
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -151,7 +186,7 @@ export function EmailThread({
 					{/* Three dots dropdown */}
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
-							<button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent">
+							<button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent" disabled={isEmptyState}>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									width="16"
@@ -171,21 +206,25 @@ export function EmailThread({
 							</button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end" className="w-48">
-							<DropdownMenuItem onClick={() => onThreadAction(threadId, 'spam')}>
+							<DropdownMenuItem onClick={() => onThreadAction(threadId, 'spam')} disabled={isEmptyState}>
 								<span>Mark as spam</span>
 							</DropdownMenuItem>
-							<DropdownMenuItem onClick={() => onThreadAction(threadId, 'favorite')}>
+							<DropdownMenuItem onClick={() => onThreadAction(threadId, 'favorite')} disabled={isEmptyState}>
 								<span>Favorite</span>
 							</DropdownMenuItem>
 							<DropdownMenuSeparator />
-							<DropdownMenuItem onClick={() => onThreadAction(threadId, 'bin')}>
+							<DropdownMenuItem onClick={() => onThreadAction(threadId, 'bin')} disabled={isEmptyState}>
 								<span>Move to bin</span>
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
 
 					{/* Expand/Collapse button */}
-					<button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent" onClick={() => onToggleExpand(threadId)}>
+					<button 
+						className="rounded-lg border px-2.5 py-1.5 hover:bg-accent" 
+						onClick={() => onToggleExpand(threadId)}
+						disabled={isEmptyState}
+					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							width="16"
@@ -204,19 +243,27 @@ export function EmailThread({
 				</div>
 			</div>
 
-			{/* Thread preview (collapsed view) */}
-			{!isExpanded && (
+			{/* Thread preview (collapsed view) - only show if not empty state */}
+			{!isExpanded && !isEmptyState && (
 				<div className="border-t pt-3">
 					<p className="text-sm text-muted-foreground line-clamp-2">{primaryEmail.content}</p>
-					<div className="text-xs text-muted-foreground mt-2">{emails.length} messages in thread</div>
+					<div className="text-xs text-muted-foreground mt-2">{displayEmails.length} messages in thread</div>
+				</div>
+			)}
+
+			{/* Empty state message */}
+			{isEmptyState && (
+				<div className="border-t pt-3">
+					<p className="text-sm text-muted-foreground">{primaryEmail.content}</p>
+					<div className="text-xs text-muted-foreground mt-2">No email selected</div>
 				</div>
 			)}
 
 			{/* Thread expanded view */}
-			{isExpanded && (
+			{isExpanded && !isEmptyState && (
 				<div className="border-t pt-3 space-y-4 max-h-[70vh] overflow-y-auto pr-2">
-					{emails.map((email, index) => (
-						<div key={email.id} className={`p-3 rounded-lg ${index === emails.length - 1 ? 'bg-muted' : 'bg-background'}`}>
+					{displayEmails.map((email, index) => (
+						<div key={email.id} className={`p-3 rounded-lg ${index === displayEmails.length - 1 ? 'bg-muted' : 'bg-background'}`}>
 							<div className="flex items-start justify-between mb-2">
 								<div>
 									<div className="font-medium">{email.from}</div>
