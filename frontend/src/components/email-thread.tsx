@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useEffect } from 'react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from './ui/dropdown-menu';
 
 interface Email {
@@ -44,6 +44,28 @@ export function EmailThread({
 	}
 
 	const primaryEmail = emails[0];
+	const composeRef = useRef<HTMLDivElement>(null);
+
+	// Scroll to compose box when it's shown
+	useEffect(() => {
+		if (showCompose && composeRef.current) {
+			// Scroll to the compose box with smooth behavior
+			composeRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+		}
+	}, [showCompose]);
+
+	// Handler functions that combine the original action with scrolling
+	const handleReply = (threadId: number) => {
+		onReply(threadId);
+	};
+
+	const handleReplyAll = (threadId: number) => {
+		onReplyAll(threadId);
+	};
+
+	const handleForward = (threadId: number) => {
+		onForward(threadId);
+	};
 
 	return (
 		<div className="rounded-xl border bg-card p-4 mb-4">
@@ -61,7 +83,7 @@ export function EmailThread({
 					{/* Action buttons */}
 					<button
 						className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2 text-sm"
-						onClick={() => onReply(threadId)}
+						onClick={() => handleReply(threadId)}
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +105,7 @@ export function EmailThread({
 
 					<button
 						className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2 text-sm"
-						onClick={() => onReplyAll(threadId)}
+						onClick={() => handleReplyAll(threadId)}
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -106,7 +128,7 @@ export function EmailThread({
 
 					<button
 						className="rounded-lg border px-2.5 py-1.5 hover:bg-accent flex items-center gap-2 text-sm"
-						onClick={() => onForward(threadId)}
+						onClick={() => handleForward(threadId)}
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -204,7 +226,7 @@ export function EmailThread({
 								</div>
 								{index === 0 && (
 									<div className="flex items-center gap-2">
-										<button className="rounded-lg border px-2 py-1 text-xs hover:bg-accent" onClick={() => onReply(threadId)}>
+										<button className="rounded-lg border px-2 py-1 text-xs hover:bg-accent" onClick={() => handleReply(threadId)}>
 											Reply
 										</button>
 									</div>
@@ -305,7 +327,7 @@ export function EmailThread({
 
 					{/* Compose form within thread */}
 					{showCompose && (
-						<div className="border rounded-lg p-3 mt-4 bg-card">
+						<div ref={composeRef} className="border rounded-lg p-3 mt-4 bg-card">
 							<div className="flex items-center justify-between mb-3">
 								<h4 className="font-medium">Compose Reply</h4>
 								<button className="rounded-md border px-2 py-1 text-xs hover:bg-accent" onClick={onCloseCompose}>
