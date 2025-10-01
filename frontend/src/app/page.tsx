@@ -720,9 +720,42 @@ export default function Home() {
           <div className="flex items-center justify-between px-1 pb-2">
             <div className="text-sm font-medium">Inbox</div>
             <div className="text-xs text-muted-foreground flex items-center gap-2">
-              <button className="rounded-md border px-2 py-1 hover:bg-accent">
-                <span>Select</span>
-              </button>
+              {isSelectMode ? (
+                <div className="text-xs text-muted-foreground flex items-center gap-2">
+                  <button 
+                    className="rounded-md border px-2 py-1 hover:bg-accent flex items-center gap-1"
+                    onClick={toggleSelectAll}
+                    aria-pressed={selectedEmails.size === 5}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check-square size-4">
+                      <polyline points="9 11 12 14 22 4"></polyline>
+                      <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                    </svg>
+                    <span>Select all</span>
+                  </button>
+                  <button 
+                    className="rounded-md border px-2 py-1 hover:bg-accent flex items-center gap-1"
+                    onClick={toggleSelectMode}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x size-4">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                    <span>Done</span>
+                  </button>
+                </div>
+              ) : (
+                <button 
+                  className="rounded-md border px-2 py-1 hover:bg-accent flex items-center gap-1"
+                  onClick={toggleSelectMode}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check-square size-4">
+                    <polyline points="9 11 12 14 22 4"></polyline>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                  </svg>
+                  <span>Select</span>
+                </button>
+              )}
             </div>
           </div>
           <div className="rounded-xl border bg-card/40 p-2 flex-1 min-h-0 flex flex-col">
@@ -755,6 +788,55 @@ export default function Home() {
                 </button>
               </div>
             </div>
+            {/* Action items bar - shown when in select mode */}
+            {isSelectMode && (
+              <div className="flex items-center gap-2 px-1 pb-2">
+                <div className="text-xs">{selectedEmails.size} selected</div>
+                <div className="ms-auto flex items-center gap-1">
+                  <button className="rounded-md border px-2 py-1 text-xs hover:bg-accent">
+                    <span>Mark read</span>
+                  </button>
+                  <button className="rounded-md border px-2 py-1 text-xs hover:bg-accent">
+                    <span>Mark unread</span>
+                  </button>
+                  <div className="relative">
+                    <button 
+                      className="rounded-md border px-2 py-1 text-xs hover:bg-accent flex items-center gap-1"
+                      onClick={toggleMoreActions}
+                      ref={moreActionsButtonRef}
+                    >
+                      <span>More</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-down size-3">
+                        <path d="m6 9 6 6 6-6"></path>
+                      </svg>
+                    </button>
+                    {isMoreActionsOpen && (
+                      <div className="absolute right-0 mt-1 w-48 rounded-md border bg-popover p-1 shadow-md z-10" ref={moreActionsDropdownRef}>
+                        <button className="w-full text-left px-2 py-1 text-xs hover:bg-accent rounded">
+                          <span>Favorite</span>
+                        </button>
+                        <button className="w-full text-left px-2 py-1 text-xs hover:bg-destructive/10 rounded">
+                          <span>Spam</span>
+                        </button>
+                        <button className="w-full text-left px-2 py-1 text-xs hover:bg-destructive/10 rounded">
+                          <span>Trash</span>
+                        </button>
+                        <div className="border-t my-1"></div>
+                        <div className="px-2 py-1">
+                          <select aria-label="Move to label" className="w-full rounded-md border px-2 py-1 text-xs bg-input/50">
+                            <option value="">Move to…</option>
+                            <option value="work">Work</option>
+                            <option value="personal">Personal</option>
+                            <option value="updates">Updates</option>
+                            <option value="alerts">Alerts</option>
+                          </select>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
             <div className="space-y-2 overflow-y-auto pr-1">
               {/* Email thread 1 */}
               <div 
