@@ -2,44 +2,45 @@
 
 import { useRef, useEffect } from 'react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from './ui/dropdown-menu';
+import { Email } from 'components/types/emails';
 
-interface Attachment {
-  name: string;
-  size: number;
-  type: string;
-}
-
-interface Email {
-	id: number;
-	from: string;
-	to: string;
-	date: string;
-	subject: string;
-	content: string;
-	isCollapsed: boolean;
-	isRead?: boolean;
-	category?: string;
-  isDraft?: boolean;
-	isFavorite?: boolean;
-	isSpam?: boolean;
-	isTrash?: boolean;
-	isArchive?: boolean;
-	labels?: string[];
-  hasAttachments?: boolean;
-  attachments?: Attachment[];
-  attachmentCount?: number;
-}
-
-// Define a default empty email object
 const EMPTY_EMAIL: Email = {
-	id: 0,
-	from: '',
-	to: '',
-	date: '',
-	subject: 'No email selected',
-	content: 'Select an email thread to view its contents',
-	isCollapsed: true,
-	isRead: true
+  id: 0,
+  from: '',
+  to: '',
+  cc: [],
+  bcc: [],
+  replyTo: '',
+  date: '',
+  subject: 'No email selected',
+  content: 'Select an email thread to view its contents',
+  htmlContent: '',
+  plainTextContent: 'Select an email thread to view its contents',
+  isCollapsed: true,
+  isRead: true,
+  category: '',
+  isDraft: false,
+  isFavorite: false,
+  isSpam: false,
+  isTrash: false,
+  isArchive: false,
+  labels: [],
+  hasAttachments: false,
+  attachments: [],
+  attachmentCount: 0,
+  priority: 'normal',
+  isStarred: false,
+  threadId: '',
+  inReplyTo: '',
+  references: [],
+  snippet: '',
+  size: 0,
+  flags: [],
+  senderName: '',
+  recipientNames: [],
+  isImportant: false,
+  hasInlineImages: false,
+  unsubscribeLink: ''
 };
 
 interface EmailThreadProps {

@@ -4,6 +4,15 @@ export interface Attachment {
   type: string;
   url: string;
   id: string;
+  extension: string;
+  sizeFormatted: string;
+  mimeType: string;
+  isScanned: boolean;
+  scanResult: 'clean' | 'infected' | 'failed' | '';
+  downloadCount: number;
+  uploadedDate: string;
+  thumbnailUrl: string;
+  isInline: boolean;
 }
 
 export interface Email {
