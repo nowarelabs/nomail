@@ -1,4 +1,4 @@
-interface Attachment {
+export interface Attachment {
   name: string;
   size: number;
   type: string;
@@ -6,7 +6,7 @@ interface Attachment {
   id: string;
 }
 
-interface Email {
+export interface Email {
   id: number;
   from: string;
   to: string;
@@ -45,7 +45,7 @@ interface Email {
   unsubscribeLink: string;
 }
 
-interface EmailThread {
+export interface EmailThread {
   id: string;
   subject: string;
   emails: Email[];
@@ -68,4 +68,55 @@ interface EmailThread {
   isSpam: boolean;
   isTrash: boolean;
   isArchive: boolean;
+}
+
+export interface PaginationMetadata {
+  currentPage: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  nextPage: number | null;
+  previousPage: number | null;
+}
+
+export interface FilterMetadata {
+  categories: string[];
+  labels: string[];
+  participants: string[];
+  dateRange: {
+    from: string | null;
+    to: string | null;
+  };
+  hasAttachments: boolean | null;
+  isUnread: boolean | null;
+  isStarred: boolean | null;
+  isFavorite: boolean | null;
+  isSpam: boolean | null;
+  isImportant: boolean | null;
+  priority: ('low' | 'normal' | 'high')[] | null;
+}
+
+export interface SearchMetadata {
+  query: string;
+  searchFields: ('subject' | 'content' | 'from' | 'to' | 'participants')[];
+  resultsCount: number;
+  searchTime: number;
+  hasMoreResults: boolean;
+}
+
+export interface SortMetadata {
+  sortBy: 'date' | 'subject' | 'sender' | 'unreadCount' | 'messageCount' | 'importance';
+  sortOrder: 'asc' | 'desc';
+}
+
+export interface EmailThreadsResponse {
+  data: EmailThread[];
+  pagination: PaginationMetadata;
+  filters?: FilterMetadata;
+  search?: SearchMetadata;
+  sort: SortMetadata;
+  timestamp: string;
+  totalUnreadCount: number;
 }
