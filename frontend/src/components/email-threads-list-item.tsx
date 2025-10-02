@@ -9,24 +9,36 @@ interface EmailThreadsListItemProps {
 	thread: EmailThread;
 	isSelected: boolean;
 	isSelectMode: boolean;
+	isActive: boolean;
 	onSelect: (id: string) => void;
-	onThreadSelect: (id: string) => void;
+	onThreadClick: (id: string) => void;
+	onThreadView: (id: string) => void;
 }
 
-export function EmailThreadsListItem({ thread, isSelected, isSelectMode, onSelect, onThreadSelect }: EmailThreadsListItemProps) {
+export function EmailThreadsListItem({
+	thread,
+	isSelected,
+	isSelectMode,
+	isActive,
+	onSelect,
+	onThreadClick,
+	onThreadView,
+}: EmailThreadsListItemProps) {
 	const primaryEmail = thread.emails[0];
 	const senderName = primaryEmail?.senderName || primaryEmail?.from || thread.participants[0] || 'Unknown Sender';
+	const isUnread = thread.unreadCount > 0;
 
 	return (
 		<div
-      className={`w-full text-left rounded-xl p-3 border transition-colors bg-card border-sidebar-border ${
-        isSelected 
-          ? 'bg-primary text-primary-foreground border-primary' 
-          : 'hover:bg-accent/50'
-      } ${thread.emails[0]?.isRead ? 'font-bold' : ''}`}
-      aria-current={isSelected ? "page" : undefined}
-      onClick={() => onThreadSelect(thread.id)}
-    >
+			className={`w-full text-left rounded-xl p-3 border transition-colors bg-card border-sidebar-border ${
+				isActive ? 'ring-2 ring-primary ring-inset' : isSelected ? 'bg-primary/10 border-primary/30' : 'hover:bg-accent/50'
+			} ${isUnread ? 'font-bold' : ''}`}
+			aria-current={isActive ? 'page' : undefined}
+			onClick={() => {
+				onThreadClick(thread.id);
+				onThreadView(thread.id);
+			}}
+		>
 			<div className="flex items-center gap-2">
 				{isSelectMode && <input type="checkbox" className="size-4" checked={isSelected} onChange={() => onSelect(thread.id)} />}
 				<button className="flex-1 text-left">
@@ -35,7 +47,7 @@ export function EmailThreadsListItem({ thread, isSelected, isSelectMode, onSelec
 						<div className="flex-1 min-w-0">
 							<div className="flex items-center justify-between gap-2">
 								<div className="flex items-center gap-2 min-w-0">
-									<span className="font-medium truncate text-foreground">{senderName}</span>
+									<span className={`font-medium truncate ${isUnread ? 'text-foreground' : 'text-muted-foreground'}`}>{senderName}</span>
 									{thread.participantNames.length > 1 && (
 										<span className="text-xs text-muted-foreground">[{thread.participantNames.length - 1}]</span>
 									)}
@@ -44,7 +56,7 @@ export function EmailThreadsListItem({ thread, isSelected, isSelectMode, onSelec
 									{new Date(thread.lastEmailDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
 								</span>
 							</div>
-							<div className="truncate text-sm opacity-90">{thread.subject}</div>
+							<div className={`truncate text-sm ${isUnread ? 'text-foreground' : 'text-muted-foreground'}`}>{thread.subject}</div>
 							{thread.labels.length > 0 && (
 								<div className="flex items-center gap-2 mt-1">
 									{thread.labels.map((label: string, index: number) => (
@@ -55,8 +67,10 @@ export function EmailThreadsListItem({ thread, isSelected, isSelectMode, onSelec
 							)}
 						</div>
 					</div>
-					<p className="mt-1 text-xs text-muted-foreground line-clamp-1">{thread.snippet}</p>
-					{thread.unreadCount > 0 && (
+					<p className={`mt-1 text-xs line-clamp-1 ${isUnread ? 'text-foreground font-medium' : 'text-muted-foreground'}`}>
+						{thread.snippet}
+					</p>
+					{isUnread && (
 						<div className="inline-flex items-center rounded-full bg-primary px-2 py-0.5 text-xs text-primary-foreground mt-1">
 							{thread.unreadCount} unread
 						</div>

@@ -1227,10 +1227,12 @@ export default function Home() {
                 <EmailThreadsListItem
                   key={thread.id}
                   thread={thread}
-                  isSelected={selectedThread === thread.id}
+                  isSelected={selectedEmails.has(thread.id)}
                   isSelectMode={isSelectMode}
+                  isActive={selectedThread === thread.id}
                   onSelect={toggleEmailSelection}
-                  onThreadSelect={handleSelectThread}
+                  onThreadClick={handleSelectThread}
+                  onThreadView={setSelectedThread}
                 />
               ))}
             </div>
