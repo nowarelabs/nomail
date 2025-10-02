@@ -13,7 +13,7 @@ export default function Home() {
   const [isManagementOpen, setIsManagementOpen] = useState(true);
   const [activeView, setActiveView] = useState('primary');
   const [isSelectMode, setIsSelectMode] = useState(false);
-  const [selectedEmails, setSelectedEmails] = useState<Set<string>>(new Set());
+  const [selectedThreads, setSelectedThreads] = useState<Set<string>>(new Set());
   const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
   const [expandedThreads, setExpandedThreads] = useState<Set<string>>(new Set());
   const [emailThreads, setEmailThreads] = useState<EmailThread[]>([
@@ -464,10 +464,8 @@ export default function Home() {
   const moreActionsButtonRef = useRef<HTMLButtonElement>(null);
   const moreActionsDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Define a constant for the default/empty thread ID
   const DEFAULT_THREAD_ID = '0';
 
-  // Check system preference and saved theme on initial load
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -479,7 +477,6 @@ export default function Home() {
     }
   }, []);
 
-  // Apply theme to document element
   useEffect(() => {
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -507,28 +504,28 @@ export default function Home() {
 
   const toggleSelectMode = () => {
     if (isSelectMode) {
-      setSelectedEmails(new Set());
+      setSelectedThreads(new Set());
     }
     setIsSelectMode(!isSelectMode);
     setIsMoreActionsOpen(false);
   };
 
   const toggleSelectAll = () => {
-    if (selectedEmails.size === emailThreads.length) {
-      setSelectedEmails(new Set());
+    if (selectedThreads.size === emailThreads.length) {
+      setSelectedThreads(new Set());
     } else {
-      setSelectedEmails(new Set(emailThreads.map(t => t.id)));
+      setSelectedThreads(new Set(emailThreads.map(t => t.id)));
     }
   };
 
   const toggleEmailSelection = (id: string) => {
-    const newSelected = new Set(selectedEmails);
+    const newSelected = new Set(selectedThreads);
     if (newSelected.has(id)) {
       newSelected.delete(id);
     } else {
       newSelected.add(id);
     }
-    setSelectedEmails(newSelected);
+    setSelectedThreads(newSelected);
   };
 
   const toggleMoreActions = () => {
@@ -1110,7 +1107,7 @@ export default function Home() {
                   <button 
                     className="rounded-md border px-2 py-1 hover:bg-accent flex items-center gap-1"
                     onClick={toggleSelectAll}
-                    aria-pressed={selectedEmails.size === 5}
+                    aria-pressed={selectedThreads.size === 5}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check-square size-4">
                       <polyline points="9 11 12 14 22 4"></polyline>
@@ -1176,7 +1173,7 @@ export default function Home() {
             {/* Action items bar - shown when in select mode */}
             {isSelectMode && (
               <div className="flex items-center gap-2 px-1 pb-2">
-                <div className="text-xs">{selectedEmails.size} selected</div>
+                <div className="text-xs">{selectedThreads.size} selected</div>
                 <div className="ms-auto flex items-center gap-1">
                   <button className="rounded-md border px-2 py-1 text-xs hover:bg-accent">
                     <span>Mark read</span>
@@ -1222,12 +1219,12 @@ export default function Home() {
                 </div>
               </div>
             )}
-            <div className="space-y-2 overflow-y-auto pr-1">
+            <div className="space-y-2 max-h-[70vh] overflow-y-auto pr-1 scrollbar-hidden">
               {emailThreads.map((thread) => (
                 <EmailThreadsListItem
                   key={thread.id}
                   thread={thread}
-                  isSelected={selectedEmails.has(thread.id)}
+                  isSelected={selectedThreads.has(thread.id)}
                   isSelectMode={isSelectMode}
                   isActive={selectedThread === thread.id}
                   onSelect={toggleEmailSelection}

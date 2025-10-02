@@ -262,7 +262,7 @@ export function EmailThread({
 
 			{/* Thread expanded view */}
 			{isExpanded && !isEmptyState && (
-				<div className="border-t pt-3 space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+				<div className="border-t pt-3 space-y-4 max-h-[70vh] overflow-y-auto pr-2 scrollbar-hidden">
 					{displayEmails.map((email, index) => (
 						<div key={email.id} className={`p-3 rounded-lg ${index === displayEmails.length - 1 ? 'bg-muted' : 'bg-background'}`}>
 							<div className="flex items-start justify-between mb-2">
