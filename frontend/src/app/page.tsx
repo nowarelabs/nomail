@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import type { EmailThread, Email } from "../types/emails";
 import { EmailThread as EmailThreadComponent } from "../components/email-thread";
+import { EmailThreadsListItem } from "../components/email-threads-list-item";
 
 export default function Home() {
   const [showNewEmailDialog, setShowNewEmailDialog] = useState(false);
@@ -192,7 +193,7 @@ export default function Home() {
       unreadCount: 2,
       hasAttachments: true,
       totalAttachmentCount: 4,
-      labels: [],
+      labels: ['Work'],
       isStarred: false,
       isFavorite: false,
       isImportant: false,
@@ -255,7 +256,7 @@ export default function Home() {
       unreadCount: 0,
       hasAttachments: false,
       totalAttachmentCount: 0,
-      labels: [],
+      labels: ['Work'],
       isStarred: false,
       isFavorite: false,
       isImportant: false,
@@ -318,7 +319,7 @@ export default function Home() {
       unreadCount: 1,
       hasAttachments: false,
       totalAttachmentCount: 0,
-      labels: ['security'],
+      labels: ['Security'],
       isStarred: false,
       isFavorite: false,
       isImportant: true,
@@ -381,7 +382,7 @@ export default function Home() {
       unreadCount: 0,
       hasAttachments: false,
       totalAttachmentCount: 0,
-      labels: ['payment'],
+      labels: ['Payment'],
       isStarred: false,
       isFavorite: false,
       isImportant: false,
@@ -444,7 +445,7 @@ export default function Home() {
       unreadCount: 1,
       hasAttachments: false,
       totalAttachmentCount: 0,
-      labels: [],
+      labels: ['Important'],
       isStarred: false,
       isFavorite: false,
       isImportant: false,
@@ -1222,341 +1223,16 @@ export default function Home() {
               </div>
             )}
             <div className="space-y-2 overflow-y-auto pr-1">
-              {/* Email thread 1 */}
-              <div 
-                className={`w-full text-left rounded-xl p-3 border transition-colors ${
-                  selectedThread === '1' 
-                    ? 'bg-primary text-primary-foreground border-primary' 
-                    : 'hover:bg-accent/50'
-                } ${!emailThreads[1]?.emails[0]?.isRead ? 'font-bold' : ''}`}
-                aria-current={selectedThread === '1' ? "page" : undefined}
-                onClick={() => handleSelectThread('1')}
-              >
-                <div className="flex items-center gap-2">
-                  {isSelectMode && (
-                    <input
-                      type="checkbox"
-                      className="size-4"
-                      checked={selectedEmails.has('1')}
-                      onChange={() => toggleEmailSelection('1')}
-                    />
-                  )}
-                  <button className="flex-1 text-left">
-                    <div className="flex items-center gap-2">
-                      <div className="size-7 rounded-full flex items-center justify-center text-xs bg-chart-1">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                          className="lucide lucide-user size-4 opacity-80" aria-hidden="true">
-                          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                          <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <span
-                              className={`truncate ${!emailThreads[1]?.emails[0]?.isRead ? 'text-foreground' : ''}`}
-                            >
-                              Ali from Baked
-                            </span>
-                            <span className="text-xs text-muted-foreground">[3]</span>
-                          </div>
-                          <span className="text-xs text-muted-foreground">Mar 29</span>
-                        </div>
-                        <div className={`truncate text-sm ${!emailThreads[1]?.emails[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
-                          New design review
-                        </div>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs bg-chart-1 text-primary-foreground">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                              className="lucide lucide-tag size-3 opacity-80" aria-hidden="true">
-                              <path
-                                d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z">
-                              </path>
-                              <circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle>
-                            </svg>
-                            Work
-                          </span>
-                          <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                              className="lucide lucide-paperclip size-3" aria-hidden="true">
-                              <path
-                                d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551">
-                              </path>
-                            </svg> 4
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[1]?.emails[0]?.isRead ? 'font-medium' : ''}`}>
-                      Design review of new email client features...
-                    </p>
-                  </button>
-                </div>
-              </div>
-              
-              {/* Email thread 2 */}
-              <div 
-                className={`w-full text-left rounded-xl p-3 border transition-colors ${
-                  selectedThread === '2' 
-                    ? 'bg-primary text-primary-foreground border-primary' 
-                    : 'hover:bg-accent/50'
-                } ${!emailThreads[2]?.emails[0]?.isRead ? 'font-bold' : ''}`}
-                onClick={() => handleSelectThread('2')}
-              >
-                <div className="flex items-center gap-2">
-                  {isSelectMode && (
-                    <input
-                      type="checkbox"
-                      className="size-4"
-                      checked={selectedEmails.has('2')}
-                      onChange={() => toggleEmailSelection('2')}
-                    />
-                  )}
-                  <button className="flex-1 text-left">
-                    <div className="flex items-center gap-2">
-                      <div className="size-7 rounded-full flex items-center justify-center text-xs bg-chart-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                          className="lucide lucide-user size-4 opacity-80" aria-hidden="true">
-                          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                          <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <span className={`truncate ${!emailThreads[2]?.emails[0]?.isRead ? 'text-foreground' : ''}`}>
-                              Alex, Ali, Sarah
-                            </span>
-                            <span className="text-xs text-muted-foreground">[6]</span>
-                          </div>
-                          <span className="text-xs text-muted-foreground">Mar 28</span>
-                        </div>
-                        <div className={`truncate text-sm ${!emailThreads[2]?.emails[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
-                          Re: Design review feedback
-                        </div>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs bg-chart-3 text-secondary-foreground">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                              className="lucide lucide-tag size-3 opacity-80" aria-hidden="true">
-                              <path
-                                d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z">
-                              </path>
-                              <circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle>
-                            </svg>
-                            Updates
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[2]?.emails[0]?.isRead ? 'font-medium' : ''}`}>
-                      Catching up on the email client design with new interactions...
-                    </p>
-                  </button>
-                </div>
-              </div>
-              
-              {/* Email thread 3 */}
-              <div 
-                className={`w-full text-left rounded-xl p-3 border transition-colors ${
-                  selectedThread === '3'
-                    ? 'bg-primary text-primary-foreground border-primary' 
-                    : 'hover:bg-accent/50'
-                } ${!emailThreads[3]?.emails[0]?.isRead ? 'font-bold' : ''}`}
-                onClick={() => handleSelectThread('3')}
-              >
-                <div className="flex items-center gap-2">
-                  {isSelectMode && (
-                    <input
-                      type="checkbox"
-                      className="size-4"
-                      checked={selectedEmails.has('3')}
-                      onChange={() => toggleEmailSelection('3')}
-                    />
-                  )}
-                  <button className="flex-1 text-left">
-                    <div className="flex items-center gap-2">
-                      <div className="size-7 rounded-full flex items-center justify-center text-xs bg-destructive">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                          className="lucide lucide-user size-4 opacity-80" aria-hidden="true">
-                          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                          <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <span className={`font-medium truncate ${!emailThreads[3]?.emails[0]?.isRead ? 'text-foreground' : ''}`}>
-                              GitHub
-                            </span>
-                            <span className="text-xs text-muted-foreground">[8]</span>
-                          </div>
-                          <span className="text-xs text-muted-foreground">Mar 28</span>
-                        </div>
-                        <div className={`truncate text-sm ${!emailThreads[3]?.emails[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
-                          Security alert: Critical vulnerability
-                        </div>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs bg-chart-5 text-primary-foreground">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                              className="lucide lucide-tag size-3 opacity-80" aria-hidden="true">
-                              <path
-                                d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z">
-                              </path>
-                              <circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle>
-                            </svg>
-                            Alerts
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[3]?.emails[0]?.isRead ? 'font-medium' : ''}`}>
-                      A high severity vulnerability was detected in one of your dependencies.
-                    </p>
-                  </button>
-                </div>
-              </div>
-              
-              {/* Email thread 4 */}
-              <div 
-                className={`w-full text-left rounded-xl p-3 border transition-colors ${
-                  selectedThread === '4'
-                    ? 'bg-primary text-primary-foreground border-primary' 
-                    : 'hover:bg-accent/50'
-                } ${!emailThreads[4]?.emails[0]?.isRead ? 'font-bold' : ''}`}
-                onClick={() => handleSelectThread('4')}
-              >
-                <div className="flex items-center gap-2">
-                  {isSelectMode && (
-                    <input
-                      type="checkbox"
-                      className="size-4"
-                      checked={selectedEmails.has('4')}
-                      onChange={() => toggleEmailSelection('4')}
-                    />
-                  )}
-                  <button className="flex-1 text-left">
-                    <div className="flex items-center gap-2">
-                      <div className="size-7 rounded-full flex items-center justify-center text-xs bg-chart-4">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                          className="lucide lucide-user size-4 opacity-80" aria-hidden="true">
-                          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                          <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <span className={`font-medium truncate ${!emailThreads[4]?.emails[0]?.isRead ? 'text-foreground' : ''}`}>
-                              Stripe
-                            </span>
-                          </div>
-                          <span className="text-xs text-muted-foreground">Mar 29</span>
-                        </div>
-                        <div className={`truncate text-sm ${!emailThreads[4]?.emails[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
-                          Payment confirmation #1234
-                        </div>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs bg-chart-1 text-primary-foreground">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                              className="lucide lucide-tag size-3 opacity-80" aria-hidden="true">
-                              <path
-                                d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z">
-                              </path>
-                              <circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle>
-                            </svg>
-                            Work
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[4]?.emails[0]?.isRead ? 'font-medium' : ''}`}>
-                      Your recent payment has been successfully processed.
-                    </p>
-                  </button>
-                </div>
-              </div>
-              
-              {/* Email thread 5 */}
-              <div 
-                className={`w-full text-left rounded-xl p-3 border transition-colors ${
-                  selectedThread === '5' 
-                    ? 'bg-primary text-primary-foreground border-primary' 
-                    : 'hover:bg-accent/50'
-                } ${!emailThreads[5]?.emails[0]?.isRead ? 'font-bold' : ''}`}
-                onClick={() => handleSelectThread('5')}
-              >
-                <div className="flex items-center gap-2">
-                  {isSelectMode && (
-                    <input
-                      type="checkbox"
-                      className="size-4"
-                      checked={selectedEmails.has('5')}
-                      onChange={() => toggleEmailSelection('5')}
-                    />
-                  )}
-                  <button className="flex-1 text-left">
-                    <div className="flex items-center gap-2">
-                      <div className="size-7 rounded-full flex items-center justify-center text-xs bg-primary">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                          className="lucide lucide-user size-4 opacity-80" aria-hidden="true">
-                          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-                          <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <span className={`font-medium truncate ${!emailThreads[5]?.emails[0]?.isRead ? 'text-foreground' : ''}`}>
-                              Netflix
-                            </span>
-                          </div>
-                          <span className="text-xs text-muted-foreground">Mar 29</span>
-                        </div>
-                        <div className={`truncate text-sm ${!emailThreads[5]?.emails[0]?.isRead ? 'opacity-100' : 'opacity-90'}`}>
-                          New shows added to your list
-                        </div>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs bg-chart-2 text-primary-foreground">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                              className="lucide lucide-tag size-3 opacity-80" aria-hidden="true">
-                              <path
-                                d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z">
-                              </path>
-                              <circle cx="7.5" cy="7.5" r=".5" fill="currentColor"></circle>
-                            </svg>
-                            Personal
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <p className={`mt-1 text-xs text-muted-foreground line-clamp-1 ${!emailThreads[5]?.emails[0]?.isRead ? 'font-medium' : ''}`}>
-                      We added new shows we think you will love.
-                    </p>
-                  </button>
-                </div>
-              </div>
+              {emailThreads.map((thread) => (
+                <EmailThreadsListItem
+                  key={thread.id}
+                  thread={thread}
+                  isSelected={selectedThread === thread.id}
+                  isSelectMode={isSelectMode}
+                  onSelect={toggleEmailSelection}
+                  onThreadSelect={handleSelectThread}
+                />
+              ))}
             </div>
             <nav className="pt-3 flex items-center justify-between text-xs text-muted-foreground"><span>Page 1 of 1</span>
               <div className="flex items-center gap-2"><button disabled={true}
