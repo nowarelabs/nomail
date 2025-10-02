@@ -15,7 +15,7 @@ export default function Home() {
 	const [theme, setTheme] = useState<'light' | 'dark'>('light');
 	const [isCoreOpen, setIsCoreOpen] = useState(true);
 	const [isManagementOpen, setIsManagementOpen] = useState(true);
-	const [activeView, setActiveView] = useState('primary');
+	const [activeView, setActiveView] = useState('inbox');
 	const [isSelectMode, setIsSelectMode] = useState(false);
 	const [selectedThreads, setSelectedThreads] = useState<Set<string>>(new Set());
 	const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
@@ -34,13 +34,11 @@ export default function Home() {
 					replyTo: '',
 					date: 'Mar 29',
 					subject: 'New design review',
-					content:
-						'Team discussed command center improvements and category system. General positive feedback, with suggestions for quick actions placement.',
+					content: 'Team discussed command center improvements...',
 					htmlContent: '',
-					plainTextContent:
-						'Team discussed command center improvements and category system. General positive feedback, with suggestions for quick actions placement.',
+					plainTextContent: 'Team discussed command center improvements...',
 					isCollapsed: true,
-					isRead: false,
+					isRead: true,
 					category: 'work',
 					isDraft: false,
 					isFavorite: false,
@@ -52,10 +50,10 @@ export default function Home() {
 					attachments: [
 						{
 							id: '1',
-							name: 'design-mockup.png',
+							name: 'image.png',
 							extension: '.png',
-							size: 2411724,
-							sizeFormatted: '2.3 MB',
+							size: 524288,
+							sizeFormatted: '512.0 KB',
 							type: 'image/png',
 							mimeType: 'image/png',
 							url: '',
@@ -821,7 +819,10 @@ export default function Home() {
 						{isCoreOpen && (
 							<div className="overflow-hidden" style={{ height: 'auto', opacity: 1 }}>
 								<div className="py-1">
-									<button className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+									<button 
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeView === 'inbox' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+										onClick={() => handleViewChange('inbox')}
+									>
 										<span className="flex items-center gap-2">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -843,7 +844,10 @@ export default function Home() {
 										</span>
 										<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">281</span>
 									</button>
-									<button className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+									<button 
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeView === 'favorites' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+										onClick={() => handleViewChange('favorites')}
+									>
 										<span className="flex items-center gap-2">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -863,7 +867,10 @@ export default function Home() {
 											Favorites
 										</span>
 									</button>
-									<button className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+									<button 
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeView === 'drafts' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+										onClick={() => handleViewChange('drafts')}
+									>
 										<span className="flex items-center gap-2">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -885,7 +892,10 @@ export default function Home() {
 										</span>
 										<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">13</span>
 									</button>
-									<button className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+									<button 
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeView === 'sent' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+										onClick={() => handleViewChange('sent')}
+									>
 										<span className="flex items-center gap-2">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -935,7 +945,10 @@ export default function Home() {
 						{isManagementOpen && (
 							<div className="overflow-hidden" style={{ height: 'auto', opacity: 1 }}>
 								<div className="py-1">
-									<button className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+									<button 
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeView === 'archive' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+										onClick={() => handleViewChange('archive')}
+									>
 										<span className="flex items-center gap-2">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -957,7 +970,10 @@ export default function Home() {
 											Archive
 										</span>
 									</button>
-									<button className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+									<button 
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeView === 'spam' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+										onClick={() => handleViewChange('spam')}
+									>
 										<span className="flex items-center gap-2">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -980,7 +996,10 @@ export default function Home() {
 										</span>
 										<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">24</span>
 									</button>
-									<button className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm bg-sidebar-primary text-sidebar-primary-foreground">
+									<button 
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeView === 'bin' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+										onClick={() => handleViewChange('bin')}
+									>
 										<span className="flex items-center gap-2">
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -1034,6 +1053,13 @@ export default function Home() {
 				<section className="border-r p-3 overflow-y-auto hidden xl:flex xl:flex-col xl:min-w-0">
 					<div className="flex items-center justify-between px-1 pb-2">
 						<div className="text-sm font-medium">
+							{activeView === 'inbox' && 'Inbox'}
+							{activeView === 'favorites' && 'Favorites'}
+							{activeView === 'drafts' && 'Drafts'}
+							{activeView === 'sent' && 'Sent'}
+							{activeView === 'archive' && 'Archive'}
+							{activeView === 'spam' && 'Spam'}
+							{activeView === 'bin' && 'Bin'}
 							{activeView === 'primary' && 'Primary'}
 							{activeView === 'social' && 'Social'}
 							{activeView === 'updates' && 'Updates'}
@@ -1208,7 +1234,35 @@ export default function Home() {
 						)}
 						<div className="space-y-2 max-h-[70vh] overflow-y-auto pr-1 scrollbar-hidden">
 							{emailThreads
-								.filter(thread => thread.category === activeView)
+								.filter(thread => {
+									switch (activeView) {
+										case 'inbox':
+											return !thread.isTrash && !thread.isSpam && !thread.isArchive;
+										case 'favorites':
+											return thread.isFavorite;
+										case 'drafts':
+											return thread.isDraft;
+										case 'sent':
+											// For demo purposes, we'll assume sent emails are those that are not drafts and not incoming
+											return !thread.isDraft && thread.emails[0]?.senderName !== 'You';
+										case 'archive':
+											return thread.isArchive;
+										case 'spam':
+											return thread.isSpam;
+										case 'bin':
+											return thread.isTrash;
+										case 'primary':
+											return thread.category === 'primary';
+										case 'social':
+											return thread.category === 'social';
+										case 'updates':
+											return thread.category === 'updates';
+										case 'promotions':
+											return thread.category === 'promotions';
+										default:
+											return true;
+									}
+								})
 								.map((thread) => (
 									<EmailThreadsListItem
 										key={thread.id}
@@ -1224,7 +1278,35 @@ export default function Home() {
 						</div>
 						<nav className="pt-3 flex items-center justify-between text-xs text-muted-foreground">
 							<span>
-								{emailThreads.filter(thread => thread.category === activeView).length} items
+								{emailThreads.filter(thread => {
+									switch (activeView) {
+										case 'inbox':
+											return !thread.isTrash && !thread.isSpam && !thread.isArchive;
+										case 'favorites':
+											return thread.isFavorite;
+										case 'drafts':
+											return thread.isDraft;
+										case 'sent':
+											// For demo purposes, we'll assume sent emails are those that are not drafts and not incoming
+											return !thread.isDraft && thread.emails[0]?.senderName !== 'You';
+										case 'archive':
+											return thread.isArchive;
+										case 'spam':
+											return thread.isSpam;
+										case 'bin':
+											return thread.isTrash;
+										case 'primary':
+											return thread.category === 'primary';
+										case 'social':
+											return thread.category === 'social';
+										case 'updates':
+											return thread.category === 'updates';
+										case 'promotions':
+											return thread.category === 'promotions';
+										default:
+											return true;
+									}
+								}).length} items
 							</span>
 							<div className="flex items-center gap-2">
 								<button disabled={true} className="rounded-md border px-2 py-1 disabled:opacity-50 hover:bg-accent">
