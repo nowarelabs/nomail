@@ -15,7 +15,8 @@ export default function Home() {
 	const [theme, setTheme] = useState<'light' | 'dark'>('light');
 	const [isCoreOpen, setIsCoreOpen] = useState(true);
 	const [isManagementOpen, setIsManagementOpen] = useState(true);
-	const [activeView, setActiveView] = useState('inbox');
+	const [activeMainView, setActiveMainView] = useState('inbox'); // Core/Management filters
+	const [activeSecondaryView, setActiveSecondaryView] = useState('primary'); // Category filters
 	const [isSelectMode, setIsSelectMode] = useState(false);
 	const [selectedThreads, setSelectedThreads] = useState<Set<string>>(new Set());
 	const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
@@ -503,7 +504,13 @@ export default function Home() {
 	};
 
 	const handleViewChange = (view: string) => {
-		setActiveView(view);
+		// Determine if this is a main view (Core/Management) or secondary view (category)
+		const mainViews = ['inbox', 'favorites', 'drafts', 'sent', 'archive', 'spam', 'bin'];
+		if (mainViews.includes(view)) {
+			setActiveMainView(view);
+		} else {
+			setActiveSecondaryView(view);
+		}
 	};
 
 	const toggleSelectMode = () => {
@@ -635,6 +642,59 @@ export default function Home() {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
 	}, []);
+
+	// Filter threads based on main view (Core/Management) and secondary view (category)
+	const filterThreads = (threads: EmailThread[]) => {
+		return threads.filter(thread => {
+			// First apply main view filter (Core/Management)
+			let passesMainFilter = false;
+			switch (activeMainView) {
+				case 'inbox':
+					passesMainFilter = !thread.isTrash && !thread.isSpam && !thread.isArchive;
+					break;
+				case 'favorites':
+					passesMainFilter = thread.isFavorite;
+					break;
+				case 'drafts':
+					passesMainFilter = thread.isDraft;
+					break;
+				case 'sent':
+					// For demo purposes, we'll assume sent emails are those that are not drafts and not incoming
+					passesMainFilter = !thread.isDraft && thread.emails[0]?.senderName !== 'You';
+					break;
+				case 'archive':
+					passesMainFilter = thread.isArchive;
+					break;
+				case 'spam':
+					passesMainFilter = thread.isSpam;
+					break;
+				case 'bin':
+					passesMainFilter = thread.isTrash;
+					break;
+				default:
+					passesMainFilter = true;
+			}
+
+			// If it doesn't pass the main filter, don't show it
+			if (!passesMainFilter) return false;
+
+			// Then apply secondary view filter (category)
+			switch (activeSecondaryView) {
+				case 'primary':
+					return thread.category === 'primary';
+				case 'social':
+					return thread.category === 'social';
+				case 'updates':
+					return thread.category === 'updates';
+				case 'promotions':
+					return thread.category === 'promotions';
+				default:
+					return true;
+			}
+		});
+	};
+
+	const filteredThreads = filterThreads(emailThreads);
 
 	return (
 		<div className="h-full w-full bg-background text-foreground">
@@ -820,7 +880,7 @@ export default function Home() {
 							<div className="overflow-hidden" style={{ height: 'auto', opacity: 1 }}>
 								<div className="py-1">
 									<button 
-										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeView === 'inbox' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'inbox' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
 										onClick={() => handleViewChange('inbox')}
 									>
 										<span className="flex items-center gap-2">
@@ -845,7 +905,7 @@ export default function Home() {
 										<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">281</span>
 									</button>
 									<button 
-										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeView === 'favorites' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'favorites' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
 										onClick={() => handleViewChange('favorites')}
 									>
 										<span className="flex items-center gap-2">
@@ -868,7 +928,7 @@ export default function Home() {
 										</span>
 									</button>
 									<button 
-										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeView === 'drafts' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'drafts' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
 										onClick={() => handleViewChange('drafts')}
 									>
 										<span className="flex items-center gap-2">
@@ -893,7 +953,7 @@ export default function Home() {
 										<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">13</span>
 									</button>
 									<button 
-										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeView === 'sent' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'sent' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
 										onClick={() => handleViewChange('sent')}
 									>
 										<span className="flex items-center gap-2">
@@ -946,7 +1006,7 @@ export default function Home() {
 							<div className="overflow-hidden" style={{ height: 'auto', opacity: 1 }}>
 								<div className="py-1">
 									<button 
-										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeView === 'archive' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'archive' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
 										onClick={() => handleViewChange('archive')}
 									>
 										<span className="flex items-center gap-2">
@@ -971,7 +1031,7 @@ export default function Home() {
 										</span>
 									</button>
 									<button 
-										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeView === 'spam' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'spam' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
 										onClick={() => handleViewChange('spam')}
 									>
 										<span className="flex items-center gap-2">
@@ -997,7 +1057,7 @@ export default function Home() {
 										<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">24</span>
 									</button>
 									<button 
-										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeView === 'bin' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'bin' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
 										onClick={() => handleViewChange('bin')}
 									>
 										<span className="flex items-center gap-2">
@@ -1053,17 +1113,17 @@ export default function Home() {
 				<section className="border-r p-3 overflow-y-auto hidden xl:flex xl:flex-col xl:min-w-0">
 					<div className="flex items-center justify-between px-1 pb-2">
 						<div className="text-sm font-medium">
-							{activeView === 'inbox' && 'Inbox'}
-							{activeView === 'favorites' && 'Favorites'}
-							{activeView === 'drafts' && 'Drafts'}
-							{activeView === 'sent' && 'Sent'}
-							{activeView === 'archive' && 'Archive'}
-							{activeView === 'spam' && 'Spam'}
-							{activeView === 'bin' && 'Bin'}
-							{activeView === 'primary' && 'Primary'}
-							{activeView === 'social' && 'Social'}
-							{activeView === 'updates' && 'Updates'}
-							{activeView === 'promotions' && 'Promotions'}
+							{activeMainView === 'inbox' && 'Inbox'}
+							{activeMainView === 'favorites' && 'Favorites'}
+							{activeMainView === 'drafts' && 'Drafts'}
+							{activeMainView === 'sent' && 'Sent'}
+							{activeMainView === 'archive' && 'Archive'}
+							{activeMainView === 'spam' && 'Spam'}
+							{activeMainView === 'bin' && 'Bin'}
+							{activeSecondaryView === 'primary' && ' - Primary'}
+							{activeSecondaryView === 'social' && ' - Social'}
+							{activeSecondaryView === 'updates' && ' - Updates'}
+							{activeSecondaryView === 'promotions' && ' - Promotions'}
 						</div>
 						<div className="text-xs text-muted-foreground flex items-center gap-2">
 							{isSelectMode ? (
@@ -1137,7 +1197,7 @@ export default function Home() {
 							<div className="ms-auto flex items-center gap-1">
 								<button
 									className={`rounded-md border px-2 py-1 text-xs ${
-										activeView === 'primary' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
+										activeSecondaryView === 'primary' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
 									}`}
 									onClick={() => handleViewChange('primary')}
 								>
@@ -1145,7 +1205,7 @@ export default function Home() {
 								</button>
 								<button
 									className={`rounded-md border px-2 py-1 text-xs ${
-										activeView === 'social' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
+										activeSecondaryView === 'social' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
 									}`}
 									onClick={() => handleViewChange('social')}
 								>
@@ -1153,7 +1213,7 @@ export default function Home() {
 								</button>
 								<button
 									className={`rounded-md border px-2 py-1 text-xs ${
-										activeView === 'updates' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
+										activeSecondaryView === 'updates' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
 									}`}
 									onClick={() => handleViewChange('updates')}
 								>
@@ -1161,7 +1221,7 @@ export default function Home() {
 								</button>
 								<button
 									className={`rounded-md border px-2 py-1 text-xs ${
-										activeView === 'promotions' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
+										activeSecondaryView === 'promotions' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
 									}`}
 									onClick={() => handleViewChange('promotions')}
 								>
@@ -1233,80 +1293,22 @@ export default function Home() {
 							</div>
 						)}
 						<div className="space-y-2 max-h-[70vh] overflow-y-auto pr-1 scrollbar-hidden">
-							{emailThreads
-								.filter(thread => {
-									switch (activeView) {
-										case 'inbox':
-											return !thread.isTrash && !thread.isSpam && !thread.isArchive;
-										case 'favorites':
-											return thread.isFavorite;
-										case 'drafts':
-											return thread.isDraft;
-										case 'sent':
-											// For demo purposes, we'll assume sent emails are those that are not drafts and not incoming
-											return !thread.isDraft && thread.emails[0]?.senderName !== 'You';
-										case 'archive':
-											return thread.isArchive;
-										case 'spam':
-											return thread.isSpam;
-										case 'bin':
-											return thread.isTrash;
-										case 'primary':
-											return thread.category === 'primary';
-										case 'social':
-											return thread.category === 'social';
-										case 'updates':
-											return thread.category === 'updates';
-										case 'promotions':
-											return thread.category === 'promotions';
-										default:
-											return true;
-									}
-								})
-								.map((thread) => (
-									<EmailThreadsListItem
-										key={thread.id}
-										thread={thread}
-										isSelected={selectedThreads.has(thread.id)}
-										isSelectMode={isSelectMode}
-										isActive={selectedThread === thread.id}
-										onSelect={toggleEmailSelection}
-										onThreadClick={handleSelectThread}
-										onThreadView={setSelectedThread}
-									/>
-								))}
+							{filteredThreads.map((thread) => (
+								<EmailThreadsListItem
+									key={thread.id}
+									thread={thread}
+									isSelected={selectedThreads.has(thread.id)}
+									isSelectMode={isSelectMode}
+									isActive={selectedThread === thread.id}
+									onSelect={toggleEmailSelection}
+									onThreadClick={handleSelectThread}
+									onThreadView={setSelectedThread}
+								/>
+							))}
 						</div>
 						<nav className="pt-3 flex items-center justify-between text-xs text-muted-foreground">
 							<span>
-								{emailThreads.filter(thread => {
-									switch (activeView) {
-										case 'inbox':
-											return !thread.isTrash && !thread.isSpam && !thread.isArchive;
-										case 'favorites':
-											return thread.isFavorite;
-										case 'drafts':
-											return thread.isDraft;
-										case 'sent':
-											// For demo purposes, we'll assume sent emails are those that are not drafts and not incoming
-											return !thread.isDraft && thread.emails[0]?.senderName !== 'You';
-										case 'archive':
-											return thread.isArchive;
-										case 'spam':
-											return thread.isSpam;
-										case 'bin':
-											return thread.isTrash;
-										case 'primary':
-											return thread.category === 'primary';
-										case 'social':
-											return thread.category === 'social';
-										case 'updates':
-											return thread.category === 'updates';
-										case 'promotions':
-											return thread.category === 'promotions';
-										default:
-											return true;
-									}
-								}).length} items
+								{filteredThreads.length} items
 							</span>
 							<div className="flex items-center gap-2">
 								<button disabled={true} className="rounded-md border px-2 py-1 disabled:opacity-50 hover:bg-accent">
