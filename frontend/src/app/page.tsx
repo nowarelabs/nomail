@@ -1033,7 +1033,12 @@ export default function Home() {
 				</aside>
 				<section className="border-r p-3 overflow-y-auto hidden xl:flex xl:flex-col xl:min-w-0">
 					<div className="flex items-center justify-between px-1 pb-2">
-						<div className="text-sm font-medium">Inbox</div>
+						<div className="text-sm font-medium">
+							{activeView === 'primary' && 'Primary'}
+							{activeView === 'social' && 'Social'}
+							{activeView === 'updates' && 'Updates'}
+							{activeView === 'promotions' && 'Promotions'}
+						</div>
 						<div className="text-xs text-muted-foreground flex items-center gap-2">
 							{isSelectMode ? (
 								<div className="text-xs text-muted-foreground flex items-center gap-2">
@@ -1202,21 +1207,25 @@ export default function Home() {
 							</div>
 						)}
 						<div className="space-y-2 max-h-[70vh] overflow-y-auto pr-1 scrollbar-hidden">
-							{emailThreads.map((thread) => (
-								<EmailThreadsListItem
-									key={thread.id}
-									thread={thread}
-									isSelected={selectedThreads.has(thread.id)}
-									isSelectMode={isSelectMode}
-									isActive={selectedThread === thread.id}
-									onSelect={toggleEmailSelection}
-									onThreadClick={handleSelectThread}
-									onThreadView={setSelectedThread}
-								/>
-							))}
+							{emailThreads
+								.filter(thread => thread.category === activeView)
+								.map((thread) => (
+									<EmailThreadsListItem
+										key={thread.id}
+										thread={thread}
+										isSelected={selectedThreads.has(thread.id)}
+										isSelectMode={isSelectMode}
+										isActive={selectedThread === thread.id}
+										onSelect={toggleEmailSelection}
+										onThreadClick={handleSelectThread}
+										onThreadView={setSelectedThread}
+									/>
+								))}
 						</div>
 						<nav className="pt-3 flex items-center justify-between text-xs text-muted-foreground">
-							<span>Page 1 of 1</span>
+							<span>
+								{emailThreads.filter(thread => thread.category === activeView).length} items
+							</span>
 							<div className="flex items-center gap-2">
 								<button disabled={true} className="rounded-md border px-2 py-1 disabled:opacity-50 hover:bg-accent">
 									Prev
