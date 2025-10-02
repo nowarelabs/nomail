@@ -17,7 +17,6 @@ export function ThreadLabel({
 	backgroundColor = 'bg-chart-1',
 	textColor = 'text-primary-foreground',
 }: ThreadLabelProps) {
-	// Default tag icon if no icon is provided
 	const defaultIcon = (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"

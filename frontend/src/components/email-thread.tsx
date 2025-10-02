@@ -5,42 +5,42 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import { Email } from 'components/types/emails';
 
 const EMPTY_EMAIL: Email = {
-  id: 0,
-  from: '',
-  to: '',
-  cc: [],
-  bcc: [],
-  replyTo: '',
-  date: '',
-  subject: 'No email selected',
-  content: 'Select an email thread to view its contents',
-  htmlContent: '',
-  plainTextContent: 'Select an email thread to view its contents',
-  isCollapsed: true,
-  isRead: true,
-  category: '',
-  isDraft: false,
-  isFavorite: false,
-  isSpam: false,
-  isTrash: false,
-  isArchive: false,
-  labels: [],
-  hasAttachments: false,
-  attachments: [],
-  attachmentCount: 0,
-  priority: 'normal',
-  isStarred: false,
-  threadId: '',
-  inReplyTo: '',
-  references: [],
-  snippet: '',
-  size: 0,
-  flags: [],
-  senderName: '',
-  recipientNames: [],
-  isImportant: false,
-  hasInlineImages: false,
-  unsubscribeLink: ''
+	id: 0,
+	from: '',
+	to: '',
+	cc: [],
+	bcc: [],
+	replyTo: '',
+	date: '',
+	subject: 'No email selected',
+	content: 'Select an email thread to view its contents',
+	htmlContent: '',
+	plainTextContent: 'Select an email thread to view its contents',
+	isCollapsed: true,
+	isRead: true,
+	category: '',
+	isDraft: false,
+	isFavorite: false,
+	isSpam: false,
+	isTrash: false,
+	isArchive: false,
+	labels: [],
+	hasAttachments: false,
+	attachments: [],
+	attachmentCount: 0,
+	priority: 'normal',
+	isStarred: false,
+	threadId: '',
+	inReplyTo: '',
+	references: [],
+	snippet: '',
+	size: 0,
+	flags: [],
+	senderName: '',
+	recipientNames: [],
+	isImportant: false,
+	hasInlineImages: false,
+	unsubscribeLink: '',
 };
 
 interface EmailThreadProps {
@@ -71,7 +71,7 @@ export function EmailThread({
 	// Handle case where no emails are available
 	const displayEmails = emails && emails.length > 0 ? emails : [EMPTY_EMAIL];
 	const primaryEmail = displayEmails[0];
-	
+
 	// Show empty state when there are no real emails
 	const isEmptyState = !emails || emails.length === 0;
 
@@ -107,9 +107,7 @@ export function EmailThread({
 					<div className="text-sm text-muted-foreground">
 						{primaryEmail.from ? `${primaryEmail.from} • ${primaryEmail.date}` : primaryEmail.date}
 					</div>
-					{primaryEmail.to && (
-						<div className="text-sm text-muted-foreground">to {primaryEmail.to}</div>
-					)}
+					{primaryEmail.to && <div className="text-sm text-muted-foreground">to {primaryEmail.to}</div>}
 				</div>
 
 				<div className="flex items-center gap-2">
@@ -221,8 +219,8 @@ export function EmailThread({
 					</DropdownMenu>
 
 					{/* Expand/Collapse button */}
-					<button 
-						className="rounded-lg border px-2.5 py-1.5 hover:bg-accent" 
+					<button
+						className="rounded-lg border px-2.5 py-1.5 hover:bg-accent"
 						onClick={() => onToggleExpand(threadId)}
 						disabled={isEmptyState}
 					>

@@ -12,7 +12,6 @@ export function ThreadAvatar({ senderName }: ThreadAvatarProps) {
 		return colors[Math.floor(Math.random() * colors.length)];
 	});
 
-	// Get the first letter of the sender's name for the avatar
 	const initials = senderName.charAt(0).toUpperCase();
 
 	return (
