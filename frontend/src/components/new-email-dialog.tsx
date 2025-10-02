@@ -5,10 +5,7 @@ interface NewEmailDialogProps {
 	onClose: (id: boolean) => void;
 }
 
-export function NewEmailDialog({
-	isOpen,
-	onClose,
-}: NewEmailDialogProps) {
+export function NewEmailDialog({ isOpen, onClose }: NewEmailDialogProps) {
 	if (!isOpen) {
 		return null;
 	}
@@ -27,7 +24,7 @@ export function NewEmailDialog({
 					<div className="flex items-center gap-2">
 						<button
 							className="rounded-md border px-2 py-1 text-xs hover:bg-accent"
-							onClick={() =>{
+							onClick={() => {
 								onClose(false);
 							}}
 						>
@@ -40,22 +37,11 @@ export function NewEmailDialog({
 						<label htmlFor="to" className="text-xs text-muted-foreground">
 							To
 						</label>
-						<input
-							id="to"
-							required
-							placeholder="Recipient"
-							className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm"
-							name="to"
-						/>
+						<input id="to" required placeholder="Recipient" className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" name="to" />
 						<label htmlFor="from" className="text-xs text-muted-foreground">
 							From
 						</label>
-						<input
-							id="from"
-							placeholder="you@domain.com"
-							className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm"
-							name="from"
-						/>
+						<input id="from" placeholder="you@domain.com" className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" name="from" />
 						<label htmlFor="cc" className="text-xs text-muted-foreground">
 							Cc
 						</label>
@@ -76,12 +62,7 @@ export function NewEmailDialog({
 						<label htmlFor="subject" className="text-xs text-muted-foreground">
 							Subject
 						</label>
-						<input
-							id="subject"
-							placeholder="Subject"
-							className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm"
-							name="subject"
-						/>
+						<input id="subject" placeholder="Subject" className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" name="subject" />
 					</div>
 					<div>
 						<label htmlFor="content" className="sr-only">
