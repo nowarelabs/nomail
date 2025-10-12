@@ -527,10 +527,15 @@ export default function Home() {
 	};
 
 	const toggleSelectAll = () => {
-		if (selectedThreads.size === emailThreads.length) {
+		// Get the currently filtered threads
+		const currentlyFilteredThreads = filterThreads(emailThreads);
+		
+		// If all filtered threads are already selected, deselect all
+		// Otherwise, select all filtered threads
+		if (selectedThreads.size === currentlyFilteredThreads.length && currentlyFilteredThreads.length > 0) {
 			setSelectedThreads(new Set());
 		} else {
-			setSelectedThreads(new Set(emailThreads.map((t) => t.id)));
+			setSelectedThreads(new Set(currentlyFilteredThreads.map((t) => t.id)));
 		}
 	};
 
@@ -683,19 +688,24 @@ export default function Home() {
 			// If it doesn't pass the main filter, don't show it
 			if (!passesMainFilter) return false;
 
-			// Then apply secondary view filter (category)
-			switch (activeSecondaryView) {
-				case 'primary':
-					return thread.category === 'primary';
-				case 'social':
-					return thread.category === 'social';
-				case 'updates':
-					return thread.category === 'updates';
-				case 'promotions':
-					return thread.category === 'promotions';
-				default:
-					return true;
+			// Only apply secondary view filter (category) when in inbox
+			if (activeMainView === 'inbox') {
+				switch (activeSecondaryView) {
+					case 'primary':
+						return thread.category === 'primary';
+					case 'social':
+						return thread.category === 'social';
+					case 'updates':
+						return thread.category === 'updates';
+					case 'promotions':
+						return thread.category === 'promotions';
+					default:
+						return true;
+				}
 			}
+			
+			// If not in inbox, show all threads that pass the main filter
+			return true;
 		});
 	};
 
@@ -1118,17 +1128,18 @@ export default function Home() {
 				<section className="border-r p-3 overflow-y-auto hidden xl:flex xl:flex-col xl:min-w-0">
 					<div className="flex items-center justify-between px-1 pb-2">
 						<div className="text-sm font-medium">
-							{activeMainView === 'inbox' && 'Inbox'}
+							{activeMainView === 'inbox' && activeSecondaryView === 'primary' && 'Primary'}
+							{activeMainView === 'inbox' && activeSecondaryView === 'social' && 'Social'}
+							{activeMainView === 'inbox' && activeSecondaryView === 'updates' && 'Updates'}
+							{activeMainView === 'inbox' && activeSecondaryView === 'promotions' && 'Promotions'}
+							{activeMainView === 'inbox' && !activeSecondaryView && 'Inbox'}
+							{activeMainView === 'inbox' && activeSecondaryView === 'inbox' && 'Inbox'}
 							{activeMainView === 'favorites' && 'Favorites'}
 							{activeMainView === 'drafts' && 'Drafts'}
 							{activeMainView === 'sent' && 'Sent'}
 							{activeMainView === 'archive' && 'Archive'}
 							{activeMainView === 'spam' && 'Spam'}
 							{activeMainView === 'bin' && 'Bin'}
-							{activeSecondaryView === 'primary' && ' - Primary'}
-							{activeSecondaryView === 'social' && ' - Social'}
-							{activeSecondaryView === 'updates' && ' - Updates'}
-							{activeSecondaryView === 'promotions' && ' - Promotions'}
 						</div>
 						<div className="text-xs text-muted-foreground flex items-center gap-2">
 							{isSelectMode ? (
@@ -1136,7 +1147,7 @@ export default function Home() {
 									<button
 										className="rounded-md border px-2 py-1 hover:bg-accent flex items-center gap-1"
 										onClick={toggleSelectAll}
-										aria-pressed={selectedThreads.size === 5}
+										aria-pressed={selectedThreads.size === filteredThreads.length && filteredThreads.length > 0}
 									>
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
@@ -1197,43 +1208,45 @@ export default function Home() {
 						</div>
 					</div>
 					<div className="rounded-xl border bg-card/40 p-2 flex-1 min-h-0 flex flex-col">
-						<div className="flex items-center gap-2 px-1 pb-2">
-							<div className="text-xs text-muted-foreground">Views</div>
-							<div className="ms-auto flex items-center gap-1">
-								<button
-									className={`rounded-md border px-2 py-1 text-xs ${
-										activeSecondaryView === 'primary' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
-									}`}
-									onClick={() => handleViewChange('primary')}
-								>
-									Primary
-								</button>
-								<button
-									className={`rounded-md border px-2 py-1 text-xs ${
-										activeSecondaryView === 'social' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
-									}`}
-									onClick={() => handleViewChange('social')}
-								>
-									Social
-								</button>
-								<button
-									className={`rounded-md border px-2 py-1 text-xs ${
-										activeSecondaryView === 'updates' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
-									}`}
-									onClick={() => handleViewChange('updates')}
-								>
-									Updates
-								</button>
-								<button
-									className={`rounded-md border px-2 py-1 text-xs ${
-										activeSecondaryView === 'promotions' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
-									}`}
-									onClick={() => handleViewChange('promotions')}
-								>
-									Promotions
-								</button>
+						{activeMainView === 'inbox' && (
+							<div className="flex items-center gap-2 px-1 pb-2">
+								<div className="text-xs text-muted-foreground">Views</div>
+								<div className="ms-auto flex items-center gap-1">
+									<button
+										className={`rounded-md border px-2 py-1 text-xs ${
+											activeSecondaryView === 'primary' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
+										}`}
+										onClick={() => handleViewChange('primary')}
+									>
+										Primary
+									</button>
+									<button
+										className={`rounded-md border px-2 py-1 text-xs ${
+											activeSecondaryView === 'social' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
+										}`}
+										onClick={() => handleViewChange('social')}
+									>
+										Social
+									</button>
+									<button
+										className={`rounded-md border px-2 py-1 text-xs ${
+											activeSecondaryView === 'updates' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
+										}`}
+										onClick={() => handleViewChange('updates')}
+									>
+										Updates
+									</button>
+									<button
+										className={`rounded-md border px-2 py-1 text-xs ${
+											activeSecondaryView === 'promotions' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
+										}`}
+										onClick={() => handleViewChange('promotions')}
+									>
+										Promotions
+									</button>
+								</div>
 							</div>
-						</div>
+						)}
 						{/* Action items bar - shown when in select mode */}
 						{isSelectMode && (
 							<div className="flex items-center gap-2 px-1 pb-2">
