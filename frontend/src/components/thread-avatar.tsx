@@ -1,16 +1,21 @@
 'use client';
 
-import { useState } from 'react';
-
 interface ThreadAvatarProps {
 	senderName: string;
 }
 
 export function ThreadAvatar({ senderName }: ThreadAvatarProps) {
-	const [avatarBg] = useState(() => {
+	const getColorFromName = (name: string) => {
 		const colors = ['bg-chart-1', 'bg-chart-2', 'bg-chart-3', 'bg-chart-4', 'bg-chart-5', 'bg-primary', 'bg-destructive'];
-		return colors[Math.floor(Math.random() * colors.length)];
-	});
+		let hash = 0;
+		for (let i = 0; i < name.length; i++) {
+			hash = name.charCodeAt(i) + ((hash << 5) - hash);
+		}
+		const index = Math.abs(hash) % colors.length;
+		return colors[index];
+	};
+
+	const avatarBg = getColorFromName(senderName);
 
 	const initials = senderName.charAt(0).toUpperCase();
 

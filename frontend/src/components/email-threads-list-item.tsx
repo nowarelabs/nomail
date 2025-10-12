@@ -24,6 +24,9 @@ export function EmailThreadsListItem({
 	onThreadClick,
 	onThreadView,
 }: EmailThreadsListItemProps) {
+	const formatDate = (dateString: string) => {
+		return new Date(dateString).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+	};
 	const primaryEmail = thread.emails[0];
 	const senderName = primaryEmail?.senderName || primaryEmail?.from || thread.participants[0] || 'Unknown Sender';
 	const isUnread = thread.unreadCount > 0;
@@ -53,7 +56,7 @@ export function EmailThreadsListItem({
 									)}
 								</div>
 								<span className="text-xs text-muted-foreground">
-									{new Date(thread.lastEmailDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+									{formatDate(thread.lastEmailDate)}
 								</span>
 							</div>
 							<div className={`truncate text-sm ${isUnread ? 'text-foreground' : 'text-muted-foreground'}`}>{thread.subject}</div>

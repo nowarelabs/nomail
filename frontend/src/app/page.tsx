@@ -473,12 +473,17 @@ export default function Home() {
 
 	useEffect(() => {
 		const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-		const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
+		
 		if (savedTheme) {
 			setTheme(savedTheme);
-		} else if (systemPrefersDark) {
-			setTheme('dark');
+		} else {
+			// Only check system preference on client side to avoid hydration mismatch
+			if (typeof window !== 'undefined') {
+				const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+				if (systemPrefersDark) {
+					setTheme('dark');
+				}
+			}
 		}
 	}, []);
 
