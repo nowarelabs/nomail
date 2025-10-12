@@ -1,0 +1,16 @@
+{
+  "name": "nomail",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start:frontend": "pnpm --filter frontend dev", 
+    "start:backend": "pnpm --filter backend dev",
+    "build": "pnpm recursive run build",
+    "dev": "pnpm recursive run dev",
+    "test": "pnpm recursive run test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.15.1"
+}
