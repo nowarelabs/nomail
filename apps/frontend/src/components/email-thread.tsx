@@ -3,6 +3,7 @@
 import { useRef, useEffect } from 'react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from './ui/dropdown-menu';
 import { Email } from 'components/types/emails';
+import { ComposeReply } from './compose-reply';
 
 const EMPTY_EMAIL: Email = {
 	id: 0,
@@ -54,6 +55,7 @@ interface EmailThreadProps {
 	onThreadAction: (threadId: string, action: string) => void;
 	showCompose: boolean;
 	onCloseCompose: () => void;
+	composeAction?: 'reply' | 'replyAll' | 'forward' | null;
 }
 
 export function EmailThread({
@@ -67,6 +69,7 @@ export function EmailThread({
 	onThreadAction,
 	showCompose,
 	onCloseCompose,
+	composeAction = null,
 }: EmailThreadProps) {
 	// Handle case where no emails are available
 	const displayEmails = emails && emails.length > 0 ? emails : [EMPTY_EMAIL];
@@ -77,13 +80,13 @@ export function EmailThread({
 
 	const composeRef = useRef<HTMLDivElement>(null);
 
-	// Scroll to compose box when it's shown
+	// Scroll to compose box when it's shown or when thread is expanded
 	useEffect(() => {
-		if (showCompose && composeRef.current) {
+		if (showCompose && composeRef.current && isExpanded) {
 			// Scroll to the compose box with smooth behavior
 			composeRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 		}
-	}, [showCompose]);
+	}, [showCompose, isExpanded]);
 
 	// Handler functions that combine the original action with scrolling
 	const handleReply = (threadId: string) => {
@@ -373,38 +376,12 @@ export function EmailThread({
 
 					{/* Compose form within thread */}
 					{showCompose && (
-						<div ref={composeRef} className="border rounded-lg p-3 mt-4 bg-card">
-							<div className="flex items-center justify-between mb-3">
-								<h4 className="font-medium">Compose Reply</h4>
-								<button className="rounded-md border px-2 py-1 text-xs hover:bg-accent" onClick={onCloseCompose}>
-									Close
-								</button>
-							</div>
-							<form className="space-y-3">
-								<div className="grid grid-cols-[4rem_1fr] items-center gap-2">
-									<label className="text-xs text-muted-foreground">To</label>
-									<input placeholder="Recipient" className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" />
-									<label className="text-xs text-muted-foreground">Subject</label>
-									<input
-										placeholder="Subject"
-										defaultValue={`Re: ${primaryEmail.subject}`}
-										className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm"
-									/>
-								</div>
-								<textarea
-									rows={4}
-									placeholder="Write your message…"
-									className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm"
-								></textarea>
-								<div className="flex items-center justify-end gap-2">
-									<button type="button" className="rounded-md border px-3 py-1.5 text-sm hover:bg-accent" onClick={onCloseCompose}>
-										Cancel
-									</button>
-									<button type="submit" className="rounded-md border px-3 py-1.5 text-sm bg-primary text-primary-foreground">
-										Send
-									</button>
-								</div>
-							</form>
+						<div ref={composeRef}>
+							<ComposeReply 
+								emails={displayEmails} 
+								action={composeAction} 
+								onClose={onCloseCompose} 
+							/>
 						</div>
 					)}
 				</div>

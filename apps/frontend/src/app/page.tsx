@@ -2132,6 +2132,7 @@ export default function Home() {
 	]);
 
 	const [showThreadCompose, setShowThreadCompose] = useState<string | null>(null);
+	const [composeAction, setComposeAction] = useState<'reply' | 'replyAll' | 'forward' | null>(null);
 	const [selectedThread, setSelectedThread] = useState<string | null>(null);
 	const moreActionsButtonRef = useRef<HTMLButtonElement>(null);
 	const moreActionsDropdownRef = useRef<HTMLDivElement>(null);
@@ -2259,14 +2260,29 @@ export default function Home() {
 	};
 
 	const handleReply = (threadId: string) => {
+		setComposeAction('reply');
+		// Expand the thread if it's not already expanded
+		if (!expandedThreads.has(threadId)) {
+			toggleThreadExpansion(threadId);
+		}
 		openThreadCompose(threadId);
 	};
 
 	const handleReplyAll = (threadId: string) => {
+		setComposeAction('replyAll');
+		// Expand the thread if it's not already expanded
+		if (!expandedThreads.has(threadId)) {
+			toggleThreadExpansion(threadId);
+		}
 		openThreadCompose(threadId);
 	};
 
 	const handleForward = (threadId: string) => {
+		setComposeAction('forward');
+		// Expand the thread if it's not already expanded
+		if (!expandedThreads.has(threadId)) {
+			toggleThreadExpansion(threadId);
+		}
 		openThreadCompose(threadId);
 	};
 
@@ -3185,6 +3201,7 @@ export default function Home() {
 							onThreadAction={handleThreadAction}
 							showCompose={selectedThread !== null && showThreadCompose === selectedThread ? showThreadCompose === selectedThread : false}
 							onCloseCompose={closeThreadCompose}
+							composeAction={composeAction}
 						/>
 					</div>
 				</main>
