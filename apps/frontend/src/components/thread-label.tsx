@@ -11,6 +11,7 @@ interface ThreadLabelProps {
 }
 
 // Function to generate a consistent color based on the label name
+// Using colors that work well in both light and dark modes
 const getLabelColor = (label: string) => {
 	const colors = [
 		{ bg: 'bg-blue-100', text: 'text-blue-800' },
@@ -70,7 +71,14 @@ export function ThreadLabel({
 	return (
 		<span
 			className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs ${bgClass} ${textClass}`}
-			style={{ color, backgroundColor: backgroundColor?.includes('bg-') ? undefined : backgroundColor }}
+			style={{ 
+				color, 
+				backgroundColor: backgroundColor?.includes('bg-') ? undefined : backgroundColor,
+				// Add a subtle border for better visibility in both modes
+				border: '1px solid transparent',
+				borderColor: backgroundColor ? undefined : 'currentColor',
+				opacity: backgroundColor ? undefined : 0.8
+			}}
 		>
 			{icon || defaultIcon}
 			{label}
