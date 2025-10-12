@@ -10,13 +10,44 @@ interface ThreadLabelProps {
 	textColor?: string;
 }
 
+// Function to generate a consistent color based on the label name
+const getLabelColor = (label: string) => {
+	const colors = [
+		{ bg: 'bg-blue-100', text: 'text-blue-800' },
+		{ bg: 'bg-green-100', text: 'text-green-800' },
+		{ bg: 'bg-yellow-100', text: 'text-yellow-800' },
+		{ bg: 'bg-red-100', text: 'text-red-800' },
+		{ bg: 'bg-purple-100', text: 'text-purple-800' },
+		{ bg: 'bg-pink-100', text: 'text-pink-800' },
+		{ bg: 'bg-indigo-100', text: 'text-indigo-800' },
+		{ bg: 'bg-teal-100', text: 'text-teal-800' },
+		{ bg: 'bg-orange-100', text: 'text-orange-800' },
+		{ bg: 'bg-cyan-100', text: 'text-cyan-800' },
+	];
+	
+	// Generate a hash from the label name to consistently assign a color
+	let hash = 0;
+	for (let i = 0; i < label.length; i++) {
+		hash = label.charCodeAt(i) + ((hash << 5) - hash);
+	}
+	
+	// Use the hash to select a color from the array
+	const index = Math.abs(hash) % colors.length;
+	return colors[index];
+};
+
 export function ThreadLabel({
 	label,
 	icon,
 	color = 'currentColor',
-	backgroundColor = 'bg-chart-1',
-	textColor = 'text-primary-foreground',
+	backgroundColor,
+	textColor,
 }: ThreadLabelProps) {
+	// If no custom colors are provided, use the generated color based on the label
+	const defaultColors = getLabelColor(label);
+	const bgClass = backgroundColor || defaultColors.bg;
+	const textClass = textColor || defaultColors.text;
+
 	const defaultIcon = (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -38,8 +69,8 @@ export function ThreadLabel({
 
 	return (
 		<span
-			className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs ${backgroundColor} ${textColor}`}
-			style={{ color, backgroundColor: backgroundColor.includes('bg-') ? undefined : backgroundColor }}
+			className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs ${bgClass} ${textClass}`}
+			style={{ color, backgroundColor: backgroundColor?.includes('bg-') ? undefined : backgroundColor }}
 		>
 			{icon || defaultIcon}
 			{label}
