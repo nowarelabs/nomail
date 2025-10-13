@@ -25,6 +25,7 @@ export default function Home() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [isCoreOpen, setIsCoreOpen] = useState(true);
   const [isManagementOpen, setIsManagementOpen] = useState(true);
+	const [isLabelsOpen, setIsLabelsOpen] = useState(true);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [activeMainView, setActiveMainView] = useState('inbox'); // Core/Management filters
   const [activeSecondaryView, setActiveSecondaryView] = useState('primary'); // Category filters
@@ -2176,6 +2177,10 @@ export default function Home() {
 		setIsManagementOpen(!isManagementOpen);
 	};
 
+	const toggleLabels = () => {
+		setIsLabelsOpen(!isLabelsOpen);
+	};
+
 	const handleViewChange = (view: string) => {
 		// Determine if this is a main view (Core/Management) or secondary view (category)
 		const mainViews = ['inbox', 'favorites', 'drafts', 'sent', 'archive', 'spam', 'bin'];
@@ -2950,27 +2955,112 @@ export default function Home() {
 							</div>
 						)}
 					</div>
-					<div className="mt-auto">
-						<div>
-							<button className="w-full text-left flex items-center gap-2 px-2 py-2 text-sm text-muted-foreground hover:text-foreground">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="24"
-									height="24"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									strokeWidth="2"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									className="lucide lucide-chevron-right size-4"
-									aria-hidden="true"
-								>
-									<path d="m9 18 6-6-6-6"></path>
-								</svg>
-								<span className="font-medium">Labels</span>
-							</button>
-						</div>
+					<div>
+						<button
+							className="w-full text-left flex items-center gap-2 px-2 py-2 text-sm text-muted-foreground hover:text-foreground"
+							onClick={toggleLabels}
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="24"
+								height="24"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="2"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								className={`lucide lucide-chevron-${isLabelsOpen ? 'down' : 'right'} size-4`}
+								aria-hidden="true"
+							>
+								<path d={`m${isLabelsOpen ? '6 9 6 6 6-6' : '9 18 6-6-6-6'}`}></path>
+							</svg>
+							<span className="font-medium">Labels</span>
+						</button>
+						{isLabelsOpen && (
+							<div className="overflow-hidden" style={{ height: 'auto', opacity: 1 }}>
+								<div className="py-1">
+									<button 
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'archive' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+										onClick={() => handleViewChange('archive')}
+									>
+										<span className="flex items-center gap-2">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="24"
+												height="24"
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												strokeWidth="2"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												className="lucide lucide-archive size-4"
+												aria-hidden="true"
+											>
+												<rect width="20" height="5" x="2" y="3" rx="1"></rect>
+												<path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"></path>
+												<path d="M10 12h4"></path>
+											</svg>
+											Archive
+										</span>
+									</button>
+									<button 
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'spam' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+										onClick={() => handleViewChange('spam')}
+									>
+										<span className="flex items-center gap-2">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="24"
+												height="24"
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												strokeWidth="2"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												className="lucide lucide-shield-alert size-4"
+												aria-hidden="true"
+											>
+												<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>
+												<path d="M12 8v4"></path>
+												<path d="M12 16h.01"></path>
+											</svg>
+											Spam
+										</span>
+										<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">24</span>
+									</button>
+									<button 
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'bin' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
+										onClick={() => handleViewChange('bin')}
+									>
+										<span className="flex items-center gap-2">
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="24"
+												height="24"
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												strokeWidth="2"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												className="lucide lucide-trash2 lucide-trash-2 size-4"
+												aria-hidden="true"
+											>
+												<path d="M10 11v6"></path>
+												<path d="M14 11v6"></path>
+												<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+												<path d="M3 6h18"></path>
+												<path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+											</svg>
+											Bin
+										</span>
+									</button>
+								</div>
+							</div>
+						)}
 					</div>
 				</aside>
 				<section className="border-r p-3 overflow-y-auto hidden xl:flex xl:flex-col xl:min-w-0">
