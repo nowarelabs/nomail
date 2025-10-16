@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 
 import type { EmailThread, Email } from "../types/emails";
 
-import { EmailThread as EmailThreadComponent } from "../components/email-thread";
+import { MainViewPanel } from "../components/main-view-panel";
 import { EmailThreadsListItem } from "../components/email-threads-list-item";
 import { NewEmailDialog } from "../components/new-email-dialog";
 import { FiltersDialog } from "components/components/filters-dialog";
@@ -2493,32 +2493,20 @@ export default function Home() {
 					toggleMoreActions={toggleMoreActions}
 					isMoreActionsOpen={isMoreActionsOpen}
 				/>
-				<main className="col-span-1 p-3 overflow-y-auto">
-					<div className="h-full w-full flex flex-col gap-3 p-4">
-						{/* Email thread display */}
-						<EmailThreadComponent
-							threadId={selectedThread || DEFAULT_THREAD_ID}
-							emails={selectedThreadData ? selectedThreadData.emails : []}
-							isExpanded={
-								selectedThread !== null && expandedThreads.has(selectedThread)
-									? expandedThreads.has(selectedThread)
-									: false
-							}
-							onToggleExpand={toggleThreadExpansion}
-							onReply={handleReply}
-							onReplyAll={handleReplyAll}
-							onForward={handleForward}
-							onThreadAction={handleThreadAction}
-							showCompose={
-								selectedThread !== null && showThreadCompose === selectedThread
-									? showThreadCompose === selectedThread
-									: false
-							}
-							onCloseCompose={closeThreadCompose}
-							composeAction={composeAction}
-						/>
-					</div>
-				</main>
+				<MainViewPanel
+					DEFAULT_THREAD_ID={DEFAULT_THREAD_ID}
+					selectedThread={selectedThread}
+					selectedThreadData={selectedThreadData}
+					expandedThreads={expandedThreads}
+					showThreadCompose={showThreadCompose}
+					composeAction={composeAction}
+					toggleThreadExpansion={toggleThreadExpansion}
+					handleReply={handleReply}
+					handleReplyAll={handleReplyAll}
+					handleForward={handleForward}
+					handleThreadAction={handleThreadAction}
+					closeThreadCompose={closeThreadCompose}
+				/>
 			</div>
 		</div>
 	);
