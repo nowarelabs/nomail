@@ -4,7 +4,6 @@ import { useRef, useEffect, useState } from 'react';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from './ui/dropdown-menu';
 import { Email } from 'components/types/emails';
 import { ComposeReply } from './compose-reply';
-import { ReplyModal } from './reply-modal';
 
 const EMPTY_EMAIL: Email = {
 	id: 0,
@@ -80,10 +79,6 @@ export function EmailThread({
 	const isEmptyState = !emails || emails.length === 0;
 
 	const composeRef = useRef<HTMLDivElement>(null);
-	
-	// State for reply modal
-	const [showReplyModal, setShowReplyModal] = useState(false);
-	const [replyAction, setReplyAction] = useState<'reply' | 'replyAll' | 'forward'>('reply');
 
 	// Scroll to compose box when it's shown or when thread is expanded
 	useEffect(() => {
@@ -104,24 +99,6 @@ export function EmailThread({
 
 	const handleForward = (threadId: string) => {
 		onForward(threadId);
-	};
-	
-	// Handler for opening reply modal
-	const handleOpenReplyModal = (action: 'reply' | 'replyAll' | 'forward') => {
-		setReplyAction(action);
-		setShowReplyModal(true);
-	};
-	
-	// Handler for sending email from modal
-	const handleSendEmail = (emailData: {
-		to: string[];
-		cc: string[];
-		subject: string;
-		content: string;
-	}) => {
-		// In a real app, this would send the email
-		console.log('Sending email:', emailData);
-		// For now, we'll just close the modal
 	};
 
 	return (
@@ -409,15 +386,6 @@ export function EmailThread({
 					)}
 				</div>
 			)}
-			
-			{/* Reply Modal */}
-			<ReplyModal
-				emails={displayEmails}
-				action={replyAction}
-				isOpen={showReplyModal}
-				onClose={() => setShowReplyModal(false)}
-				onSend={handleSendEmail}
-			/>
 		</div>
 	);
 }

@@ -8,7 +8,7 @@ import { EmailThread as EmailThreadComponent } from '../components/email-thread'
 import { EmailThreadsListItem } from '../components/email-threads-list-item';
 import { NewEmailDialog } from '../components/new-email-dialog';
 import { FiltersDialog } from 'components/components/filters-dialog';
-import { ReplyModal } from '../components/reply-modal';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -2139,10 +2139,6 @@ export default function Home() {
 	const [composeAction, setComposeAction] = useState<'reply' | 'replyAll' | 'forward' | null>(null);
 	const [selectedThread, setSelectedThread] = useState<string | null>(null);
 
-	const [showReplyModal, setShowReplyModal] = useState(false);
-	const [replyModalAction, setReplyModalAction] = useState<'reply' | 'replyAll' | 'forward'>('reply');
-	const [replyModalThread, setReplyModalThread] = useState<EmailThread | null>(null);
-
 	const moreActionsButtonRef = useRef<HTMLButtonElement>(null);
 	const moreActionsDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -2302,26 +2298,6 @@ export default function Home() {
 		openThreadCompose(threadId);
 	};
 
-  const handleOpenReplyModal = (threadId: string, action: 'reply' | 'replyAll' | 'forward') => {
-    const thread = emailThreads.find(t => t.id === threadId);
-    if (thread) {
-      setReplyModalThread(thread);
-      setReplyModalAction(action);
-      setShowReplyModal(true);
-    }
-  };
-  
-  const handleSendEmail = (emailData: {
-    to: string[];
-    cc: string[];
-    subject: string;
-    content: string;
-  }) => {
-    // In a real app, this would send the email
-    console.log('Sending email:', emailData);
-    // For now, we'll just close the modal
-  };
-
 	const handleMarkAsSpam = (threadId: string) => {
 		console.log(`Marking thread ${threadId} as spam`);
 	};
@@ -2433,17 +2409,6 @@ export default function Home() {
 
 			{/* Filters Dialog */}
 			<FiltersDialog isOpen={showFiltersDialog} onClose={setShowFiltersDialog} />
-			
-			{/* Reply Modal */}
-			{replyModalThread && (
-				<ReplyModal
-					emails={replyModalThread.emails}
-					action={replyModalAction}
-					isOpen={showReplyModal}
-					onClose={() => setShowReplyModal(false)}
-					onSend={handleSendEmail}
-				/>
-			)}
 
 			<div className="flex items-center gap-2 px-3 py-2 border-b">
 				<div className="flex items-center gap-2">

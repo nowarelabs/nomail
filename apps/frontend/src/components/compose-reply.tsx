@@ -3,6 +3,7 @@
 import { useState, useRef, KeyboardEvent } from 'react';
 import { Email } from '../types/emails';
 import { EmailAddressPill } from './email-address-pill';
+import { ReplyModal } from './reply-modal';
 
 interface ComposeReplyProps {
 	emails: Email[];
@@ -81,6 +82,9 @@ ${latestEmail.plainTextContent || latestEmail.content}`;
 	// Refs for input fields
 	const toInputRef = useRef<HTMLInputElement>(null);
 	const ccInputRef = useRef<HTMLInputElement>(null);
+	
+	// State for reply modal
+	const [showReplyModal, setShowReplyModal] = useState(false);
 
 	// Function to validate email format
 	const isValidEmail = (email: string) => {
@@ -144,6 +148,20 @@ ${latestEmail.plainTextContent || latestEmail.content}`;
 			}
 		}
 	};
+	
+	// Handler for sending email from modal
+	const handleSendEmail = (emailData: {
+		to: string[];
+		cc: string[];
+		subject: string;
+		content: string;
+	}) => {
+		// In a real app, this would send the email
+		console.log('Sending email:', emailData);
+		// For now, we'll just close the modal
+		setShowReplyModal(false);
+		onClose();
+	};
 
 	return (
 		<div className="border rounded-lg p-3 mt-4 bg-card">
@@ -154,9 +172,17 @@ ${latestEmail.plainTextContent || latestEmail.content}`;
 					{action === 'forward' && 'Forward'}
 					{!action && 'Compose Reply'}
 				</h4>
-				<button className="rounded-md border px-2 py-1 text-xs hover:bg-accent" onClick={onClose}>
-					Close
-				</button>
+				<div className="flex items-center gap-2">
+					<button 
+						className="rounded-md border px-2 py-1 text-xs hover:bg-accent" 
+						onClick={() => setShowReplyModal(true)}
+					>
+						Expand
+					</button>
+					<button className="rounded-md border px-2 py-1 text-xs hover:bg-accent" onClick={onClose}>
+						Close
+					</button>
+				</div>
 			</div>
 			<form className="space-y-3">
 				<div className="grid grid-cols-[4rem_1fr] items-center gap-2">
@@ -230,6 +256,15 @@ ${latestEmail.plainTextContent || latestEmail.content}`;
 					</button>
 				</div>
 			</form>
+			
+			{/* Reply Modal - only accessible through this ComposeReply component */}
+			<ReplyModal
+				emails={emails}
+				action={action as 'reply' | 'replyAll' | 'forward'}
+				isOpen={showReplyModal}
+				onClose={() => setShowReplyModal(false)}
+				onSend={handleSendEmail}
+			/>
 		</div>
 	);
 }
