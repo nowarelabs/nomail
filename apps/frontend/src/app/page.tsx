@@ -2475,6 +2475,7 @@ export default function Home() {
 					activeSecondaryView={activeSecondaryView}
 					showNewEmailDialog={showNewEmailDialog}
 					setShowNewEmailDialog={setShowNewEmailDialog}
+					setShowFiltersDialog={setShowFiltersDialog}
 					handleViewChange={handleViewChange}
 				/>
 				<ViewChangerPanel

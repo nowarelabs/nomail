@@ -8,6 +8,7 @@ interface LeftAsideBarProps {
   activeSecondaryView: string;
   showNewEmailDialog: boolean;
   setShowNewEmailDialog: (show: boolean) => void;
+	setShowFiltersDialog: (open: boolean) => void;
   handleViewChange: (view: string) => void;
 }
 
@@ -16,6 +17,7 @@ export function LeftAsideBar({
   activeSecondaryView,
   showNewEmailDialog,
   setShowNewEmailDialog,
+	setShowFiltersDialog,
   handleViewChange,
 }: LeftAsideBarProps) {
   const [isCoreOpen, setIsCoreOpen] = useState(true);
@@ -481,7 +483,7 @@ export function LeftAsideBar({
                 </button>
                 <button
                   className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                  onClick={() => setShowNewEmailDialog(true)}
+                  onClick={() => setShowFiltersDialog(true)}
                 >
                   <span className="flex items-center gap-2">
                     <svg
