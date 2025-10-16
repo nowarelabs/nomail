@@ -1,25 +1,31 @@
-'use client';
+"use client";
 
-import { useRef, useEffect, useState } from 'react';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from './ui/dropdown-menu';
-import { Email } from 'components/types/emails';
-import { ComposeReply } from './compose-reply';
+import { useRef, useEffect, useState } from "react";
+import {
+	DropdownMenu,
+	DropdownMenuTrigger,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+} from "./ui/dropdown-menu";
+import { Email } from "components/types/emails";
+import { ComposeReply } from "./compose-reply";
 
 const EMPTY_EMAIL: Email = {
 	id: 0,
-	from: '',
-	to: '',
+	from: "",
+	to: "",
 	cc: [],
 	bcc: [],
-	replyTo: '',
-	date: '',
-	subject: 'No email selected',
-	content: 'Select an email thread to view its contents',
-	htmlContent: '',
-	plainTextContent: 'Select an email thread to view its contents',
+	replyTo: "",
+	date: "",
+	subject: "No email selected",
+	content: "Select an email thread to view its contents",
+	htmlContent: "",
+	plainTextContent: "Select an email thread to view its contents",
 	isCollapsed: true,
 	isRead: true,
-	category: '',
+	category: "",
 	isDraft: false,
 	isFavorite: false,
 	isSpam: false,
@@ -29,19 +35,19 @@ const EMPTY_EMAIL: Email = {
 	hasAttachments: false,
 	attachments: [],
 	attachmentCount: 0,
-	priority: 'normal',
+	priority: "normal",
 	isStarred: false,
-	threadId: '',
-	inReplyTo: '',
+	threadId: "",
+	inReplyTo: "",
 	references: [],
-	snippet: '',
+	snippet: "",
 	size: 0,
 	flags: [],
-	senderName: '',
+	senderName: "",
 	recipientNames: [],
 	isImportant: false,
 	hasInlineImages: false,
-	unsubscribeLink: '',
+	unsubscribeLink: "",
 };
 
 interface EmailThreadProps {
@@ -55,7 +61,7 @@ interface EmailThreadProps {
 	onThreadAction: (threadId: string, action: string) => void;
 	showCompose: boolean;
 	onCloseCompose: () => void;
-	composeAction?: 'reply' | 'replyAll' | 'forward' | null;
+	composeAction?: "reply" | "replyAll" | "forward" | null;
 }
 
 export function EmailThread({
@@ -84,7 +90,10 @@ export function EmailThread({
 	useEffect(() => {
 		if (showCompose && composeRef.current && isExpanded) {
 			// Scroll to the compose box with smooth behavior
-			composeRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+			composeRef.current.scrollIntoView({
+				behavior: "smooth",
+				block: "nearest",
+			});
 		}
 	}, [showCompose, isExpanded]);
 
@@ -108,9 +117,15 @@ export function EmailThread({
 				<div className="flex-1">
 					<h3 className="font-semibold text-lg">{primaryEmail.subject}</h3>
 					<div className="text-sm text-muted-foreground">
-						{primaryEmail.from ? `${primaryEmail.from} • ${primaryEmail.date}` : primaryEmail.date}
+						{primaryEmail.from
+							? `${primaryEmail.from} • ${primaryEmail.date}`
+							: primaryEmail.date}
 					</div>
-					{primaryEmail.to && <div className="text-sm text-muted-foreground">to {primaryEmail.to}</div>}
+					{primaryEmail.to && (
+						<div className="text-sm text-muted-foreground">
+							to {primaryEmail.to}
+						</div>
+					)}
 				</div>
 
 				<div className="flex items-center gap-2">
@@ -188,7 +203,10 @@ export function EmailThread({
 					{/* Three dots dropdown */}
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
-							<button className="rounded-lg border px-2.5 py-1.5 hover:bg-accent" disabled={isEmptyState}>
+							<button
+								className="rounded-lg border px-2.5 py-1.5 hover:bg-accent"
+								disabled={isEmptyState}
+							>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									width="16"
@@ -208,14 +226,23 @@ export function EmailThread({
 							</button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end" className="w-48">
-							<DropdownMenuItem onClick={() => onThreadAction(threadId, 'spam')} disabled={isEmptyState}>
+							<DropdownMenuItem
+								onClick={() => onThreadAction(threadId, "spam")}
+								disabled={isEmptyState}
+							>
 								<span>Mark as spam</span>
 							</DropdownMenuItem>
-							<DropdownMenuItem onClick={() => onThreadAction(threadId, 'favorite')} disabled={isEmptyState}>
+							<DropdownMenuItem
+								onClick={() => onThreadAction(threadId, "favorite")}
+								disabled={isEmptyState}
+							>
 								<span>Favorite</span>
 							</DropdownMenuItem>
 							<DropdownMenuSeparator />
-							<DropdownMenuItem onClick={() => onThreadAction(threadId, 'bin')} disabled={isEmptyState}>
+							<DropdownMenuItem
+								onClick={() => onThreadAction(threadId, "bin")}
+								disabled={isEmptyState}
+							>
 								<span>Move to bin</span>
 							</DropdownMenuItem>
 						</DropdownMenuContent>
@@ -237,9 +264,11 @@ export function EmailThread({
 							strokeWidth="2"
 							strokeLinecap="round"
 							strokeLinejoin="round"
-							className={`lucide lucide-chevron-${isExpanded ? 'up' : 'down'} size-4`}
+							className={`lucide lucide-chevron-${
+								isExpanded ? "up" : "down"
+							} size-4`}
 						>
-							<path d={isExpanded ? 'm18 15-6-6-6 6' : 'm6 9 6 6 6-6'}></path>
+							<path d={isExpanded ? "m18 15-6-6-6 6" : "m6 9 6 6 6-6"}></path>
 						</svg>
 					</button>
 				</div>
@@ -248,16 +277,24 @@ export function EmailThread({
 			{/* Thread preview (collapsed view) - only show if not empty state */}
 			{!isExpanded && !isEmptyState && (
 				<div className="border-t pt-3">
-					<p className="text-sm text-muted-foreground line-clamp-2">{primaryEmail.content}</p>
-					<div className="text-xs text-muted-foreground mt-2">{displayEmails.length} messages in thread</div>
+					<p className="text-sm text-muted-foreground line-clamp-2">
+						{primaryEmail.content}
+					</p>
+					<div className="text-xs text-muted-foreground mt-2">
+						{displayEmails.length} messages in thread
+					</div>
 				</div>
 			)}
 
 			{/* Empty state message */}
 			{isEmptyState && (
 				<div className="border-t pt-3">
-					<p className="text-sm text-muted-foreground">{primaryEmail.content}</p>
-					<div className="text-xs text-muted-foreground mt-2">No email selected</div>
+					<p className="text-sm text-muted-foreground">
+						{primaryEmail.content}
+					</p>
+					<div className="text-xs text-muted-foreground mt-2">
+						No email selected
+					</div>
 				</div>
 			)}
 
@@ -265,7 +302,14 @@ export function EmailThread({
 			{isExpanded && !isEmptyState && (
 				<div className="border-t pt-3 space-y-4 max-h-[70vh] overflow-y-auto pr-2 scrollbar-hidden">
 					{displayEmails.map((email, index) => (
-						<div key={email.id} className={`p-3 rounded-lg ${index === displayEmails.length - 1 ? 'bg-muted' : 'bg-background'}`}>
+						<div
+							key={email.id}
+							className={`p-3 rounded-lg ${
+								index === displayEmails.length - 1
+									? "bg-muted"
+									: "bg-background"
+							}`}
+						>
 							<div className="flex items-start justify-between mb-2">
 								<div>
 									<div className="font-medium">{email.from}</div>
@@ -275,7 +319,10 @@ export function EmailThread({
 								</div>
 								{index === 0 && (
 									<div className="flex items-center gap-2">
-										<button className="rounded-lg border px-2 py-1 text-xs hover:bg-accent" onClick={() => handleReply(threadId)}>
+										<button
+											className="rounded-lg border px-2 py-1 text-xs hover:bg-accent"
+											onClick={() => handleReply(threadId)}
+										>
 											Reply
 										</button>
 									</div>
@@ -286,7 +333,9 @@ export function EmailThread({
 							{/* Attachments section */}
 							{index === 0 && (
 								<div className="rounded-xl border p-3 mt-3">
-									<div className="text-sm font-medium mb-2">Attachments [4]</div>
+									<div className="text-sm font-medium mb-2">
+										Attachments [4]
+									</div>
 									<div className="flex flex-wrap gap-2">
 										<span className="inline-flex items-center gap-2 rounded-full px-2.5 py-1 text-xs border bg-accent text-accent-foreground">
 											<svg
@@ -377,10 +426,10 @@ export function EmailThread({
 					{/* Compose form within thread */}
 					{showCompose && (
 						<div ref={composeRef}>
-							<ComposeReply 
-								emails={displayEmails} 
-								action={composeAction} 
-								onClose={onCloseCompose} 
+							<ComposeReply
+								emails={displayEmails}
+								action={composeAction}
+								onClose={onCloseCompose}
 							/>
 						</div>
 					)}

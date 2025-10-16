@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 interface FiltersDialogProps {
 	isOpen: boolean;
@@ -16,7 +16,7 @@ export function FiltersDialog({ isOpen, onClose }: FiltersDialogProps) {
 			aria-modal="true"
 			aria-label="Advanced filters"
 			className="fixed top-4 right-4 w-[min(100vw-1rem,28rem)] z-50"
-			style={{ opacity: 1, transform: 'none' }}
+			style={{ opacity: 1, transform: "none" }}
 		>
 			<div className="rounded-xl border bg-card shadow-xl overflow-hidden">
 				<header className="flex items-center justify-between border-b px-3 py-2">
@@ -37,15 +37,27 @@ export function FiltersDialog({ isOpen, onClose }: FiltersDialogProps) {
 						<label htmlFor="q" className="text-xs text-muted-foreground">
 							Query
 						</label>
-						<input id="q" placeholder="free text" className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" />
+						<input
+							id="q"
+							placeholder="free text"
+							className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm"
+						/>
 						<label htmlFor="from" className="text-xs text-muted-foreground">
 							From
 						</label>
-						<input id="from" placeholder="name or email" className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" />
+						<input
+							id="from"
+							placeholder="name or email"
+							className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm"
+						/>
 						<label htmlFor="to" className="text-xs text-muted-foreground">
 							To
 						</label>
-						<input id="to" placeholder="recipient" className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" />
+						<input
+							id="to"
+							placeholder="recipient"
+							className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm"
+						/>
 						<label className="text-xs text-muted-foreground">Attachment</label>
 						<div className="flex items-center gap-2">
 							<input id="hasAtt" className="size-4" type="checkbox" />
@@ -56,7 +68,10 @@ export function FiltersDialog({ isOpen, onClose }: FiltersDialogProps) {
 						<label htmlFor="label" className="text-xs text-muted-foreground">
 							Label
 						</label>
-						<select id="label" className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm">
+						<select
+							id="label"
+							className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm"
+						>
 							<option value="any">Any</option>
 							<option value="work">Work</option>
 							<option value="personal">Personal</option>

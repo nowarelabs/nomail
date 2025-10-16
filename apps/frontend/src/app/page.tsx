@@ -1,62 +1,66 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from "react";
 
-import type { EmailThread, Email } from '../types/emails';
+import type { EmailThread, Email } from "../types/emails";
 
-import { EmailThread as EmailThreadComponent } from '../components/email-thread';
-import { EmailThreadsListItem } from '../components/email-threads-list-item';
-import { NewEmailDialog } from '../components/new-email-dialog';
-import { FiltersDialog } from 'components/components/filters-dialog';
+import { EmailThread as EmailThreadComponent } from "../components/email-thread";
+import { EmailThreadsListItem } from "../components/email-threads-list-item";
+import { NewEmailDialog } from "../components/new-email-dialog";
+import { FiltersDialog } from "components/components/filters-dialog";
 
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '../components/ui/dropdown-menu';
-import { Button } from '../components/ui/button';
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuGroup,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu";
+import { Button } from "../components/ui/button";
 
 export default function Home() {
-  const [showNewEmailDialog, setShowNewEmailDialog] = useState(false);
-  const [showFiltersDialog, setShowFiltersDialog] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const [isCoreOpen, setIsCoreOpen] = useState(true);
-  const [isManagementOpen, setIsManagementOpen] = useState(true);
-  const [isLabelsOpen, setIsLabelsOpen] = useState(false);
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-  const [isMoreOpen, setIsMoreOpen] = useState(true);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [activeMainView, setActiveMainView] = useState('inbox');
-  const [activeSecondaryView, setActiveSecondaryView] = useState('primary');
-  const [isSelectMode, setIsSelectMode] = useState(false);
-  const [selectedThreads, setSelectedThreads] = useState<Set<string>>(new Set());
-  const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
-  const [expandedThreads, setExpandedThreads] = useState<Set<string>>(new Set());
-  const [emailThreads, setEmailThreads] = useState<EmailThread[]>([
+	const [showNewEmailDialog, setShowNewEmailDialog] = useState(false);
+	const [showFiltersDialog, setShowFiltersDialog] = useState(false);
+	const [theme, setTheme] = useState<"light" | "dark">("light");
+	const [isCoreOpen, setIsCoreOpen] = useState(true);
+	const [isManagementOpen, setIsManagementOpen] = useState(true);
+	const [isLabelsOpen, setIsLabelsOpen] = useState(false);
+	const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+	const [isMoreOpen, setIsMoreOpen] = useState(true);
+	const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+	const [activeMainView, setActiveMainView] = useState("inbox");
+	const [activeSecondaryView, setActiveSecondaryView] = useState("primary");
+	const [isSelectMode, setIsSelectMode] = useState(false);
+	const [selectedThreads, setSelectedThreads] = useState<Set<string>>(
+		new Set()
+	);
+	const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
+	const [expandedThreads, setExpandedThreads] = useState<Set<string>>(
+		new Set()
+	);
+	const [emailThreads, setEmailThreads] = useState<EmailThread[]>([
 		// Primary emails
 		{
-			id: '1',
-			subject: 'New design review',
+			id: "1",
+			subject: "New design review",
 			emails: [
 				{
 					id: 1,
-					from: 'ali@baked.com',
-					to: 'you@example.com',
+					from: "ali@baked.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 29',
-					subject: 'New design review',
-					content: 'Team discussed command center improvements...',
-					htmlContent: '',
-					plainTextContent: 'Team discussed command center improvements...',
+					replyTo: "",
+					date: "Mar 29",
+					subject: "New design review",
+					content: "Team discussed command center improvements...",
+					htmlContent: "",
+					plainTextContent: "Team discussed command center improvements...",
 					isCollapsed: true,
 					isRead: true,
-					category: 'work',
+					category: "work",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
@@ -66,84 +70,87 @@ export default function Home() {
 					hasAttachments: true,
 					attachments: [
 						{
-							id: '1',
-							name: 'image.png',
-							extension: '.png',
+							id: "1",
+							name: "image.png",
+							extension: ".png",
 							size: 524288,
-							sizeFormatted: '512.0 KB',
-							type: 'image/png',
-							mimeType: 'image/png',
-							url: '',
+							sizeFormatted: "512.0 KB",
+							type: "image/png",
+							mimeType: "image/png",
+							url: "",
 							isScanned: true,
-							scanResult: 'clean',
+							scanResult: "clean",
 							downloadCount: 0,
-							uploadedDate: 'Mar 29',
-							thumbnailUrl: '',
+							uploadedDate: "Mar 29",
+							thumbnailUrl: "",
 							isInline: false,
 						},
 						{
-							id: '2',
-							name: 'requirements.pdf',
-							extension: '.pdf',
+							id: "2",
+							name: "requirements.pdf",
+							extension: ".pdf",
 							size: 1048576,
-							sizeFormatted: '1.0 MB',
-							type: 'application/pdf',
-							mimeType: 'application/pdf',
-							url: '',
+							sizeFormatted: "1.0 MB",
+							type: "application/pdf",
+							mimeType: "application/pdf",
+							url: "",
 							isScanned: true,
-							scanResult: 'clean',
+							scanResult: "clean",
 							downloadCount: 2,
-							uploadedDate: 'Mar 29',
-							thumbnailUrl: '',
+							uploadedDate: "Mar 29",
+							thumbnailUrl: "",
 							isInline: false,
 						},
 						{
-							id: '3',
-							name: 'comments.docx',
-							extension: '.docx',
+							id: "3",
+							name: "comments.docx",
+							extension: ".docx",
 							size: 2097152,
-							sizeFormatted: '2.0 MB',
-							type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-							mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-							url: '',
+							sizeFormatted: "2.0 MB",
+							type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+							mimeType:
+								"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+							url: "",
 							isScanned: true,
-							scanResult: 'clean',
+							scanResult: "clean",
 							downloadCount: 2,
-							uploadedDate: 'Mar 29',
-							thumbnailUrl: '',
+							uploadedDate: "Mar 29",
+							thumbnailUrl: "",
 							isInline: false,
 						},
 					],
 					attachmentCount: 3,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '1',
-					inReplyTo: '',
+					threadId: "1",
+					inReplyTo: "",
 					references: [],
-					snippet: 'Team discussed command center improvements...',
+					snippet: "Team discussed command center improvements...",
 					size: 0,
 					flags: [],
-					senderName: 'Ali from Baked',
-					recipientNames: ['You'],
+					senderName: "Ali from Baked",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 				{
 					id: 2,
-					from: 'you@example.com',
-					to: 'ali@baked.com',
+					from: "you@example.com",
+					to: "ali@baked.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 28',
-					subject: 'Re: New design review',
-					content: "Thanks for the feedback. I'll work on implementing the suggestions.",
-					htmlContent: '',
-					plainTextContent: "Thanks for the feedback. I'll work on implementing the suggestions.",
+					replyTo: "",
+					date: "Mar 28",
+					subject: "Re: New design review",
+					content:
+						"Thanks for the feedback. I'll work on implementing the suggestions.",
+					htmlContent: "",
+					plainTextContent:
+						"Thanks for the feedback. I'll work on implementing the suggestions.",
 					isCollapsed: true,
 					isRead: true,
-					category: 'work',
+					category: "work",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
@@ -153,35 +160,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '1',
-					inReplyTo: '1',
-					references: ['1'],
-					snippet: 'Thanks for the feedback...',
+					threadId: "1",
+					inReplyTo: "1",
+					references: ["1"],
+					snippet: "Thanks for the feedback...",
 					size: 0,
-					flags: ['replied'],
-					senderName: 'You',
-					recipientNames: ['Ali from Baked'],
+					flags: ["replied"],
+					senderName: "You",
+					recipientNames: ["Ali from Baked"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 				{
 					id: 3,
-					from: 'ali@baked.com',
-					to: 'you@example.com',
+					from: "ali@baked.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 27',
-					subject: 'Re: New design review',
-					content: 'Looking forward to seeing the updated designs.',
-					htmlContent: '',
-					plainTextContent: 'Looking forward to seeing the updated designs.',
+					replyTo: "",
+					date: "Mar 27",
+					subject: "Re: New design review",
+					content: "Looking forward to seeing the updated designs.",
+					htmlContent: "",
+					plainTextContent: "Looking forward to seeing the updated designs.",
 					isCollapsed: true,
 					isRead: false,
-					category: 'work',
+					category: "work",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
@@ -191,35 +198,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '1',
-					inReplyTo: '2',
-					references: ['1', '2'],
-					snippet: 'Looking forward to seeing...',
+					threadId: "1",
+					inReplyTo: "2",
+					references: ["1", "2"],
+					snippet: "Looking forward to seeing...",
 					size: 0,
 					flags: [],
-					senderName: 'Ali from Baked',
-					recipientNames: ['You'],
+					senderName: "Ali from Baked",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['ali@baked.com', 'you@example.com'],
-			participantNames: ['Ali from Baked', 'You'],
-			lastEmailDate: 'Mar 29',
-			firstEmailDate: 'Mar 27',
+			participants: ["ali@baked.com", "you@example.com"],
+			participantNames: ["Ali from Baked", "You"],
+			lastEmailDate: "Mar 29",
+			firstEmailDate: "Mar 27",
 			messageCount: 3,
 			unreadCount: 2,
 			hasAttachments: true,
 			totalAttachmentCount: 4,
-			labels: ['Work'],
+			labels: ["Work"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'primary',
-			snippet: 'Team discussed command center improvements...',
+			category: "primary",
+			snippet: "Team discussed command center improvements...",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -227,24 +234,26 @@ export default function Home() {
 			isArchive: false,
 		},
 		{
-			id: '2',
-			subject: 'Project status update',
+			id: "2",
+			subject: "Project status update",
 			emails: [
 				{
 					id: 4,
-					from: 'manager@company.com',
-					to: 'you@example.com',
-					cc: ['team@company.com'],
+					from: "manager@company.com",
+					to: "you@example.com",
+					cc: ["team@company.com"],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 28',
-					subject: 'Project status update',
-					content: 'Please provide a status update on the current project by end of day.',
-					htmlContent: '',
-					plainTextContent: 'Please provide a status update on the current project by end of day.',
+					replyTo: "",
+					date: "Mar 28",
+					subject: "Project status update",
+					content:
+						"Please provide a status update on the current project by end of day.",
+					htmlContent: "",
+					plainTextContent:
+						"Please provide a status update on the current project by end of day.",
 					isCollapsed: true,
 					isRead: true,
-					category: 'work',
+					category: "work",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
@@ -254,35 +263,39 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: true,
-					threadId: '2',
-					inReplyTo: '',
+					threadId: "2",
+					inReplyTo: "",
 					references: [],
-					snippet: 'Please provide a status update on the current project...',
+					snippet: "Please provide a status update on the current project...",
 					size: 0,
 					flags: [],
-					senderName: 'Project Manager',
-					recipientNames: ['You', 'Team'],
+					senderName: "Project Manager",
+					recipientNames: ["You", "Team"],
 					isImportant: true,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['manager@company.com', 'you@example.com', 'team@company.com'],
-			participantNames: ['Project Manager', 'You', 'Team'],
-			lastEmailDate: 'Mar 28',
-			firstEmailDate: 'Mar 28',
+			participants: [
+				"manager@company.com",
+				"you@example.com",
+				"team@company.com",
+			],
+			participantNames: ["Project Manager", "You", "Team"],
+			lastEmailDate: "Mar 28",
+			firstEmailDate: "Mar 28",
 			messageCount: 1,
 			unreadCount: 0,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Work', 'Important'],
+			labels: ["Work", "Important"],
 			isStarred: true,
 			isFavorite: false,
 			isImportant: true,
-			category: 'primary',
-			snippet: 'Please provide a status update on the current project...',
+			category: "primary",
+			snippet: "Please provide a status update on the current project...",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -290,24 +303,26 @@ export default function Home() {
 			isArchive: false,
 		},
 		{
-			id: '3',
-			subject: 'Meeting tomorrow',
+			id: "3",
+			subject: "Meeting tomorrow",
 			emails: [
 				{
 					id: 5,
-					from: 'colleague@company.com',
-					to: 'you@example.com',
+					from: "colleague@company.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 27',
-					subject: 'Meeting tomorrow',
-					content: 'Just confirming our meeting scheduled for tomorrow at 10am.',
-					htmlContent: '',
-					plainTextContent: 'Just confirming our meeting scheduled for tomorrow at 10am.',
+					replyTo: "",
+					date: "Mar 27",
+					subject: "Meeting tomorrow",
+					content:
+						"Just confirming our meeting scheduled for tomorrow at 10am.",
+					htmlContent: "",
+					plainTextContent:
+						"Just confirming our meeting scheduled for tomorrow at 10am.",
 					isCollapsed: true,
 					isRead: false,
-					category: 'work',
+					category: "work",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
@@ -317,35 +332,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '3',
-					inReplyTo: '',
+					threadId: "3",
+					inReplyTo: "",
 					references: [],
-					snippet: 'Just confirming our meeting scheduled for tomorrow...',
+					snippet: "Just confirming our meeting scheduled for tomorrow...",
 					size: 0,
 					flags: [],
-					senderName: 'Colleague',
-					recipientNames: ['You'],
+					senderName: "Colleague",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['colleague@company.com', 'you@example.com'],
-			participantNames: ['Colleague', 'You'],
-			lastEmailDate: 'Mar 27',
-			firstEmailDate: 'Mar 27',
+			participants: ["colleague@company.com", "you@example.com"],
+			participantNames: ["Colleague", "You"],
+			lastEmailDate: "Mar 27",
+			firstEmailDate: "Mar 27",
 			messageCount: 1,
 			unreadCount: 1,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Meeting'],
+			labels: ["Meeting"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'primary',
-			snippet: 'Just confirming our meeting scheduled for tomorrow...',
+			category: "primary",
+			snippet: "Just confirming our meeting scheduled for tomorrow...",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -354,24 +369,24 @@ export default function Home() {
 		},
 		// Social emails
 		{
-			id: '4',
-			subject: 'New friend request',
+			id: "4",
+			subject: "New friend request",
 			emails: [
 				{
 					id: 6,
-					from: 'social-network@example.com',
-					to: 'you@example.com',
+					from: "social-network@example.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 29',
-					subject: 'New friend request',
-					content: 'You have a new friend request from John Doe.',
-					htmlContent: '',
-					plainTextContent: 'You have a new friend request from John Doe.',
+					replyTo: "",
+					date: "Mar 29",
+					subject: "New friend request",
+					content: "You have a new friend request from John Doe.",
+					htmlContent: "",
+					plainTextContent: "You have a new friend request from John Doe.",
 					isCollapsed: true,
 					isRead: true,
-					category: 'social',
+					category: "social",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
@@ -381,35 +396,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '4',
-					inReplyTo: '',
+					threadId: "4",
+					inReplyTo: "",
 					references: [],
-					snippet: 'You have a new friend request from John Doe.',
+					snippet: "You have a new friend request from John Doe.",
 					size: 0,
 					flags: [],
-					senderName: 'Social Network',
-					recipientNames: ['You'],
+					senderName: "Social Network",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['social-network@example.com', 'you@example.com'],
-			participantNames: ['Social Network', 'You'],
-			lastEmailDate: 'Mar 29',
-			firstEmailDate: 'Mar 29',
+			participants: ["social-network@example.com", "you@example.com"],
+			participantNames: ["Social Network", "You"],
+			lastEmailDate: "Mar 29",
+			firstEmailDate: "Mar 29",
 			messageCount: 1,
 			unreadCount: 0,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Social'],
+			labels: ["Social"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'social',
-			snippet: 'You have a new friend request from John Doe.',
+			category: "social",
+			snippet: "You have a new friend request from John Doe.",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -417,24 +432,24 @@ export default function Home() {
 			isArchive: false,
 		},
 		{
-			id: '5',
-			subject: 'Photo tagged',
+			id: "5",
+			subject: "Photo tagged",
 			emails: [
 				{
 					id: 7,
-					from: 'photos@example.com',
-					to: 'you@example.com',
+					from: "photos@example.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 28',
-					subject: 'Photo tagged',
-					content: 'You were tagged in 3 photos.',
-					htmlContent: '',
-					plainTextContent: 'You were tagged in 3 photos.',
+					replyTo: "",
+					date: "Mar 28",
+					subject: "Photo tagged",
+					content: "You were tagged in 3 photos.",
+					htmlContent: "",
+					plainTextContent: "You were tagged in 3 photos.",
 					isCollapsed: true,
 					isRead: false,
-					category: 'social',
+					category: "social",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
@@ -444,35 +459,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '5',
-					inReplyTo: '',
+					threadId: "5",
+					inReplyTo: "",
 					references: [],
-					snippet: 'You were tagged in 3 photos.',
+					snippet: "You were tagged in 3 photos.",
 					size: 0,
 					flags: [],
-					senderName: 'Photo Service',
-					recipientNames: ['You'],
+					senderName: "Photo Service",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['photos@example.com', 'you@example.com'],
-			participantNames: ['Photo Service', 'You'],
-			lastEmailDate: 'Mar 28',
-			firstEmailDate: 'Mar 28',
+			participants: ["photos@example.com", "you@example.com"],
+			participantNames: ["Photo Service", "You"],
+			lastEmailDate: "Mar 28",
+			firstEmailDate: "Mar 28",
 			messageCount: 1,
 			unreadCount: 1,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Social'],
+			labels: ["Social"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'social',
-			snippet: 'You were tagged in 3 photos.',
+			category: "social",
+			snippet: "You were tagged in 3 photos.",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -481,62 +496,64 @@ export default function Home() {
 		},
 		// Updates emails
 		{
-			id: '6',
-			subject: 'Security alert: Critical vulnerability',
+			id: "6",
+			subject: "Security alert: Critical vulnerability",
 			emails: [
 				{
 					id: 8,
-					from: 'noreply@github.com',
-					to: 'you@example.com',
+					from: "noreply@github.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 28',
-					subject: 'Security alert: Critical vulnerability',
-					content: 'A high severity vulnerability was detected in one of your dependencies.',
-					htmlContent: '',
-					plainTextContent: 'A high severity vulnerability was detected in one of your dependencies.',
+					replyTo: "",
+					date: "Mar 28",
+					subject: "Security alert: Critical vulnerability",
+					content:
+						"A high severity vulnerability was detected in one of your dependencies.",
+					htmlContent: "",
+					plainTextContent:
+						"A high severity vulnerability was detected in one of your dependencies.",
 					isCollapsed: true,
 					isRead: false,
-					category: 'notifications',
+					category: "notifications",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
 					isTrash: false,
 					isArchive: false,
-					labels: ['security'],
+					labels: ["security"],
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'high',
+					priority: "high",
 					isStarred: false,
-					threadId: '6',
-					inReplyTo: '',
+					threadId: "6",
+					inReplyTo: "",
 					references: [],
-					snippet: 'A high severity vulnerability was detected...',
+					snippet: "A high severity vulnerability was detected...",
 					size: 0,
 					flags: [],
-					senderName: 'GitHub',
-					recipientNames: ['You'],
+					senderName: "GitHub",
+					recipientNames: ["You"],
 					isImportant: true,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['noreply@github.com', 'you@example.com'],
-			participantNames: ['GitHub', 'You'],
-			lastEmailDate: 'Mar 28',
-			firstEmailDate: 'Mar 28',
+			participants: ["noreply@github.com", "you@example.com"],
+			participantNames: ["GitHub", "You"],
+			lastEmailDate: "Mar 28",
+			firstEmailDate: "Mar 28",
 			messageCount: 1,
 			unreadCount: 1,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Security'],
+			labels: ["Security"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: true,
-			category: 'updates',
-			snippet: 'A high severity vulnerability was detected...',
+			category: "updates",
+			snippet: "A high severity vulnerability was detected...",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -544,24 +561,25 @@ export default function Home() {
 			isArchive: false,
 		},
 		{
-			id: '7',
-			subject: 'Service maintenance',
+			id: "7",
+			subject: "Service maintenance",
 			emails: [
 				{
 					id: 9,
-					from: 'admin@service.com',
-					to: 'you@example.com',
+					from: "admin@service.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 27',
-					subject: 'Service maintenance',
-					content: 'We will be performing scheduled maintenance this weekend.',
-					htmlContent: '',
-					plainTextContent: 'We will be performing scheduled maintenance this weekend.',
+					replyTo: "",
+					date: "Mar 27",
+					subject: "Service maintenance",
+					content: "We will be performing scheduled maintenance this weekend.",
+					htmlContent: "",
+					plainTextContent:
+						"We will be performing scheduled maintenance this weekend.",
 					isCollapsed: true,
 					isRead: true,
-					category: 'notifications',
+					category: "notifications",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
@@ -571,35 +589,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '7',
-					inReplyTo: '',
+					threadId: "7",
+					inReplyTo: "",
 					references: [],
-					snippet: 'We will be performing scheduled maintenance this weekend.',
+					snippet: "We will be performing scheduled maintenance this weekend.",
 					size: 0,
 					flags: [],
-					senderName: 'Service Admin',
-					recipientNames: ['You'],
+					senderName: "Service Admin",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['admin@service.com', 'you@example.com'],
-			participantNames: ['Service Admin', 'You'],
-			lastEmailDate: 'Mar 27',
-			firstEmailDate: 'Mar 27',
+			participants: ["admin@service.com", "you@example.com"],
+			participantNames: ["Service Admin", "You"],
+			lastEmailDate: "Mar 27",
+			firstEmailDate: "Mar 27",
 			messageCount: 1,
 			unreadCount: 0,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Maintenance'],
+			labels: ["Maintenance"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'updates',
-			snippet: 'We will be performing scheduled maintenance this weekend.',
+			category: "updates",
+			snippet: "We will be performing scheduled maintenance this weekend.",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -608,24 +626,24 @@ export default function Home() {
 		},
 		// Promotions emails
 		{
-			id: '8',
-			subject: 'New shows added to your list',
+			id: "8",
+			subject: "New shows added to your list",
 			emails: [
 				{
 					id: 10,
-					from: 'info@netflix.com',
-					to: 'you@example.com',
+					from: "info@netflix.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 29',
-					subject: 'New shows added to your list',
-					content: 'We added new shows we think you will love.',
-					htmlContent: '',
-					plainTextContent: 'We added new shows we think you will love.',
+					replyTo: "",
+					date: "Mar 29",
+					subject: "New shows added to your list",
+					content: "We added new shows we think you will love.",
+					htmlContent: "",
+					plainTextContent: "We added new shows we think you will love.",
 					isCollapsed: true,
 					isRead: false,
-					category: 'promotions',
+					category: "promotions",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
@@ -635,35 +653,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '8',
-					inReplyTo: '',
+					threadId: "8",
+					inReplyTo: "",
 					references: [],
-					snippet: 'We added new shows we think you will love.',
+					snippet: "We added new shows we think you will love.",
 					size: 0,
 					flags: [],
-					senderName: 'Netflix',
-					recipientNames: ['You'],
+					senderName: "Netflix",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: 'https://netflix.com/unsubscribe',
+					unsubscribeLink: "https://netflix.com/unsubscribe",
 				},
 			],
-			participants: ['info@netflix.com', 'you@example.com'],
-			participantNames: ['Netflix', 'You'],
-			lastEmailDate: 'Mar 29',
-			firstEmailDate: 'Mar 29',
+			participants: ["info@netflix.com", "you@example.com"],
+			participantNames: ["Netflix", "You"],
+			lastEmailDate: "Mar 29",
+			firstEmailDate: "Mar 29",
 			messageCount: 1,
 			unreadCount: 1,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Entertainment'],
+			labels: ["Entertainment"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'promotions',
-			snippet: 'We added new shows we think you will love.',
+			category: "promotions",
+			snippet: "We added new shows we think you will love.",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -671,24 +689,25 @@ export default function Home() {
 			isArchive: false,
 		},
 		{
-			id: '9',
-			subject: 'Special offer just for you',
+			id: "9",
+			subject: "Special offer just for you",
 			emails: [
 				{
 					id: 11,
-					from: 'deals@store.com',
-					to: 'you@example.com',
+					from: "deals@store.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 28',
-					subject: 'Special offer just for you',
-					content: 'Exclusive 50% off discount for our loyal customers.',
-					htmlContent: '',
-					plainTextContent: 'Exclusive 50% off discount for our loyal customers.',
+					replyTo: "",
+					date: "Mar 28",
+					subject: "Special offer just for you",
+					content: "Exclusive 50% off discount for our loyal customers.",
+					htmlContent: "",
+					plainTextContent:
+						"Exclusive 50% off discount for our loyal customers.",
 					isCollapsed: true,
 					isRead: true,
-					category: 'promotions',
+					category: "promotions",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
@@ -698,35 +717,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '9',
-					inReplyTo: '',
+					threadId: "9",
+					inReplyTo: "",
 					references: [],
-					snippet: 'Exclusive 50% off discount for our loyal customers.',
+					snippet: "Exclusive 50% off discount for our loyal customers.",
 					size: 0,
 					flags: [],
-					senderName: 'Online Store',
-					recipientNames: ['You'],
+					senderName: "Online Store",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: 'https://store.com/unsubscribe',
+					unsubscribeLink: "https://store.com/unsubscribe",
 				},
 			],
-			participants: ['deals@store.com', 'you@example.com'],
-			participantNames: ['Online Store', 'You'],
-			lastEmailDate: 'Mar 28',
-			firstEmailDate: 'Mar 28',
+			participants: ["deals@store.com", "you@example.com"],
+			participantNames: ["Online Store", "You"],
+			lastEmailDate: "Mar 28",
+			firstEmailDate: "Mar 28",
 			messageCount: 1,
 			unreadCount: 0,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Promotion'],
+			labels: ["Promotion"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'promotions',
-			snippet: 'Exclusive 50% off discount for our loyal customers.',
+			category: "promotions",
+			snippet: "Exclusive 50% off discount for our loyal customers.",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -734,24 +753,24 @@ export default function Home() {
 			isArchive: false,
 		},
 		{
-			id: '10',
-			subject: 'Last chance: Sale ends tonight',
+			id: "10",
+			subject: "Last chance: Sale ends tonight",
 			emails: [
 				{
 					id: 12,
-					from: 'marketing@brand.com',
-					to: 'you@example.com',
+					from: "marketing@brand.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 27',
-					subject: 'Last chance: Sale ends tonight',
-					content: 'Don\'t miss out on our biggest sale of the year!',
-					htmlContent: '',
-					plainTextContent: 'Don\'t miss out on our biggest sale of the year!',
+					replyTo: "",
+					date: "Mar 27",
+					subject: "Last chance: Sale ends tonight",
+					content: "Don't miss out on our biggest sale of the year!",
+					htmlContent: "",
+					plainTextContent: "Don't miss out on our biggest sale of the year!",
 					isCollapsed: true,
 					isRead: false,
-					category: 'promotions',
+					category: "promotions",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
@@ -761,35 +780,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '10',
-					inReplyTo: '',
+					threadId: "10",
+					inReplyTo: "",
 					references: [],
-					snippet: 'Don\'t miss out on our biggest sale of the year!',
+					snippet: "Don't miss out on our biggest sale of the year!",
 					size: 0,
 					flags: [],
-					senderName: 'Brand Marketing',
-					recipientNames: ['You'],
+					senderName: "Brand Marketing",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: 'https://brand.com/unsubscribe',
+					unsubscribeLink: "https://brand.com/unsubscribe",
 				},
 			],
-			participants: ['marketing@brand.com', 'you@example.com'],
-			participantNames: ['Brand Marketing', 'You'],
-			lastEmailDate: 'Mar 27',
-			firstEmailDate: 'Mar 27',
+			participants: ["marketing@brand.com", "you@example.com"],
+			participantNames: ["Brand Marketing", "You"],
+			lastEmailDate: "Mar 27",
+			firstEmailDate: "Mar 27",
 			messageCount: 1,
 			unreadCount: 1,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Promotion'],
+			labels: ["Promotion"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'promotions',
-			snippet: 'Don\'t miss out on our biggest sale of the year!',
+			category: "promotions",
+			snippet: "Don't miss out on our biggest sale of the year!",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -798,24 +817,25 @@ export default function Home() {
 		},
 		// Favorites
 		{
-			id: '11',
-			subject: 'Important project proposal',
+			id: "11",
+			subject: "Important project proposal",
 			emails: [
 				{
 					id: 13,
-					from: 'client@important.com',
-					to: 'you@example.com',
+					from: "client@important.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 26',
-					subject: 'Important project proposal',
-					content: 'We would like to discuss the project proposal with you.',
-					htmlContent: '',
-					plainTextContent: 'We would like to discuss the project proposal with you.',
+					replyTo: "",
+					date: "Mar 26",
+					subject: "Important project proposal",
+					content: "We would like to discuss the project proposal with you.",
+					htmlContent: "",
+					plainTextContent:
+						"We would like to discuss the project proposal with you.",
 					isCollapsed: true,
 					isRead: false,
-					category: 'work',
+					category: "work",
 					isDraft: false,
 					isFavorite: true,
 					isSpam: false,
@@ -825,52 +845,52 @@ export default function Home() {
 					hasAttachments: true,
 					attachments: [
 						{
-							id: '4',
-							name: 'project_proposal.pdf',
-							extension: '.pdf',
+							id: "4",
+							name: "project_proposal.pdf",
+							extension: ".pdf",
 							size: 2097152,
-							sizeFormatted: '2.0 MB',
-							type: 'application/pdf',
-							mimeType: 'application/pdf',
-							url: '',
+							sizeFormatted: "2.0 MB",
+							type: "application/pdf",
+							mimeType: "application/pdf",
+							url: "",
 							isScanned: true,
-							scanResult: 'clean',
+							scanResult: "clean",
 							downloadCount: 0,
-							uploadedDate: 'Mar 26',
-							thumbnailUrl: '',
+							uploadedDate: "Mar 26",
+							thumbnailUrl: "",
 							isInline: false,
 						},
 					],
 					attachmentCount: 1,
-					priority: 'high',
+					priority: "high",
 					isStarred: true,
-					threadId: '11',
-					inReplyTo: '',
+					threadId: "11",
+					inReplyTo: "",
 					references: [],
-					snippet: 'We would like to discuss the project proposal with you.',
+					snippet: "We would like to discuss the project proposal with you.",
 					size: 0,
 					flags: [],
-					senderName: 'Important Client',
-					recipientNames: ['You'],
+					senderName: "Important Client",
+					recipientNames: ["You"],
 					isImportant: true,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['client@important.com', 'you@example.com'],
-			participantNames: ['Important Client', 'You'],
-			lastEmailDate: 'Mar 26',
-			firstEmailDate: 'Mar 26',
+			participants: ["client@important.com", "you@example.com"],
+			participantNames: ["Important Client", "You"],
+			lastEmailDate: "Mar 26",
+			firstEmailDate: "Mar 26",
 			messageCount: 1,
 			unreadCount: 1,
 			hasAttachments: true,
 			totalAttachmentCount: 1,
-			labels: ['Work', 'Important'],
+			labels: ["Work", "Important"],
 			isStarred: true,
 			isFavorite: true,
 			isImportant: true,
-			category: 'primary',
-			snippet: 'We would like to discuss the project proposal with you.',
+			category: "primary",
+			snippet: "We would like to discuss the project proposal with you.",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -878,24 +898,25 @@ export default function Home() {
 			isArchive: false,
 		},
 		{
-			id: '12',
-			subject: 'Family reunion photos',
+			id: "12",
+			subject: "Family reunion photos",
 			emails: [
 				{
 					id: 14,
-					from: 'family@example.com',
-					to: 'you@example.com',
+					from: "family@example.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 25',
-					subject: 'Family reunion photos',
-					content: 'Here are the photos from our family reunion last weekend.',
-					htmlContent: '',
-					plainTextContent: 'Here are the photos from our family reunion last weekend.',
+					replyTo: "",
+					date: "Mar 25",
+					subject: "Family reunion photos",
+					content: "Here are the photos from our family reunion last weekend.",
+					htmlContent: "",
+					plainTextContent:
+						"Here are the photos from our family reunion last weekend.",
 					isCollapsed: true,
 					isRead: true,
-					category: 'personal',
+					category: "personal",
 					isDraft: false,
 					isFavorite: true,
 					isSpam: false,
@@ -905,68 +926,68 @@ export default function Home() {
 					hasAttachments: true,
 					attachments: [
 						{
-							id: '5',
-							name: 'family_reunion_01.jpg',
-							extension: '.jpg',
+							id: "5",
+							name: "family_reunion_01.jpg",
+							extension: ".jpg",
 							size: 3145728,
-							sizeFormatted: '3.0 MB',
-							type: 'image/jpeg',
-							mimeType: 'image/jpeg',
-							url: '',
+							sizeFormatted: "3.0 MB",
+							type: "image/jpeg",
+							mimeType: "image/jpeg",
+							url: "",
 							isScanned: true,
-							scanResult: 'clean',
+							scanResult: "clean",
 							downloadCount: 0,
-							uploadedDate: 'Mar 25',
-							thumbnailUrl: '',
+							uploadedDate: "Mar 25",
+							thumbnailUrl: "",
 							isInline: false,
 						},
 						{
-							id: '6',
-							name: 'family_reunion_02.jpg',
-							extension: '.jpg',
+							id: "6",
+							name: "family_reunion_02.jpg",
+							extension: ".jpg",
 							size: 2621440,
-							sizeFormatted: '2.5 MB',
-							type: 'image/jpeg',
-							mimeType: 'image/jpeg',
-							url: '',
+							sizeFormatted: "2.5 MB",
+							type: "image/jpeg",
+							mimeType: "image/jpeg",
+							url: "",
 							isScanned: true,
-							scanResult: 'clean',
+							scanResult: "clean",
 							downloadCount: 0,
-							uploadedDate: 'Mar 25',
-							thumbnailUrl: '',
+							uploadedDate: "Mar 25",
+							thumbnailUrl: "",
 							isInline: false,
 						},
 					],
 					attachmentCount: 2,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '12',
-					inReplyTo: '',
+					threadId: "12",
+					inReplyTo: "",
 					references: [],
-					snippet: 'Here are the photos from our family reunion last weekend.',
+					snippet: "Here are the photos from our family reunion last weekend.",
 					size: 0,
 					flags: [],
-					senderName: 'Family Member',
-					recipientNames: ['You'],
+					senderName: "Family Member",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['family@example.com', 'you@example.com'],
-			participantNames: ['Family Member', 'You'],
-			lastEmailDate: 'Mar 25',
-			firstEmailDate: 'Mar 25',
+			participants: ["family@example.com", "you@example.com"],
+			participantNames: ["Family Member", "You"],
+			lastEmailDate: "Mar 25",
+			firstEmailDate: "Mar 25",
 			messageCount: 1,
 			unreadCount: 0,
 			hasAttachments: true,
 			totalAttachmentCount: 2,
-			labels: ['Personal'],
+			labels: ["Personal"],
 			isStarred: false,
 			isFavorite: true,
 			isImportant: false,
-			category: 'social',
-			snippet: 'Here are the photos from our family reunion last weekend.',
+			category: "social",
+			snippet: "Here are the photos from our family reunion last weekend.",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -975,24 +996,24 @@ export default function Home() {
 		},
 		// Drafts
 		{
-			id: '13',
-			subject: 'Project update for Q2',
+			id: "13",
+			subject: "Project update for Q2",
 			emails: [
 				{
 					id: 15,
-					from: 'you@example.com',
-					to: 'manager@company.com',
-					cc: ['team@company.com'],
+					from: "you@example.com",
+					to: "manager@company.com",
+					cc: ["team@company.com"],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 24',
-					subject: 'Project update for Q2',
-					content: 'Here is the project update for Q2...',
-					htmlContent: '',
-					plainTextContent: 'Here is the project update for Q2...',
+					replyTo: "",
+					date: "Mar 24",
+					subject: "Project update for Q2",
+					content: "Here is the project update for Q2...",
+					htmlContent: "",
+					plainTextContent: "Here is the project update for Q2...",
 					isCollapsed: true,
 					isRead: true,
-					category: 'work',
+					category: "work",
 					isDraft: true,
 					isFavorite: false,
 					isSpam: false,
@@ -1002,35 +1023,39 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '13',
-					inReplyTo: '',
+					threadId: "13",
+					inReplyTo: "",
 					references: [],
-					snippet: 'Here is the project update for Q2...',
+					snippet: "Here is the project update for Q2...",
 					size: 0,
 					flags: [],
-					senderName: 'You',
-					recipientNames: ['Manager', 'Team'],
+					senderName: "You",
+					recipientNames: ["Manager", "Team"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['you@example.com', 'manager@company.com', 'team@company.com'],
-			participantNames: ['You', 'Manager', 'Team'],
-			lastEmailDate: 'Mar 24',
-			firstEmailDate: 'Mar 24',
+			participants: [
+				"you@example.com",
+				"manager@company.com",
+				"team@company.com",
+			],
+			participantNames: ["You", "Manager", "Team"],
+			lastEmailDate: "Mar 24",
+			firstEmailDate: "Mar 24",
 			messageCount: 1,
 			unreadCount: 0,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Work'],
+			labels: ["Work"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'primary',
-			snippet: 'Here is the project update for Q2...',
+			category: "primary",
+			snippet: "Here is the project update for Q2...",
 			isCollapsed: true,
 			isDraft: true,
 			isSpam: false,
@@ -1038,24 +1063,24 @@ export default function Home() {
 			isArchive: false,
 		},
 		{
-			id: '14',
-			subject: 'Vacation plans',
+			id: "14",
+			subject: "Vacation plans",
 			emails: [
 				{
 					id: 16,
-					from: 'you@example.com',
-					to: 'friend@example.com',
+					from: "you@example.com",
+					to: "friend@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 23',
-					subject: 'Vacation plans',
-					content: 'I was thinking about our vacation plans...',
-					htmlContent: '',
-					plainTextContent: 'I was thinking about our vacation plans...',
+					replyTo: "",
+					date: "Mar 23",
+					subject: "Vacation plans",
+					content: "I was thinking about our vacation plans...",
+					htmlContent: "",
+					plainTextContent: "I was thinking about our vacation plans...",
 					isCollapsed: true,
 					isRead: true,
-					category: 'personal',
+					category: "personal",
 					isDraft: true,
 					isFavorite: false,
 					isSpam: false,
@@ -1065,35 +1090,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '14',
-					inReplyTo: '',
+					threadId: "14",
+					inReplyTo: "",
 					references: [],
-					snippet: 'I was thinking about our vacation plans...',
+					snippet: "I was thinking about our vacation plans...",
 					size: 0,
 					flags: [],
-					senderName: 'You',
-					recipientNames: ['Friend'],
+					senderName: "You",
+					recipientNames: ["Friend"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['you@example.com', 'friend@example.com'],
-			participantNames: ['You', 'Friend'],
-			lastEmailDate: 'Mar 23',
-			firstEmailDate: 'Mar 23',
+			participants: ["you@example.com", "friend@example.com"],
+			participantNames: ["You", "Friend"],
+			lastEmailDate: "Mar 23",
+			firstEmailDate: "Mar 23",
 			messageCount: 1,
 			unreadCount: 0,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Personal'],
+			labels: ["Personal"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'social',
-			snippet: 'I was thinking about our vacation plans...',
+			category: "social",
+			snippet: "I was thinking about our vacation plans...",
 			isCollapsed: true,
 			isDraft: true,
 			isSpam: false,
@@ -1101,24 +1126,24 @@ export default function Home() {
 			isArchive: false,
 		},
 		{
-			id: '15',
-			subject: 'Meeting notes',
+			id: "15",
+			subject: "Meeting notes",
 			emails: [
 				{
 					id: 17,
-					from: 'you@example.com',
-					to: 'colleague@company.com',
+					from: "you@example.com",
+					to: "colleague@company.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 22',
-					subject: 'Meeting notes',
-					content: 'Here are the notes from our meeting...',
-					htmlContent: '',
-					plainTextContent: 'Here are the notes from our meeting...',
+					replyTo: "",
+					date: "Mar 22",
+					subject: "Meeting notes",
+					content: "Here are the notes from our meeting...",
+					htmlContent: "",
+					plainTextContent: "Here are the notes from our meeting...",
 					isCollapsed: true,
 					isRead: true,
-					category: 'work',
+					category: "work",
 					isDraft: true,
 					isFavorite: false,
 					isSpam: false,
@@ -1128,35 +1153,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '15',
-					inReplyTo: '',
+					threadId: "15",
+					inReplyTo: "",
 					references: [],
-					snippet: 'Here are the notes from our meeting...',
+					snippet: "Here are the notes from our meeting...",
 					size: 0,
 					flags: [],
-					senderName: 'You',
-					recipientNames: ['Colleague'],
+					senderName: "You",
+					recipientNames: ["Colleague"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['you@example.com', 'colleague@company.com'],
-			participantNames: ['You', 'Colleague'],
-			lastEmailDate: 'Mar 22',
-			firstEmailDate: 'Mar 22',
+			participants: ["you@example.com", "colleague@company.com"],
+			participantNames: ["You", "Colleague"],
+			lastEmailDate: "Mar 22",
+			firstEmailDate: "Mar 22",
 			messageCount: 1,
 			unreadCount: 0,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Work'],
+			labels: ["Work"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'primary',
-			snippet: 'Here are the notes from our meeting...',
+			category: "primary",
+			snippet: "Here are the notes from our meeting...",
 			isCollapsed: true,
 			isDraft: true,
 			isSpam: false,
@@ -1164,24 +1189,25 @@ export default function Home() {
 			isArchive: false,
 		},
 		{
-			id: '16',
-			subject: 'Product feedback',
+			id: "16",
+			subject: "Product feedback",
 			emails: [
 				{
 					id: 18,
-					from: 'you@example.com',
-					to: 'support@product.com',
+					from: "you@example.com",
+					to: "support@product.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 21',
-					subject: 'Product feedback',
-					content: 'I wanted to share some feedback about your product...',
-					htmlContent: '',
-					plainTextContent: 'I wanted to share some feedback about your product...',
+					replyTo: "",
+					date: "Mar 21",
+					subject: "Product feedback",
+					content: "I wanted to share some feedback about your product...",
+					htmlContent: "",
+					plainTextContent:
+						"I wanted to share some feedback about your product...",
 					isCollapsed: true,
 					isRead: true,
-					category: 'work',
+					category: "work",
 					isDraft: true,
 					isFavorite: false,
 					isSpam: false,
@@ -1191,35 +1217,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '16',
-					inReplyTo: '',
+					threadId: "16",
+					inReplyTo: "",
 					references: [],
-					snippet: 'I wanted to share some feedback about your product...',
+					snippet: "I wanted to share some feedback about your product...",
 					size: 0,
 					flags: [],
-					senderName: 'You',
-					recipientNames: ['Support'],
+					senderName: "You",
+					recipientNames: ["Support"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['you@example.com', 'support@product.com'],
-			participantNames: ['You', 'Support'],
-			lastEmailDate: 'Mar 21',
-			firstEmailDate: 'Mar 21',
+			participants: ["you@example.com", "support@product.com"],
+			participantNames: ["You", "Support"],
+			lastEmailDate: "Mar 21",
+			firstEmailDate: "Mar 21",
 			messageCount: 1,
 			unreadCount: 0,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Feedback'],
+			labels: ["Feedback"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'updates',
-			snippet: 'I wanted to share some feedback about your product...',
+			category: "updates",
+			snippet: "I wanted to share some feedback about your product...",
 			isCollapsed: true,
 			isDraft: true,
 			isSpam: false,
@@ -1227,24 +1253,25 @@ export default function Home() {
 			isArchive: false,
 		},
 		{
-			id: '17',
-			subject: 'Newsletter article',
+			id: "17",
+			subject: "Newsletter article",
 			emails: [
 				{
 					id: 19,
-					from: 'you@example.com',
-					to: 'newsletter@blog.com',
+					from: "you@example.com",
+					to: "newsletter@blog.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 20',
-					subject: 'Newsletter article',
-					content: 'Here is the article I promised for your newsletter...',
-					htmlContent: '',
-					plainTextContent: 'Here is the article I promised for your newsletter...',
+					replyTo: "",
+					date: "Mar 20",
+					subject: "Newsletter article",
+					content: "Here is the article I promised for your newsletter...",
+					htmlContent: "",
+					plainTextContent:
+						"Here is the article I promised for your newsletter...",
 					isCollapsed: true,
 					isRead: true,
-					category: 'personal',
+					category: "personal",
 					isDraft: true,
 					isFavorite: false,
 					isSpam: false,
@@ -1254,52 +1281,53 @@ export default function Home() {
 					hasAttachments: true,
 					attachments: [
 						{
-							id: '7',
-							name: 'newsletter_article.docx',
-							extension: '.docx',
+							id: "7",
+							name: "newsletter_article.docx",
+							extension: ".docx",
 							size: 1572864,
-							sizeFormatted: '1.5 MB',
-							type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-							mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-							url: '',
+							sizeFormatted: "1.5 MB",
+							type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+							mimeType:
+								"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+							url: "",
 							isScanned: true,
-							scanResult: 'clean',
+							scanResult: "clean",
 							downloadCount: 0,
-							uploadedDate: 'Mar 20',
-							thumbnailUrl: '',
+							uploadedDate: "Mar 20",
+							thumbnailUrl: "",
 							isInline: false,
 						},
 					],
 					attachmentCount: 1,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '17',
-					inReplyTo: '',
+					threadId: "17",
+					inReplyTo: "",
 					references: [],
-					snippet: 'Here is the article I promised for your newsletter...',
+					snippet: "Here is the article I promised for your newsletter...",
 					size: 0,
 					flags: [],
-					senderName: 'You',
-					recipientNames: ['Newsletter'],
+					senderName: "You",
+					recipientNames: ["Newsletter"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['you@example.com', 'newsletter@blog.com'],
-			participantNames: ['You', 'Newsletter'],
-			lastEmailDate: 'Mar 20',
-			firstEmailDate: 'Mar 20',
+			participants: ["you@example.com", "newsletter@blog.com"],
+			participantNames: ["You", "Newsletter"],
+			lastEmailDate: "Mar 20",
+			firstEmailDate: "Mar 20",
 			messageCount: 1,
 			unreadCount: 0,
 			hasAttachments: true,
 			totalAttachmentCount: 1,
-			labels: ['Writing'],
+			labels: ["Writing"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'promotions',
-			snippet: 'Here is the article I promised for your newsletter...',
+			category: "promotions",
+			snippet: "Here is the article I promised for your newsletter...",
 			isCollapsed: true,
 			isDraft: true,
 			isSpam: false,
@@ -1308,24 +1336,24 @@ export default function Home() {
 		},
 		// Sent emails
 		{
-			id: '18',
-			subject: 'Thank you for the opportunity',
+			id: "18",
+			subject: "Thank you for the opportunity",
 			emails: [
 				{
 					id: 20,
-					from: 'you@example.com',
-					to: 'recruiter@company.com',
+					from: "you@example.com",
+					to: "recruiter@company.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 19',
-					subject: 'Thank you for the opportunity',
-					content: 'Thank you for considering me for the position.',
-					htmlContent: '',
-					plainTextContent: 'Thank you for considering me for the position.',
+					replyTo: "",
+					date: "Mar 19",
+					subject: "Thank you for the opportunity",
+					content: "Thank you for considering me for the position.",
+					htmlContent: "",
+					plainTextContent: "Thank you for considering me for the position.",
 					isCollapsed: true,
 					isRead: true,
-					category: 'work',
+					category: "work",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
@@ -1335,35 +1363,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '18',
-					inReplyTo: '',
+					threadId: "18",
+					inReplyTo: "",
 					references: [],
-					snippet: 'Thank you for considering me for the position.',
+					snippet: "Thank you for considering me for the position.",
 					size: 0,
-					flags: ['sent'],
-					senderName: 'You',
-					recipientNames: ['Recruiter'],
+					flags: ["sent"],
+					senderName: "You",
+					recipientNames: ["Recruiter"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['you@example.com', 'recruiter@company.com'],
-			participantNames: ['You', 'Recruiter'],
-			lastEmailDate: 'Mar 19',
-			firstEmailDate: 'Mar 19',
+			participants: ["you@example.com", "recruiter@company.com"],
+			participantNames: ["You", "Recruiter"],
+			lastEmailDate: "Mar 19",
+			firstEmailDate: "Mar 19",
 			messageCount: 1,
 			unreadCount: 0,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Work'],
+			labels: ["Work"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'primary',
-			snippet: 'Thank you for considering me for the position.',
+			category: "primary",
+			snippet: "Thank you for considering me for the position.",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -1371,24 +1399,24 @@ export default function Home() {
 			isArchive: false,
 		},
 		{
-			id: '19',
-			subject: 'Happy birthday!',
+			id: "19",
+			subject: "Happy birthday!",
 			emails: [
 				{
 					id: 21,
-					from: 'you@example.com',
-					to: 'friend@example.com',
+					from: "you@example.com",
+					to: "friend@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 18',
-					subject: 'Happy birthday!',
-					content: 'Happy birthday! Hope you have a wonderful day.',
-					htmlContent: '',
-					plainTextContent: 'Happy birthday! Hope you have a wonderful day.',
+					replyTo: "",
+					date: "Mar 18",
+					subject: "Happy birthday!",
+					content: "Happy birthday! Hope you have a wonderful day.",
+					htmlContent: "",
+					plainTextContent: "Happy birthday! Hope you have a wonderful day.",
 					isCollapsed: true,
 					isRead: true,
-					category: 'personal',
+					category: "personal",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
@@ -1398,35 +1426,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '19',
-					inReplyTo: '',
+					threadId: "19",
+					inReplyTo: "",
 					references: [],
-					snippet: 'Happy birthday! Hope you have a wonderful day.',
+					snippet: "Happy birthday! Hope you have a wonderful day.",
 					size: 0,
-					flags: ['sent'],
-					senderName: 'You',
-					recipientNames: ['Friend'],
+					flags: ["sent"],
+					senderName: "You",
+					recipientNames: ["Friend"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['you@example.com', 'friend@example.com'],
-			participantNames: ['You', 'Friend'],
-			lastEmailDate: 'Mar 18',
-			firstEmailDate: 'Mar 18',
+			participants: ["you@example.com", "friend@example.com"],
+			participantNames: ["You", "Friend"],
+			lastEmailDate: "Mar 18",
+			firstEmailDate: "Mar 18",
 			messageCount: 1,
 			unreadCount: 0,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Personal'],
+			labels: ["Personal"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'social',
-			snippet: 'Happy birthday! Hope you have a wonderful day.',
+			category: "social",
+			snippet: "Happy birthday! Hope you have a wonderful day.",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -1434,24 +1462,26 @@ export default function Home() {
 			isArchive: false,
 		},
 		{
-			id: '20',
-			subject: 'Invoice for services',
+			id: "20",
+			subject: "Invoice for services",
 			emails: [
 				{
 					id: 22,
-					from: 'you@example.com',
-					to: 'client@business.com',
+					from: "you@example.com",
+					to: "client@business.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 17',
-					subject: 'Invoice for services',
-					content: 'Please find the attached invoice for the services provided.',
-					htmlContent: '',
-					plainTextContent: 'Please find the attached invoice for the services provided.',
+					replyTo: "",
+					date: "Mar 17",
+					subject: "Invoice for services",
+					content:
+						"Please find the attached invoice for the services provided.",
+					htmlContent: "",
+					plainTextContent:
+						"Please find the attached invoice for the services provided.",
 					isCollapsed: true,
 					isRead: true,
-					category: 'work',
+					category: "work",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
@@ -1461,52 +1491,53 @@ export default function Home() {
 					hasAttachments: true,
 					attachments: [
 						{
-							id: '8',
-							name: 'invoice_001.pdf',
-							extension: '.pdf',
+							id: "8",
+							name: "invoice_001.pdf",
+							extension: ".pdf",
 							size: 1048576,
-							sizeFormatted: '1.0 MB',
-							type: 'application/pdf',
-							mimeType: 'application/pdf',
-							url: '',
+							sizeFormatted: "1.0 MB",
+							type: "application/pdf",
+							mimeType: "application/pdf",
+							url: "",
 							isScanned: true,
-							scanResult: 'clean',
+							scanResult: "clean",
 							downloadCount: 0,
-							uploadedDate: 'Mar 17',
-							thumbnailUrl: '',
+							uploadedDate: "Mar 17",
+							thumbnailUrl: "",
 							isInline: false,
 						},
 					],
 					attachmentCount: 1,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '20',
-					inReplyTo: '',
+					threadId: "20",
+					inReplyTo: "",
 					references: [],
-					snippet: 'Please find the attached invoice for the services provided.',
+					snippet:
+						"Please find the attached invoice for the services provided.",
 					size: 0,
-					flags: ['sent'],
-					senderName: 'You',
-					recipientNames: ['Client'],
+					flags: ["sent"],
+					senderName: "You",
+					recipientNames: ["Client"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['you@example.com', 'client@business.com'],
-			participantNames: ['You', 'Client'],
-			lastEmailDate: 'Mar 17',
-			firstEmailDate: 'Mar 17',
+			participants: ["you@example.com", "client@business.com"],
+			participantNames: ["You", "Client"],
+			lastEmailDate: "Mar 17",
+			firstEmailDate: "Mar 17",
 			messageCount: 1,
 			unreadCount: 0,
 			hasAttachments: true,
 			totalAttachmentCount: 1,
-			labels: ['Work', 'Billing'],
+			labels: ["Work", "Billing"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'primary',
-			snippet: 'Please find the attached invoice for the services provided.',
+			category: "primary",
+			snippet: "Please find the attached invoice for the services provided.",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -1515,24 +1546,25 @@ export default function Home() {
 		},
 		// Archive
 		{
-			id: '21',
-			subject: 'Old project files',
+			id: "21",
+			subject: "Old project files",
 			emails: [
 				{
 					id: 23,
-					from: 'old-colleague@company.com',
-					to: 'you@example.com',
+					from: "old-colleague@company.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Jan 15',
-					subject: 'Old project files',
-					content: 'These are the project files from the previous year.',
-					htmlContent: '',
-					plainTextContent: 'These are the project files from the previous year.',
+					replyTo: "",
+					date: "Jan 15",
+					subject: "Old project files",
+					content: "These are the project files from the previous year.",
+					htmlContent: "",
+					plainTextContent:
+						"These are the project files from the previous year.",
 					isCollapsed: true,
 					isRead: true,
-					category: 'work',
+					category: "work",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
@@ -1542,52 +1574,52 @@ export default function Home() {
 					hasAttachments: true,
 					attachments: [
 						{
-							id: '9',
-							name: 'project_files.zip',
-							extension: '.zip',
+							id: "9",
+							name: "project_files.zip",
+							extension: ".zip",
 							size: 5242880,
-							sizeFormatted: '5.0 MB',
-							type: 'application/zip',
-							mimeType: 'application/zip',
-							url: '',
+							sizeFormatted: "5.0 MB",
+							type: "application/zip",
+							mimeType: "application/zip",
+							url: "",
 							isScanned: true,
-							scanResult: 'clean',
+							scanResult: "clean",
 							downloadCount: 0,
-							uploadedDate: 'Jan 15',
-							thumbnailUrl: '',
+							uploadedDate: "Jan 15",
+							thumbnailUrl: "",
 							isInline: false,
 						},
 					],
 					attachmentCount: 1,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '21',
-					inReplyTo: '',
+					threadId: "21",
+					inReplyTo: "",
 					references: [],
-					snippet: 'These are the project files from the previous year.',
+					snippet: "These are the project files from the previous year.",
 					size: 0,
 					flags: [],
-					senderName: 'Old Colleague',
-					recipientNames: ['You'],
+					senderName: "Old Colleague",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['old-colleague@company.com', 'you@example.com'],
-			participantNames: ['Old Colleague', 'You'],
-			lastEmailDate: 'Jan 15',
-			firstEmailDate: 'Jan 15',
+			participants: ["old-colleague@company.com", "you@example.com"],
+			participantNames: ["Old Colleague", "You"],
+			lastEmailDate: "Jan 15",
+			firstEmailDate: "Jan 15",
 			messageCount: 1,
 			unreadCount: 0,
 			hasAttachments: true,
 			totalAttachmentCount: 1,
-			labels: ['Work', 'Archive'],
+			labels: ["Work", "Archive"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'primary',
-			snippet: 'These are the project files from the previous year.',
+			category: "primary",
+			snippet: "These are the project files from the previous year.",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -1595,24 +1627,25 @@ export default function Home() {
 			isArchive: true,
 		},
 		{
-			id: '22',
-			subject: 'Conference materials',
+			id: "22",
+			subject: "Conference materials",
 			emails: [
 				{
 					id: 24,
-					from: 'conference@event.com',
-					to: 'you@example.com',
+					from: "conference@event.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Dec 10',
-					subject: 'Conference materials',
-					content: 'Here are the materials from the conference you attended.',
-					htmlContent: '',
-					plainTextContent: 'Here are the materials from the conference you attended.',
+					replyTo: "",
+					date: "Dec 10",
+					subject: "Conference materials",
+					content: "Here are the materials from the conference you attended.",
+					htmlContent: "",
+					plainTextContent:
+						"Here are the materials from the conference you attended.",
 					isCollapsed: true,
 					isRead: true,
-					category: 'work',
+					category: "work",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
@@ -1622,68 +1655,69 @@ export default function Home() {
 					hasAttachments: true,
 					attachments: [
 						{
-							id: '10',
-							name: 'conference_presentation.pptx',
-							extension: '.pptx',
+							id: "10",
+							name: "conference_presentation.pptx",
+							extension: ".pptx",
 							size: 3145728,
-							sizeFormatted: '3.0 MB',
-							type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-							mimeType: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-							url: '',
+							sizeFormatted: "3.0 MB",
+							type: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+							mimeType:
+								"application/vnd.openxmlformats-officedocument.presentationml.presentation",
+							url: "",
 							isScanned: true,
-							scanResult: 'clean',
+							scanResult: "clean",
 							downloadCount: 0,
-							uploadedDate: 'Dec 10',
-							thumbnailUrl: '',
+							uploadedDate: "Dec 10",
+							thumbnailUrl: "",
 							isInline: false,
 						},
 						{
-							id: '11',
-							name: 'conference_handouts.pdf',
-							extension: '.pdf',
+							id: "11",
+							name: "conference_handouts.pdf",
+							extension: ".pdf",
 							size: 2097152,
-							sizeFormatted: '2.0 MB',
-							type: 'application/pdf',
-							mimeType: 'application/pdf',
-							url: '',
+							sizeFormatted: "2.0 MB",
+							type: "application/pdf",
+							mimeType: "application/pdf",
+							url: "",
 							isScanned: true,
-							scanResult: 'clean',
+							scanResult: "clean",
 							downloadCount: 0,
-							uploadedDate: 'Dec 10',
-							thumbnailUrl: '',
+							uploadedDate: "Dec 10",
+							thumbnailUrl: "",
 							isInline: false,
 						},
 					],
 					attachmentCount: 2,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '22',
-					inReplyTo: '',
+					threadId: "22",
+					inReplyTo: "",
 					references: [],
-					snippet: 'Here are the materials from the conference you attended.',
+					snippet: "Here are the materials from the conference you attended.",
 					size: 0,
 					flags: [],
-					senderName: 'Conference',
-					recipientNames: ['You'],
+					senderName: "Conference",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['conference@event.com', 'you@example.com'],
-			participantNames: ['Conference', 'You'],
-			lastEmailDate: 'Dec 10',
-			firstEmailDate: 'Dec 10',
+			participants: ["conference@event.com", "you@example.com"],
+			participantNames: ["Conference", "You"],
+			lastEmailDate: "Dec 10",
+			firstEmailDate: "Dec 10",
 			messageCount: 1,
 			unreadCount: 0,
 			hasAttachments: true,
 			totalAttachmentCount: 2,
-			labels: ['Work', 'Conference'],
+			labels: ["Work", "Conference"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'updates',
-			snippet: 'Here are the materials from the conference you attended.',
+			category: "updates",
+			snippet: "Here are the materials from the conference you attended.",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -1692,24 +1726,25 @@ export default function Home() {
 		},
 		// Spam
 		{
-			id: '23',
-			subject: 'Congratulations! You\'ve won!',
+			id: "23",
+			subject: "Congratulations! You've won!",
 			emails: [
 				{
 					id: 25,
-					from: 'lottery@scam.com',
-					to: 'you@example.com',
+					from: "lottery@scam.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 16',
-					subject: 'Congratulations! You\'ve won!',
-					content: 'You have won $1,000,000! Click here to claim your prize.',
-					htmlContent: '',
-					plainTextContent: 'You have won $1,000,000! Click here to claim your prize.',
+					replyTo: "",
+					date: "Mar 16",
+					subject: "Congratulations! You've won!",
+					content: "You have won $1,000,000! Click here to claim your prize.",
+					htmlContent: "",
+					plainTextContent:
+						"You have won $1,000,000! Click here to claim your prize.",
 					isCollapsed: true,
 					isRead: false,
-					category: 'promotions',
+					category: "promotions",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: true,
@@ -1719,35 +1754,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '23',
-					inReplyTo: '',
+					threadId: "23",
+					inReplyTo: "",
 					references: [],
-					snippet: 'You have won $1,000,000! Click here to claim your prize.',
+					snippet: "You have won $1,000,000! Click here to claim your prize.",
 					size: 0,
 					flags: [],
-					senderName: 'Lottery Scam',
-					recipientNames: ['You'],
+					senderName: "Lottery Scam",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['lottery@scam.com', 'you@example.com'],
-			participantNames: ['Lottery Scam', 'You'],
-			lastEmailDate: 'Mar 16',
-			firstEmailDate: 'Mar 16',
+			participants: ["lottery@scam.com", "you@example.com"],
+			participantNames: ["Lottery Scam", "You"],
+			lastEmailDate: "Mar 16",
+			firstEmailDate: "Mar 16",
 			messageCount: 1,
 			unreadCount: 1,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Spam'],
+			labels: ["Spam"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'promotions',
-			snippet: 'You have won $1,000,000! Click here to claim your prize.',
+			category: "promotions",
+			snippet: "You have won $1,000,000! Click here to claim your prize.",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: true,
@@ -1755,24 +1790,24 @@ export default function Home() {
 			isArchive: false,
 		},
 		{
-			id: '24',
-			subject: 'Get rich quick scheme',
+			id: "24",
+			subject: "Get rich quick scheme",
 			emails: [
 				{
 					id: 26,
-					from: 'money@fake.com',
-					to: 'you@example.com',
+					from: "money@fake.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 15',
-					subject: 'Get rich quick scheme',
-					content: 'Make money fast with this amazing opportunity!',
-					htmlContent: '',
-					plainTextContent: 'Make money fast with this amazing opportunity!',
+					replyTo: "",
+					date: "Mar 15",
+					subject: "Get rich quick scheme",
+					content: "Make money fast with this amazing opportunity!",
+					htmlContent: "",
+					plainTextContent: "Make money fast with this amazing opportunity!",
 					isCollapsed: true,
 					isRead: false,
-					category: 'promotions',
+					category: "promotions",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: true,
@@ -1782,35 +1817,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '24',
-					inReplyTo: '',
+					threadId: "24",
+					inReplyTo: "",
 					references: [],
-					snippet: 'Make money fast with this amazing opportunity!',
+					snippet: "Make money fast with this amazing opportunity!",
 					size: 0,
 					flags: [],
-					senderName: 'Fake Money',
-					recipientNames: ['You'],
+					senderName: "Fake Money",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['money@fake.com', 'you@example.com'],
-			participantNames: ['Fake Money', 'You'],
-			lastEmailDate: 'Mar 15',
-			firstEmailDate: 'Mar 15',
+			participants: ["money@fake.com", "you@example.com"],
+			participantNames: ["Fake Money", "You"],
+			lastEmailDate: "Mar 15",
+			firstEmailDate: "Mar 15",
 			messageCount: 1,
 			unreadCount: 1,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Spam'],
+			labels: ["Spam"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'promotions',
-			snippet: 'Make money fast with this amazing opportunity!',
+			category: "promotions",
+			snippet: "Make money fast with this amazing opportunity!",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: true,
@@ -1818,24 +1853,24 @@ export default function Home() {
 			isArchive: false,
 		},
 		{
-			id: '25',
-			subject: 'Cheap medications',
-			 emails: [
+			id: "25",
+			subject: "Cheap medications",
+			emails: [
 				{
 					id: 27,
-					from: 'pharmacy@spam.com',
-					to: 'you@example.com',
+					from: "pharmacy@spam.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 14',
-					subject: 'Cheap medications',
-					content: 'Get prescription medications at 90% off!',
-					htmlContent: '',
-					plainTextContent: 'Get prescription medications at 90% off!',
+					replyTo: "",
+					date: "Mar 14",
+					subject: "Cheap medications",
+					content: "Get prescription medications at 90% off!",
+					htmlContent: "",
+					plainTextContent: "Get prescription medications at 90% off!",
 					isCollapsed: true,
 					isRead: false,
-					category: 'promotions',
+					category: "promotions",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: true,
@@ -1845,35 +1880,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '25',
-					inReplyTo: '',
+					threadId: "25",
+					inReplyTo: "",
 					references: [],
-					snippet: 'Get prescription medications at 90% off!',
+					snippet: "Get prescription medications at 90% off!",
 					size: 0,
 					flags: [],
-					senderName: 'Spam Pharmacy',
-					recipientNames: ['You'],
+					senderName: "Spam Pharmacy",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['pharmacy@spam.com', 'you@example.com'],
-			participantNames: ['Spam Pharmacy', 'You'],
-			lastEmailDate: 'Mar 14',
-			firstEmailDate: 'Mar 14',
+			participants: ["pharmacy@spam.com", "you@example.com"],
+			participantNames: ["Spam Pharmacy", "You"],
+			lastEmailDate: "Mar 14",
+			firstEmailDate: "Mar 14",
 			messageCount: 1,
 			unreadCount: 1,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Spam'],
+			labels: ["Spam"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'promotions',
-			snippet: 'Get prescription medications at 90% off!',
+			category: "promotions",
+			snippet: "Get prescription medications at 90% off!",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: true,
@@ -1881,24 +1916,24 @@ export default function Home() {
 			isArchive: false,
 		},
 		{
-			id: '26',
-			subject: 'Free trial offer',
+			id: "26",
+			subject: "Free trial offer",
 			emails: [
 				{
 					id: 28,
-					from: 'trial@marketing.com',
-					to: 'you@example.com',
+					from: "trial@marketing.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 13',
-					subject: 'Free trial offer',
-					content: 'Start your free trial today with no commitment!',
-					htmlContent: '',
-					plainTextContent: 'Start your free trial today with no commitment!',
+					replyTo: "",
+					date: "Mar 13",
+					subject: "Free trial offer",
+					content: "Start your free trial today with no commitment!",
+					htmlContent: "",
+					plainTextContent: "Start your free trial today with no commitment!",
 					isCollapsed: true,
 					isRead: true,
-					category: 'promotions',
+					category: "promotions",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: true,
@@ -1908,35 +1943,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '26',
-					inReplyTo: '',
+					threadId: "26",
+					inReplyTo: "",
 					references: [],
-					snippet: 'Start your free trial today with no commitment!',
+					snippet: "Start your free trial today with no commitment!",
 					size: 0,
 					flags: [],
-					senderName: 'Marketing Trial',
-					recipientNames: ['You'],
+					senderName: "Marketing Trial",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['trial@marketing.com', 'you@example.com'],
-			participantNames: ['Marketing Trial', 'You'],
-			lastEmailDate: 'Mar 13',
-			firstEmailDate: 'Mar 13',
+			participants: ["trial@marketing.com", "you@example.com"],
+			participantNames: ["Marketing Trial", "You"],
+			lastEmailDate: "Mar 13",
+			firstEmailDate: "Mar 13",
 			messageCount: 1,
 			unreadCount: 0,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Spam'],
+			labels: ["Spam"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'promotions',
-			snippet: 'Start your free trial today with no commitment!',
+			category: "promotions",
+			snippet: "Start your free trial today with no commitment!",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: true,
@@ -1944,24 +1979,24 @@ export default function Home() {
 			isArchive: false,
 		},
 		{
-			id: '27',
-			subject: 'Act now! Limited time offer',
+			id: "27",
+			subject: "Act now! Limited time offer",
 			emails: [
 				{
 					id: 29,
-					from: 'deals@spam.com',
-					to: 'you@example.com',
+					from: "deals@spam.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Mar 12',
-					subject: 'Act now! Limited time offer',
-					content: 'This offer expires in 24 hours! Don\'t miss out!',
-					htmlContent: '',
-					plainTextContent: 'This offer expires in 24 hours! Don\'t miss out!',
+					replyTo: "",
+					date: "Mar 12",
+					subject: "Act now! Limited time offer",
+					content: "This offer expires in 24 hours! Don't miss out!",
+					htmlContent: "",
+					plainTextContent: "This offer expires in 24 hours! Don't miss out!",
 					isCollapsed: true,
 					isRead: false,
-					category: 'promotions',
+					category: "promotions",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: true,
@@ -1971,35 +2006,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '27',
-					inReplyTo: '',
+					threadId: "27",
+					inReplyTo: "",
 					references: [],
-					snippet: 'This offer expires in 24 hours! Don\'t miss out!',
+					snippet: "This offer expires in 24 hours! Don't miss out!",
 					size: 0,
 					flags: [],
-					senderName: 'Spam Deals',
-					recipientNames: ['You'],
+					senderName: "Spam Deals",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['deals@spam.com', 'you@example.com'],
-			participantNames: ['Spam Deals', 'You'],
-			lastEmailDate: 'Mar 12',
-			firstEmailDate: 'Mar 12',
+			participants: ["deals@spam.com", "you@example.com"],
+			participantNames: ["Spam Deals", "You"],
+			lastEmailDate: "Mar 12",
+			firstEmailDate: "Mar 12",
 			messageCount: 1,
 			unreadCount: 1,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Spam'],
+			labels: ["Spam"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'promotions',
-			snippet: 'This offer expires in 24 hours! Don\'t miss out!',
+			category: "promotions",
+			snippet: "This offer expires in 24 hours! Don't miss out!",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: true,
@@ -2008,24 +2043,24 @@ export default function Home() {
 		},
 		// Bin/Trash
 		{
-			id: '28',
-			subject: 'Old newsletter',
+			id: "28",
+			subject: "Old newsletter",
 			emails: [
 				{
 					id: 30,
-					from: 'newsletter@old.com',
-					to: 'you@example.com',
+					from: "newsletter@old.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Feb 10',
-					subject: 'Old newsletter',
-					content: 'February edition of our newsletter.',
-					htmlContent: '',
-					plainTextContent: 'February edition of our newsletter.',
+					replyTo: "",
+					date: "Feb 10",
+					subject: "Old newsletter",
+					content: "February edition of our newsletter.",
+					htmlContent: "",
+					plainTextContent: "February edition of our newsletter.",
 					isCollapsed: true,
 					isRead: true,
-					category: 'promotions',
+					category: "promotions",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
@@ -2035,35 +2070,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '28',
-					inReplyTo: '',
+					threadId: "28",
+					inReplyTo: "",
 					references: [],
-					snippet: 'February edition of our newsletter.',
+					snippet: "February edition of our newsletter.",
 					size: 0,
 					flags: [],
-					senderName: 'Old Newsletter',
-					recipientNames: ['You'],
+					senderName: "Old Newsletter",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: 'https://old.com/unsubscribe',
+					unsubscribeLink: "https://old.com/unsubscribe",
 				},
 			],
-			participants: ['newsletter@old.com', 'you@example.com'],
-			participantNames: ['Old Newsletter', 'You'],
-			lastEmailDate: 'Feb 10',
-			firstEmailDate: 'Feb 10',
+			participants: ["newsletter@old.com", "you@example.com"],
+			participantNames: ["Old Newsletter", "You"],
+			lastEmailDate: "Feb 10",
+			firstEmailDate: "Feb 10",
 			messageCount: 1,
 			unreadCount: 0,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Newsletter'],
+			labels: ["Newsletter"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'promotions',
-			snippet: 'February edition of our newsletter.',
+			category: "promotions",
+			snippet: "February edition of our newsletter.",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -2071,24 +2106,25 @@ export default function Home() {
 			isArchive: false,
 		},
 		{
-			id: '29',
-			subject: 'Meeting cancellation',
+			id: "29",
+			subject: "Meeting cancellation",
 			emails: [
 				{
 					id: 31,
-					from: 'colleague@company.com',
-					to: 'you@example.com',
+					from: "colleague@company.com",
+					to: "you@example.com",
 					cc: [],
 					bcc: [],
-					replyTo: '',
-					date: 'Feb 5',
-					subject: 'Meeting cancellation',
-					content: 'The meeting scheduled for tomorrow has been cancelled.',
-					htmlContent: '',
-					plainTextContent: 'The meeting scheduled for tomorrow has been cancelled.',
+					replyTo: "",
+					date: "Feb 5",
+					subject: "Meeting cancellation",
+					content: "The meeting scheduled for tomorrow has been cancelled.",
+					htmlContent: "",
+					plainTextContent:
+						"The meeting scheduled for tomorrow has been cancelled.",
 					isCollapsed: true,
 					isRead: true,
-					category: 'work',
+					category: "work",
 					isDraft: false,
 					isFavorite: false,
 					isSpam: false,
@@ -2098,35 +2134,35 @@ export default function Home() {
 					hasAttachments: false,
 					attachments: [],
 					attachmentCount: 0,
-					priority: 'normal',
+					priority: "normal",
 					isStarred: false,
-					threadId: '29',
-					inReplyTo: '',
+					threadId: "29",
+					inReplyTo: "",
 					references: [],
-					snippet: 'The meeting scheduled for tomorrow has been cancelled.',
+					snippet: "The meeting scheduled for tomorrow has been cancelled.",
 					size: 0,
 					flags: [],
-					senderName: 'Colleague',
-					recipientNames: ['You'],
+					senderName: "Colleague",
+					recipientNames: ["You"],
 					isImportant: false,
 					hasInlineImages: false,
-					unsubscribeLink: '',
+					unsubscribeLink: "",
 				},
 			],
-			participants: ['colleague@company.com', 'you@example.com'],
-			participantNames: ['Colleague', 'You'],
-			lastEmailDate: 'Feb 5',
-			firstEmailDate: 'Feb 5',
+			participants: ["colleague@company.com", "you@example.com"],
+			participantNames: ["Colleague", "You"],
+			lastEmailDate: "Feb 5",
+			firstEmailDate: "Feb 5",
 			messageCount: 1,
 			unreadCount: 0,
 			hasAttachments: false,
 			totalAttachmentCount: 0,
-			labels: ['Meeting'],
+			labels: ["Meeting"],
 			isStarred: false,
 			isFavorite: false,
 			isImportant: false,
-			category: 'primary',
-			snippet: 'The meeting scheduled for tomorrow has been cancelled.',
+			category: "primary",
+			snippet: "The meeting scheduled for tomorrow has been cancelled.",
 			isCollapsed: true,
 			isDraft: false,
 			isSpam: false,
@@ -2135,41 +2171,47 @@ export default function Home() {
 		},
 	]);
 
-	const [showThreadCompose, setShowThreadCompose] = useState<string | null>(null);
-	const [composeAction, setComposeAction] = useState<'reply' | 'replyAll' | 'forward' | null>(null);
+	const [showThreadCompose, setShowThreadCompose] = useState<string | null>(
+		null
+	);
+	const [composeAction, setComposeAction] = useState<
+		"reply" | "replyAll" | "forward" | null
+	>(null);
 	const [selectedThread, setSelectedThread] = useState<string | null>(null);
 
 	const moreActionsButtonRef = useRef<HTMLButtonElement>(null);
 	const moreActionsDropdownRef = useRef<HTMLDivElement>(null);
 
-	const DEFAULT_THREAD_ID = '0';
+	const DEFAULT_THREAD_ID = "0";
 
 	useEffect(() => {
-		const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-		
+		const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
+
 		if (savedTheme) {
 			setTheme(savedTheme);
 		} else {
-			if (typeof window !== 'undefined') {
-				const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+			if (typeof window !== "undefined") {
+				const systemPrefersDark = window.matchMedia(
+					"(prefers-color-scheme: dark)"
+				).matches;
 				if (systemPrefersDark) {
-					setTheme('dark');
+					setTheme("dark");
 				}
 			}
 		}
 	}, []);
 
 	useEffect(() => {
-		if (theme === 'dark') {
-			document.documentElement.classList.add('dark');
+		if (theme === "dark") {
+			document.documentElement.classList.add("dark");
 		} else {
-			document.documentElement.classList.remove('dark');
+			document.documentElement.classList.remove("dark");
 		}
-		localStorage.setItem('theme', theme);
+		localStorage.setItem("theme", theme);
 	}, [theme]);
 
 	const toggleTheme = () => {
-		setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+		setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
 	};
 
 	const toggleCore = () => {
@@ -2193,7 +2235,15 @@ export default function Home() {
 	};
 
 	const handleViewChange = (view: string) => {
-		const mainViews = ['inbox', 'favorites', 'drafts', 'sent', 'archive', 'spam', 'bin'];
+		const mainViews = [
+			"inbox",
+			"favorites",
+			"drafts",
+			"sent",
+			"archive",
+			"spam",
+			"bin",
+		];
 		if (mainViews.includes(view)) {
 			setActiveMainView(view);
 		} else {
@@ -2212,7 +2262,10 @@ export default function Home() {
 	const toggleSelectAll = () => {
 		const currentlyFilteredThreads = filterThreads(emailThreads);
 
-		if (selectedThreads.size === currentlyFilteredThreads.length && currentlyFilteredThreads.length > 0) {
+		if (
+			selectedThreads.size === currentlyFilteredThreads.length &&
+			currentlyFilteredThreads.length > 0
+		) {
 			setSelectedThreads(new Set());
 		} else {
 			setSelectedThreads(new Set(currentlyFilteredThreads.map((t) => t.id)));
@@ -2272,7 +2325,7 @@ export default function Home() {
 	};
 
 	const handleReply = (threadId: string) => {
-		setComposeAction('reply');
+		setComposeAction("reply");
 
 		if (!expandedThreads.has(threadId)) {
 			toggleThreadExpansion(threadId);
@@ -2281,7 +2334,7 @@ export default function Home() {
 	};
 
 	const handleReplyAll = (threadId: string) => {
-		setComposeAction('replyAll');
+		setComposeAction("replyAll");
 
 		if (!expandedThreads.has(threadId)) {
 			toggleThreadExpansion(threadId);
@@ -2290,7 +2343,7 @@ export default function Home() {
 	};
 
 	const handleForward = (threadId: string) => {
-		setComposeAction('forward');
+		setComposeAction("forward");
 
 		if (!expandedThreads.has(threadId)) {
 			toggleThreadExpansion(threadId);
@@ -2312,13 +2365,13 @@ export default function Home() {
 
 	const handleThreadAction = (threadId: string, action: string) => {
 		switch (action) {
-			case 'spam':
+			case "spam":
 				handleMarkAsSpam(threadId);
 				break;
-			case 'favorite':
+			case "favorite":
 				handleFavorite(threadId);
 				break;
-			case 'bin':
+			case "bin":
 				handleMoveToBin(threadId);
 				break;
 			default:
@@ -2326,7 +2379,10 @@ export default function Home() {
 		}
 	};
 
-	const selectedThreadData = selectedThread !== null ? emailThreads.find((t) => t.id === selectedThread) : undefined;
+	const selectedThreadData =
+		selectedThread !== null
+			? emailThreads.find((t) => t.id === selectedThread)
+			: undefined;
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -2340,36 +2396,39 @@ export default function Home() {
 			}
 		};
 
-		document.addEventListener('mousedown', handleClickOutside);
+		document.addEventListener("mousedown", handleClickOutside);
 		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
+			document.removeEventListener("mousedown", handleClickOutside);
 		};
 	}, []);
 
 	const filterThreads = (threads: EmailThread[]) => {
-		return threads.filter(thread => {
+		return threads.filter((thread) => {
 			let passesMainFilter = false;
 			switch (activeMainView) {
-				case 'inbox':
-					passesMainFilter = !thread.isTrash && !thread.isSpam && !thread.isArchive;
+				case "inbox":
+					passesMainFilter =
+						!thread.isTrash && !thread.isSpam && !thread.isArchive;
 					break;
-				case 'favorites':
+				case "favorites":
 					passesMainFilter = thread.isFavorite;
 					break;
-				case 'drafts':
+				case "drafts":
 					passesMainFilter = thread.isDraft;
 					break;
-				case 'sent':
+				case "sent":
 					// Sent emails are those that have the 'sent' flag
-					passesMainFilter = thread.emails.some(email => email.flags.includes('sent')) && !thread.isDraft;
+					passesMainFilter =
+						thread.emails.some((email) => email.flags.includes("sent")) &&
+						!thread.isDraft;
 					break;
-				case 'archive':
+				case "archive":
 					passesMainFilter = thread.isArchive;
 					break;
-				case 'spam':
+				case "spam":
 					passesMainFilter = thread.isSpam;
 					break;
-				case 'bin':
+				case "bin":
 					passesMainFilter = thread.isTrash;
 					break;
 				default:
@@ -2380,21 +2439,21 @@ export default function Home() {
 			if (!passesMainFilter) return false;
 
 			// Only apply secondary view filter (category) when in inbox
-			if (activeMainView === 'inbox') {
+			if (activeMainView === "inbox") {
 				switch (activeSecondaryView) {
-					case 'primary':
-						return thread.category === 'primary';
-					case 'social':
-						return thread.category === 'social';
-					case 'updates':
-						return thread.category === 'updates';
-					case 'promotions':
-						return thread.category === 'promotions';
+					case "primary":
+						return thread.category === "primary";
+					case "social":
+						return thread.category === "social";
+					case "updates":
+						return thread.category === "updates";
+					case "promotions":
+						return thread.category === "promotions";
 					default:
 						return true;
 				}
 			}
-			
+
 			// If not in inbox, show all threads that pass the main filter
 			return true;
 		});
@@ -2405,10 +2464,16 @@ export default function Home() {
 	return (
 		<div className="h-full w-full bg-background text-foreground">
 			{/* New Email Dialog */}
-			<NewEmailDialog isOpen={showNewEmailDialog} onClose={setShowNewEmailDialog} />
+			<NewEmailDialog
+				isOpen={showNewEmailDialog}
+				onClose={setShowNewEmailDialog}
+			/>
 
 			{/* Filters Dialog */}
-			<FiltersDialog isOpen={showFiltersDialog} onClose={setShowFiltersDialog} />
+			<FiltersDialog
+				isOpen={showFiltersDialog}
+				onClose={setShowFiltersDialog}
+			/>
 
 			<div className="flex items-center gap-2 px-3 py-2 border-b">
 				<div className="flex items-center gap-2">
@@ -2474,7 +2539,11 @@ export default function Home() {
 					</svg>
 					<span>Filters</span>
 				</button>
-				<button aria-label="Toggle theme" className="rounded-lg border p-2 hover:bg-accent" onClick={toggleTheme}>
+				<button
+					aria-label="Toggle theme"
+					className="rounded-lg border p-2 hover:bg-accent"
+					onClick={toggleTheme}
+				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
 						width="24"
@@ -2488,7 +2557,7 @@ export default function Home() {
 						className="lucide lucide-moon size-4"
 						aria-hidden="true"
 					>
-						{theme === 'light' ? (
+						{theme === "light" ? (
 							// Moon icon for light mode
 							<path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"></path>
 						) : (
@@ -2509,7 +2578,11 @@ export default function Home() {
 				</button>
 				<DropdownMenu open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
 					<DropdownMenuTrigger asChild>
-						<Button variant="outline" size="icon" className="rounded-lg border p-2 hover:bg-accent">
+						<Button
+							variant="outline"
+							size="icon"
+							className="rounded-lg border p-2 hover:bg-accent"
+						>
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
 								width="24"
@@ -2599,10 +2672,25 @@ export default function Home() {
 									strokeLinejoin="round"
 									className="lucide lucide-palette size-4 mr-2"
 								>
-									<circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
-									<circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+									<circle
+										cx="13.5"
+										cy="6.5"
+										r=".5"
+										fill="currentColor"
+									></circle>
+									<circle
+										cx="17.5"
+										cy="10.5"
+										r=".5"
+										fill="currentColor"
+									></circle>
 									<circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
-									<circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+									<circle
+										cx="6.5"
+										cy="12.5"
+										r=".5"
+										fill="currentColor"
+									></circle>
 									<path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
 								</svg>
 								<span>Appearance</span>
@@ -2701,7 +2789,9 @@ export default function Home() {
 				<aside className="hidden md:flex flex-col gap-3 border-r p-3 bg-sidebar">
 					<div className="px-2">
 						<div className="text-sm text-muted-foreground">Baked Design</div>
-						<div className="text-xs text-muted-foreground">work@baked.design</div>
+						<div className="text-xs text-muted-foreground">
+							work@baked.design
+						</div>
 					</div>
 					<button
 						className="inline-flex items-center gap-2 rounded-lg border px-3 py-2 bg-primary text-primary-foreground hover:opacity-90"
@@ -2740,19 +2830,30 @@ export default function Home() {
 								strokeWidth="2"
 								strokeLinecap="round"
 								strokeLinejoin="round"
-								className={`lucide lucide-chevron-${isCoreOpen ? 'down' : 'right'} size-4`}
+								className={`lucide lucide-chevron-${
+									isCoreOpen ? "down" : "right"
+								} size-4`}
 								aria-hidden="true"
 							>
-								<path d={`m${isCoreOpen ? '6 9 6 6 6-6' : '9 18 6-6-6-6'}`}></path>
+								<path
+									d={`m${isCoreOpen ? "6 9 6 6 6-6" : "9 18 6-6-6-6"}`}
+								></path>
 							</svg>
 							<span className="font-medium">Core</span>
 						</button>
 						{isCoreOpen && (
-							<div className="overflow-hidden" style={{ height: 'auto', opacity: 1 }}>
+							<div
+								className="overflow-hidden"
+								style={{ height: "auto", opacity: 1 }}
+							>
 								<div className="py-1">
-									<button 
-										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'inbox' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
-										onClick={() => handleViewChange('inbox')}
+									<button
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${
+											activeMainView === "inbox"
+												? "bg-sidebar-primary text-sidebar-primary-foreground"
+												: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+										}`}
+										onClick={() => handleViewChange("inbox")}
 									>
 										<span className="flex items-center gap-2">
 											<svg
@@ -2773,11 +2874,17 @@ export default function Home() {
 											</svg>
 											Inbox
 										</span>
-										<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">281</span>
+										<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">
+											281
+										</span>
 									</button>
-									<button 
-										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'favorites' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
-										onClick={() => handleViewChange('favorites')}
+									<button
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${
+											activeMainView === "favorites"
+												? "bg-sidebar-primary text-sidebar-primary-foreground"
+												: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+										}`}
+										onClick={() => handleViewChange("favorites")}
 									>
 										<span className="flex items-center gap-2">
 											<svg
@@ -2798,9 +2905,13 @@ export default function Home() {
 											Favorites
 										</span>
 									</button>
-									<button 
-										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'drafts' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
-										onClick={() => handleViewChange('drafts')}
+									<button
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${
+											activeMainView === "drafts"
+												? "bg-sidebar-primary text-sidebar-primary-foreground"
+												: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+										}`}
+										onClick={() => handleViewChange("drafts")}
 									>
 										<span className="flex items-center gap-2">
 											<svg
@@ -2821,11 +2932,17 @@ export default function Home() {
 											</svg>
 											Drafts
 										</span>
-										<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">13</span>
+										<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">
+											13
+										</span>
 									</button>
-									<button 
-										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'sent' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
-										onClick={() => handleViewChange('sent')}
+									<button
+										className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${
+											activeMainView === "sent"
+												? "bg-sidebar-primary text-sidebar-primary-foreground"
+												: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+										}`}
+										onClick={() => handleViewChange("sent")}
 									>
 										<span className="flex items-center gap-2">
 											<svg
@@ -2867,19 +2984,30 @@ export default function Home() {
 									strokeWidth="2"
 									strokeLinecap="round"
 									strokeLinejoin="round"
-									className={`lucide lucide-chevron-${isManagementOpen ? 'down' : 'right'} size-4`}
+									className={`lucide lucide-chevron-${
+										isManagementOpen ? "down" : "right"
+									} size-4`}
 									aria-hidden="true"
 								>
-									<path d={`m${isManagementOpen ? '6 9 6 6 6-6' : '9 18 6-6-6-6'}`}></path>
+									<path
+										d={`m${isManagementOpen ? "6 9 6 6 6-6" : "9 18 6-6-6-6"}`}
+									></path>
 								</svg>
 								<span className="font-medium">Management</span>
 							</button>
 							{isManagementOpen && (
-								<div className="overflow-hidden" style={{ height: 'auto', opacity: 1 }}>
+								<div
+									className="overflow-hidden"
+									style={{ height: "auto", opacity: 1 }}
+								>
 									<div className="py-1">
-										<button 
-											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'archive' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
-											onClick={() => handleViewChange('archive')}
+										<button
+											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${
+												activeMainView === "archive"
+													? "bg-sidebar-primary text-sidebar-primary-foreground"
+													: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+											}`}
+											onClick={() => handleViewChange("archive")}
 										>
 											<span className="flex items-center gap-2">
 												<svg
@@ -2902,9 +3030,13 @@ export default function Home() {
 												Archive
 											</span>
 										</button>
-										<button 
-											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'spam' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
-											onClick={() => handleViewChange('spam')}
+										<button
+											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${
+												activeMainView === "spam"
+													? "bg-sidebar-primary text-sidebar-primary-foreground"
+													: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+											}`}
+											onClick={() => handleViewChange("spam")}
 										>
 											<span className="flex items-center gap-2">
 												<svg
@@ -2926,11 +3058,17 @@ export default function Home() {
 												</svg>
 												Spam
 											</span>
-											<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">24</span>
+											<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">
+												24
+											</span>
 										</button>
-										<button 
-											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'bin' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
-											onClick={() => handleViewChange('bin')}
+										<button
+											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${
+												activeMainView === "bin"
+													? "bg-sidebar-primary text-sidebar-primary-foreground"
+													: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+											}`}
+											onClick={() => handleViewChange("bin")}
 										>
 											<span className="flex items-center gap-2">
 												<svg
@@ -2974,19 +3112,30 @@ export default function Home() {
 									strokeWidth="2"
 									strokeLinecap="round"
 									strokeLinejoin="round"
-									className={`lucide lucide-chevron-${isLabelsOpen ? 'down' : 'right'} size-4`}
+									className={`lucide lucide-chevron-${
+										isLabelsOpen ? "down" : "right"
+									} size-4`}
 									aria-hidden="true"
 								>
-									<path d={`m${isLabelsOpen ? '6 9 6 6 6-6' : '9 18 6-6-6-6'}`}></path>
+									<path
+										d={`m${isLabelsOpen ? "6 9 6 6 6-6" : "9 18 6-6-6-6"}`}
+									></path>
 								</svg>
 								<span className="font-medium">Labels</span>
 							</button>
 							{isLabelsOpen && (
-								<div className="overflow-hidden" style={{ height: 'auto', opacity: 1 }}>
+								<div
+									className="overflow-hidden"
+									style={{ height: "auto", opacity: 1 }}
+								>
 									<div className="py-1">
-										<button 
-											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'work' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
-											onClick={() => handleViewChange('work')}
+										<button
+											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${
+												activeMainView === "work"
+													? "bg-sidebar-primary text-sidebar-primary-foreground"
+													: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+											}`}
+											onClick={() => handleViewChange("work")}
 										>
 											<span className="flex items-center gap-2">
 												<svg
@@ -3007,14 +3156,24 @@ export default function Home() {
 													<path d="M10 22v-2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2"></path>
 													<path d="M4 10h16"></path>
 													<path d="M4 14h16"></path>
-													<rect width="20" height="16" x="2" y="6" rx="2"></rect>
+													<rect
+														width="20"
+														height="16"
+														x="2"
+														y="6"
+														rx="2"
+													></rect>
 												</svg>
 												Work
 											</span>
 										</button>
-										<button 
-											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'personal' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
-											onClick={() => handleViewChange('personal')}
+										<button
+											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${
+												activeMainView === "personal"
+													? "bg-sidebar-primary text-sidebar-primary-foreground"
+													: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+											}`}
+											onClick={() => handleViewChange("personal")}
 										>
 											<span className="flex items-center gap-2">
 												<svg
@@ -3036,9 +3195,13 @@ export default function Home() {
 												Personal
 											</span>
 										</button>
-										<button 
-											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'important' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
-											onClick={() => handleViewChange('important')}
+										<button
+											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${
+												activeMainView === "important"
+													? "bg-sidebar-primary text-sidebar-primary-foreground"
+													: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+											}`}
+											onClick={() => handleViewChange("important")}
 										>
 											<span className="flex items-center gap-2">
 												<svg
@@ -3059,7 +3222,7 @@ export default function Home() {
 												Important
 											</span>
 										</button>
-										<button 
+										<button
 											className="w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
 											onClick={() => setShowFiltersDialog(true)}
 										>
@@ -3101,19 +3264,30 @@ export default function Home() {
 									strokeWidth="2"
 									strokeLinecap="round"
 									strokeLinejoin="round"
-									className={`lucide lucide-chevron-${isFiltersOpen ? 'down' : 'right'} size-4`}
+									className={`lucide lucide-chevron-${
+										isFiltersOpen ? "down" : "right"
+									} size-4`}
 									aria-hidden="true"
 								>
-									<path d={`m${isFiltersOpen ? '6 9 6 6 6-6' : '9 18 6-6-6-6'}`}></path>
+									<path
+										d={`m${isFiltersOpen ? "6 9 6 6 6-6" : "9 18 6-6-6-6"}`}
+									></path>
 								</svg>
 								<span className="font-medium">Filters</span>
 							</button>
 							{isFiltersOpen && (
-								<div className="overflow-hidden" style={{ height: 'auto', opacity: 1 }}>
+								<div
+									className="overflow-hidden"
+									style={{ height: "auto", opacity: 1 }}
+								>
 									<div className="py-1">
-										<button 
-											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'unread' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
-											onClick={() => handleViewChange('unread')}
+										<button
+											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${
+												activeMainView === "unread"
+													? "bg-sidebar-primary text-sidebar-primary-foreground"
+													: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+											}`}
+											onClick={() => handleViewChange("unread")}
 										>
 											<span className="flex items-center gap-2">
 												<svg
@@ -3134,11 +3308,17 @@ export default function Home() {
 												</svg>
 												Unread
 											</span>
-											<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">24</span>
+											<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">
+												24
+											</span>
 										</button>
-										<button 
-											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'starred' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
-											onClick={() => handleViewChange('starred')}
+										<button
+											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${
+												activeMainView === "starred"
+													? "bg-sidebar-primary text-sidebar-primary-foreground"
+													: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+											}`}
+											onClick={() => handleViewChange("starred")}
 										>
 											<span className="flex items-center gap-2">
 												<svg
@@ -3158,11 +3338,17 @@ export default function Home() {
 												</svg>
 												Starred
 											</span>
-											<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">4</span>
+											<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">
+												4
+											</span>
 										</button>
-										<button 
-											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'snoozed' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
-											onClick={() => handleViewChange('snoozed')}
+										<button
+											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${
+												activeMainView === "snoozed"
+													? "bg-sidebar-primary text-sidebar-primary-foreground"
+													: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+											}`}
+											onClick={() => handleViewChange("snoozed")}
 										>
 											<span className="flex items-center gap-2">
 												<svg
@@ -3185,7 +3371,9 @@ export default function Home() {
 												</svg>
 												Snoozed
 											</span>
-											<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">1</span>
+											<span className="rounded-full px-2 py-0.5 text-xs bg-muted text-muted-foreground">
+												1
+											</span>
 										</button>
 									</div>
 								</div>
@@ -3206,19 +3394,30 @@ export default function Home() {
 									strokeWidth="2"
 									strokeLinecap="round"
 									strokeLinejoin="round"
-									className={`lucide lucide-chevron-${isMoreOpen ? 'down' : 'right'} size-4`}
+									className={`lucide lucide-chevron-${
+										isMoreOpen ? "down" : "right"
+									} size-4`}
 									aria-hidden="true"
 								>
-									<path d={`m${isMoreOpen ? '6 9 6 6 6-6' : '9 18 6-6-6-6'}`}></path>
+									<path
+										d={`m${isMoreOpen ? "6 9 6 6 6-6" : "9 18 6-6-6-6"}`}
+									></path>
 								</svg>
 								<span className="font-medium">More</span>
 							</button>
 							{isMoreOpen && (
-								<div className="overflow-hidden" style={{ height: 'auto', opacity: 1 }}>
+								<div
+									className="overflow-hidden"
+									style={{ height: "auto", opacity: 1 }}
+								>
 									<div className="py-1">
-										<button 
-											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'settings' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
-											onClick={() => handleViewChange('settings')}
+										<button
+											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${
+												activeMainView === "settings"
+													? "bg-sidebar-primary text-sidebar-primary-foreground"
+													: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+											}`}
+											onClick={() => handleViewChange("settings")}
 										>
 											<span className="flex items-center gap-2">
 												<svg
@@ -3241,9 +3440,13 @@ export default function Home() {
 												Settings
 											</span>
 										</button>
-										<button 
-											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${activeMainView === 'help' ? 'bg-sidebar-primary text-sidebar-primary-foreground' : 'hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}`}
-											onClick={() => handleViewChange('help')}
+										<button
+											className={`w-full flex items-center justify-between gap-2 rounded-lg px-2 py-2 text-sm ${
+												activeMainView === "help"
+													? "bg-sidebar-primary text-sidebar-primary-foreground"
+													: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+											}`}
+											onClick={() => handleViewChange("help")}
 										>
 											<span className="flex items-center gap-2">
 												<svg
@@ -3275,18 +3478,28 @@ export default function Home() {
 				<section className="border-r p-3 overflow-y-auto hidden xl:flex xl:flex-col xl:min-w-0">
 					<div className="flex items-center justify-between px-1 pb-2">
 						<div className="text-sm font-medium">
-							{activeMainView === 'inbox' && activeSecondaryView === 'primary' && 'Primary'}
-							{activeMainView === 'inbox' && activeSecondaryView === 'social' && 'Social'}
-							{activeMainView === 'inbox' && activeSecondaryView === 'updates' && 'Updates'}
-							{activeMainView === 'inbox' && activeSecondaryView === 'promotions' && 'Promotions'}
-							{activeMainView === 'inbox' && !activeSecondaryView && 'Inbox'}
-							{activeMainView === 'inbox' && activeSecondaryView === 'inbox' && 'Inbox'}
-							{activeMainView === 'favorites' && 'Favorites'}
-							{activeMainView === 'drafts' && 'Drafts'}
-							{activeMainView === 'sent' && 'Sent'}
-							{activeMainView === 'archive' && 'Archive'}
-							{activeMainView === 'spam' && 'Spam'}
-							{activeMainView === 'bin' && 'Bin'}
+							{activeMainView === "inbox" &&
+								activeSecondaryView === "primary" &&
+								"Primary"}
+							{activeMainView === "inbox" &&
+								activeSecondaryView === "social" &&
+								"Social"}
+							{activeMainView === "inbox" &&
+								activeSecondaryView === "updates" &&
+								"Updates"}
+							{activeMainView === "inbox" &&
+								activeSecondaryView === "promotions" &&
+								"Promotions"}
+							{activeMainView === "inbox" && !activeSecondaryView && "Inbox"}
+							{activeMainView === "inbox" &&
+								activeSecondaryView === "inbox" &&
+								"Inbox"}
+							{activeMainView === "favorites" && "Favorites"}
+							{activeMainView === "drafts" && "Drafts"}
+							{activeMainView === "sent" && "Sent"}
+							{activeMainView === "archive" && "Archive"}
+							{activeMainView === "spam" && "Spam"}
+							{activeMainView === "bin" && "Bin"}
 						</div>
 						<div className="text-xs text-muted-foreground flex items-center gap-2">
 							{isSelectMode ? (
@@ -3294,7 +3507,10 @@ export default function Home() {
 									<button
 										className="rounded-md border px-2 py-1 hover:bg-accent flex items-center gap-1"
 										onClick={toggleSelectAll}
-										aria-pressed={selectedThreads.size === filteredThreads.length && filteredThreads.length > 0}
+										aria-pressed={
+											selectedThreads.size === filteredThreads.length &&
+											filteredThreads.length > 0
+										}
 									>
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
@@ -3313,7 +3529,10 @@ export default function Home() {
 										</svg>
 										<span>Select all</span>
 									</button>
-									<button className="rounded-md border px-2 py-1 hover:bg-accent flex items-center gap-1" onClick={toggleSelectMode}>
+									<button
+										className="rounded-md border px-2 py-1 hover:bg-accent flex items-center gap-1"
+										onClick={toggleSelectMode}
+									>
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
 											width="16"
@@ -3333,7 +3552,10 @@ export default function Home() {
 									</button>
 								</div>
 							) : (
-								<button className="rounded-md border px-2 py-1 hover:bg-accent flex items-center gap-1" onClick={toggleSelectMode}>
+								<button
+									className="rounded-md border px-2 py-1 hover:bg-accent flex items-center gap-1"
+									onClick={toggleSelectMode}
+								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										width="16"
@@ -3355,39 +3577,47 @@ export default function Home() {
 						</div>
 					</div>
 					<div className="rounded-xl border bg-card/40 p-2 flex-1 min-h-0 flex flex-col">
-						{activeMainView === 'inbox' && (
+						{activeMainView === "inbox" && (
 							<div className="flex items-center gap-2 px-1 pb-2">
 								<div className="text-xs text-muted-foreground">Views</div>
 								<div className="ms-auto flex items-center gap-1">
 									<button
 										className={`rounded-md border px-2 py-1 text-xs ${
-											activeSecondaryView === 'primary' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
+											activeSecondaryView === "primary"
+												? "bg-primary text-primary-foreground"
+												: "hover:bg-accent"
 										}`}
-										onClick={() => handleViewChange('primary')}
+										onClick={() => handleViewChange("primary")}
 									>
 										Primary
 									</button>
 									<button
 										className={`rounded-md border px-2 py-1 text-xs ${
-											activeSecondaryView === 'social' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
+											activeSecondaryView === "social"
+												? "bg-primary text-primary-foreground"
+												: "hover:bg-accent"
 										}`}
-										onClick={() => handleViewChange('social')}
+										onClick={() => handleViewChange("social")}
 									>
 										Social
 									</button>
 									<button
 										className={`rounded-md border px-2 py-1 text-xs ${
-											activeSecondaryView === 'updates' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
+											activeSecondaryView === "updates"
+												? "bg-primary text-primary-foreground"
+												: "hover:bg-accent"
 										}`}
-										onClick={() => handleViewChange('updates')}
+										onClick={() => handleViewChange("updates")}
 									>
 										Updates
 									</button>
 									<button
 										className={`rounded-md border px-2 py-1 text-xs ${
-											activeSecondaryView === 'promotions' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent'
+											activeSecondaryView === "promotions"
+												? "bg-primary text-primary-foreground"
+												: "hover:bg-accent"
 										}`}
-										onClick={() => handleViewChange('promotions')}
+										onClick={() => handleViewChange("promotions")}
 									>
 										Promotions
 									</button>
@@ -3443,7 +3673,10 @@ export default function Home() {
 												</button>
 												<div className="border-t my-1"></div>
 												<div className="px-2 py-1">
-													<select aria-label="Move to label" className="w-full rounded-md border px-2 py-1 text-xs bg-input/50">
+													<select
+														aria-label="Move to label"
+														className="w-full rounded-md border px-2 py-1 text-xs bg-input/50"
+													>
 														<option value="">Move to…</option>
 														<option value="work">Work</option>
 														<option value="personal">Personal</option>
@@ -3472,14 +3705,18 @@ export default function Home() {
 							))}
 						</div>
 						<nav className="pt-3 flex items-center justify-between text-xs text-muted-foreground">
-							<span>
-								{filteredThreads.length} items
-							</span>
+							<span>{filteredThreads.length} items</span>
 							<div className="flex items-center gap-2">
-								<button disabled={true} className="rounded-md border px-2 py-1 disabled:opacity-50 hover:bg-accent">
+								<button
+									disabled={true}
+									className="rounded-md border px-2 py-1 disabled:opacity-50 hover:bg-accent"
+								>
 									Prev
 								</button>
-								<button disabled={true} className="rounded-md border px-2 py-1 disabled:opacity-50 hover:bg-accent">
+								<button
+									disabled={true}
+									className="rounded-md border px-2 py-1 disabled:opacity-50 hover:bg-accent"
+								>
 									Next
 								</button>
 							</div>
@@ -3492,13 +3729,21 @@ export default function Home() {
 						<EmailThreadComponent
 							threadId={selectedThread || DEFAULT_THREAD_ID}
 							emails={selectedThreadData ? selectedThreadData.emails : []}
-							isExpanded={selectedThread !== null && expandedThreads.has(selectedThread) ? expandedThreads.has(selectedThread) : false}
+							isExpanded={
+								selectedThread !== null && expandedThreads.has(selectedThread)
+									? expandedThreads.has(selectedThread)
+									: false
+							}
 							onToggleExpand={toggleThreadExpansion}
 							onReply={handleReply}
 							onReplyAll={handleReplyAll}
 							onForward={handleForward}
 							onThreadAction={handleThreadAction}
-							showCompose={selectedThread !== null && showThreadCompose === selectedThread ? showThreadCompose === selectedThread : false}
+							showCompose={
+								selectedThread !== null && showThreadCompose === selectedThread
+									? showThreadCompose === selectedThread
+									: false
+							}
 							onCloseCompose={closeThreadCompose}
 							composeAction={composeAction}
 						/>

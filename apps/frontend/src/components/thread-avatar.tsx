@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 interface ThreadAvatarProps {
 	senderName: string;
@@ -6,7 +6,15 @@ interface ThreadAvatarProps {
 
 export function ThreadAvatar({ senderName }: ThreadAvatarProps) {
 	const getColorFromName = (name: string) => {
-		const colors = ['bg-chart-1', 'bg-chart-2', 'bg-chart-3', 'bg-chart-4', 'bg-chart-5', 'bg-primary', 'bg-destructive'];
+		const colors = [
+			"bg-chart-1",
+			"bg-chart-2",
+			"bg-chart-3",
+			"bg-chart-4",
+			"bg-chart-5",
+			"bg-primary",
+			"bg-destructive",
+		];
 		let hash = 0;
 		for (let i = 0; i < name.length; i++) {
 			hash = name.charCodeAt(i) + ((hash << 5) - hash);
@@ -20,7 +28,9 @@ export function ThreadAvatar({ senderName }: ThreadAvatarProps) {
 	const initials = senderName.charAt(0).toUpperCase();
 
 	return (
-		<div className={`size-7 rounded-full flex items-center justify-center text-xs ${avatarBg}`}>
+		<div
+			className={`size-7 rounded-full flex items-center justify-center text-xs ${avatarBg}`}
+		>
 			{initials.match(/[A-Z]/) ? (
 				<span className="font-medium">{initials}</span>
 			) : (
