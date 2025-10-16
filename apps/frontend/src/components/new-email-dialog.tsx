@@ -1,5 +1,8 @@
 'use client';
 
+import { useState, useRef, KeyboardEvent } from 'react';
+import { EmailAddressPill } from './email-address-pill';
+
 interface NewEmailDialogProps {
 	isOpen: boolean;
 	onClose: (id: boolean) => void;
@@ -9,6 +12,84 @@ export function NewEmailDialog({ isOpen, onClose }: NewEmailDialogProps) {
 	if (!isOpen) {
 		return null;
 	}
+
+	// State for email addresses
+	const [toEmails, setToEmails] = useState<string[]>([]);
+	const [ccEmails, setCcEmails] = useState<string[]>([]);
+	const [bccEmails, setBccEmails] = useState<string[]>([]);
+	
+	// State for current input values
+	const [toInput, setToInput] = useState('');
+	const [ccInput, setCcInput] = useState('');
+	const [bccInput, setBccInput] = useState('');
+	
+	// Refs for input fields
+	const toInputRef = useRef<HTMLInputElement>(null);
+	const ccInputRef = useRef<HTMLInputElement>(null);
+	const bccInputRef = useRef<HTMLInputElement>(null);
+
+	// Function to validate email format
+	const isValidEmail = (email: string) => {
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		return emailRegex.test(email);
+	};
+
+	// Function to add email when pressing Enter or comma
+	const handleEmailInput = (
+		e: KeyboardEvent<HTMLInputElement>,
+		inputValue: string,
+		setInputValue: (value: string) => void,
+		emailList: string[],
+		setEmailList: (emails: string[]) => void,
+		nextInputRef?: React.RefObject<HTMLInputElement>
+	) => {
+		if (e.key === 'Enter' || e.key === ',') {
+			e.preventDefault();
+			const email = inputValue.trim().replace(/,$/, ''); // Remove trailing comma
+			
+			if (email && isValidEmail(email) && !emailList.includes(email)) {
+				setEmailList([...emailList, email]);
+				setInputValue('');
+				
+				// Focus next input if available
+				if (nextInputRef?.current) {
+					nextInputRef.current.focus();
+				}
+			}
+		}
+		
+		// Handle backspace to remove last email when input is empty
+		if (e.key === 'Backspace' && inputValue === '' && emailList.length > 0) {
+			const newEmailList = [...emailList];
+			newEmailList.pop(); // Remove last email
+			setEmailList(newEmailList);
+		}
+	};
+
+	// Function to remove email
+	const removeEmail = (
+		email: string,
+		emailList: string[],
+		setEmailList: (emails: string[]) => void
+	) => {
+		setEmailList(emailList.filter(e => e !== email));
+	};
+
+	// Function to handle blur (when user clicks away)
+	const handleInputBlur = (
+		inputValue: string,
+		setInputValue: (value: string) => void,
+		emailList: string[],
+		setEmailList: (emails: string[]) => void
+	) => {
+		if (inputValue.trim()) {
+			const email = inputValue.trim();
+			if (isValidEmail(email) && !emailList.includes(email)) {
+				setEmailList([...emailList, email]);
+				setInputValue('');
+			}
+		}
+	};
 
 	return (
 		<section
@@ -37,7 +118,29 @@ export function NewEmailDialog({ isOpen, onClose }: NewEmailDialogProps) {
 						<label htmlFor="to" className="text-xs text-muted-foreground">
 							To
 						</label>
-						<input id="to" required placeholder="Recipient" className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" name="to" />
+						<div 
+							className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm min-h-9 flex flex-wrap gap-1 items-center"
+							onClick={() => toInputRef.current?.focus()}
+						>
+							{toEmails.map((email) => (
+								<EmailAddressPill 
+									key={email} 
+									email={email} 
+									onRemove={(email) => removeEmail(email, toEmails, setToEmails)} 
+								/>
+							))}
+							<input 
+								ref={toInputRef}
+								id="to"
+								value={toInput}
+								onChange={(e) => setToInput(e.target.value)}
+								onKeyDown={(e) => handleEmailInput(e, toInput, setToInput, toEmails, setToEmails, ccInputRef as React.RefObject<HTMLInputElement>)}
+								onBlur={() => handleInputBlur(toInput, setToInput, toEmails, setToEmails)}
+								placeholder={toEmails.length === 0 ? "Recipient" : ""}
+								className="flex-1 min-w-[120px] bg-transparent border-0 outline-none focus:outline-none focus:ring-0 p-0"
+								name="to"
+							/>
+						</div>
 						<label htmlFor="from" className="text-xs text-muted-foreground">
 							From
 						</label>
@@ -45,11 +148,55 @@ export function NewEmailDialog({ isOpen, onClose }: NewEmailDialogProps) {
 						<label htmlFor="cc" className="text-xs text-muted-foreground">
 							Cc
 						</label>
-						<input id="cc" placeholder="Add Cc" className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" name="cc" />
+						<div 
+							className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm min-h-9 flex flex-wrap gap-1 items-center"
+							onClick={() => ccInputRef.current?.focus()}
+						>
+							{ccEmails.map((email) => (
+								<EmailAddressPill 
+									key={email} 
+									email={email} 
+									onRemove={(email) => removeEmail(email, ccEmails, setCcEmails)} 
+								/>
+							))}
+							<input 
+								ref={ccInputRef}
+								id="cc"
+								value={ccInput}
+								onChange={(e) => setCcInput(e.target.value)}
+								onKeyDown={(e) => handleEmailInput(e, ccInput, setCcInput, ccEmails, setCcEmails, bccInputRef as React.RefObject<HTMLInputElement>)}
+								onBlur={() => handleInputBlur(ccInput, setCcInput, ccEmails, setCcEmails)}
+								placeholder={ccEmails.length === 0 ? "Add Cc" : ""}
+								className="flex-1 min-w-[120px] bg-transparent border-0 outline-none focus:outline-none focus:ring-0 p-0"
+								name="cc"
+							/>
+						</div>
 						<label htmlFor="bcc" className="text-xs text-muted-foreground">
 							Bcc
 						</label>
-						<input id="bcc" placeholder="Add Bcc" className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm" name="bcc" />
+						<div 
+							className="w-full rounded-md border bg-input/50 px-3 py-2 text-sm min-h-9 flex flex-wrap gap-1 items-center"
+							onClick={() => bccInputRef.current?.focus()}
+						>
+							{bccEmails.map((email) => (
+								<EmailAddressPill 
+									key={email} 
+									email={email} 
+									onRemove={(email) => removeEmail(email, bccEmails, setBccEmails)} 
+								/>
+							))}
+							<input 
+								ref={bccInputRef}
+								id="bcc"
+								value={bccInput}
+								onChange={(e) => setBccInput(e.target.value)}
+								onKeyDown={(e) => handleEmailInput(e, bccInput, setBccInput, bccEmails, setBccEmails)}
+								onBlur={() => handleInputBlur(bccInput, setBccInput, bccEmails, setBccEmails)}
+								placeholder={bccEmails.length === 0 ? "Add Bcc" : ""}
+								className="flex-1 min-w-[120px] bg-transparent border-0 outline-none focus:outline-none focus:ring-0 p-0"
+								name="bcc"
+							/>
+						</div>
 						<label htmlFor="replyto" className="text-xs text-muted-foreground">
 							Reply‑To
 						</label>
