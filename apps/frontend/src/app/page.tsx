@@ -11,6 +11,7 @@ import { FiltersDialog } from "components/components/filters-dialog";
 import { TitleBar } from "../components/title-bar";
 import { LeftAsideBar } from "../components/left-aside-bar";
 import { ViewChangerPanel } from "../components/view-changer-panel";
+import { BottomBar } from "../components/bottom-bar";
 
 import {
 	DropdownMenu,
@@ -2508,6 +2509,7 @@ export default function Home() {
 					handleThreadAction={handleThreadAction}
 					closeThreadCompose={closeThreadCompose}
 				/>
+				<BottomBar />
 			</div>
 		</div>
 	);
